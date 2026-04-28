@@ -17,4 +17,4 @@ funciton draw() {
   
   requestAnimationFrame(draw);
 }
-draw()
+draw();
