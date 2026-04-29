@@ -1,9 +1,16 @@
 html, body {
-  width: 100%
-  height: 100%
+  overflow: hidden;
+  margin: 0;
+  touch-action: none; /* disable gestures like pinch or pan */
+  overscroll-behavior: none; /* prevent edge bounce */
+  height: 100%;
 }
 
 #game-canvas {
-  width: 100vh
-  height: 100vh
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  pointer-events: none;
+  -webkit-user-select: none; /* for highlighting over text */
+  user-select: none; /* same as above */
 }
