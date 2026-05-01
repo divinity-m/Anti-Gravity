@@ -1,7 +1,7 @@
 /// FUNCTIONS.JS ANTI GRAVITY ///
 
 function swapGravity() {
-    // Determines the falling direciton and changes the values of gravity and dGravity acoordingly
+    // swapGravity(): Determines the players falling direciton and changes the values of gravity and dGravity acoordingly
     if (!isMidAir) {
         fallingDirection = fallingDirection === "down" ? "up" : "down";
         gravity = fallingDirection === "down" ? 3 : -3;
@@ -38,6 +38,8 @@ function drawPlayer() {
 
 function imposeGravity(borderHeight) {
     // imposeGravity(): checks if the player is falling to apply the gravity mechanic
+
+    if (player.enteringPortal) return;
 
     const midAirDown = player.y + player.r + gravity < cnv.height-borderHeight;
     const midAirUp = player.y - player.r + gravity > borderHeight;
