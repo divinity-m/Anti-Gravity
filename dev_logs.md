@@ -21,4 +21,4 @@ Things Added:
 I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right.
 
 Things Added:
- - 
+ - Player movement refinement
