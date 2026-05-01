@@ -18,7 +18,8 @@ Things Added:
 
 
 # Day 3 - Thursday | In class work #
-I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right.
+I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right. Gavin Diep helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin.
 
 Things Added:
  - Player movement refinement
+ - Player Design
