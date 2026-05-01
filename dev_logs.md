@@ -23,3 +23,11 @@ I refined some aspects of the game, such as making the gravity accelerate and ma
 Things Added:
  - Player movement refinement
  - Player Design
+
+
+
+# Day 3 - Thursday | In class work #
+I started working on the mechanics for the portal, which marks the checkpoint for the end of a level and warps the player into a new level. Gavin created a design for it. The portals functionality is still very incomplete, right now I'm just working on a 'gravitational pull' effect to suck the player into the portal when they get close enough.
+
+Things Added:
+ - Portal Design
