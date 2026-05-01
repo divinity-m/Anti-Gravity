@@ -17,7 +17,7 @@ const player = {
     x: cnv.width/5, y: cnv.height - cnv.height/3,
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
     speed: 5,
-    facingAngle: 0,
+    facingAngle: 0, enteringPortal: true,
 }
 const portal = {
     x: cnv.width - cnv.width/5, y: cnv.height/2,
@@ -113,13 +113,15 @@ function draw() {
     ctx.fillStyle = "black";
     drawCircle(portal.x, portal.y, portal.r + 50, 2);
     if (distFromPortal < portal.r + 50) {
+        player.enteringPortal = true;
+        
         // slowy add the dAngle to the players angle to get the 'spin' affect as the player enters the portal
         const dAngle = (angleToPortal - player.facingAngle) / 100;
         player.facingAngle += dAngle
 
         player.x += portalDx/distFromPortal * 5;
         player.y += portalDy/distFromPortal * 5;
-    }
+    } else player.enteringPortal = false;
 
     // player
     drawPlayer();
