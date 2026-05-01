@@ -17,17 +17,22 @@ const player = {
     x: cnv.width/5, y: cnv.height - cnv.height/3,
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
     speed: 5,
+    facingAngle: 0,
 }
 const portal = {
-    x: cnv.width/5, y: cnv.height - cnv.height/3,
-    r: 17.5, rotation: 0, spinSpeed: Math.PI/24,
+    x: cnv.width - cnv.width/5, y: cnv.height/2,
+    r: 40, rotation: 0, spinSpeed: Math.PI/128,
+}
+
+// classes
+class Obstacle {
+
 }
 
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
 document.addEventListener("keyup", keyupHandler);
-
 
 // Handlers //
 function keydownHandler(e) {
@@ -55,27 +60,6 @@ function keyupHandler(e) {
     if (key === "KeyD" || key === "ArrowRight") dPressed = false;
 }
 
-
-// Functions //
-function swapGravity() {
-    // Determines the falling direciton and changes the values of gravity and dGravity acoordingly
-    if (!isMidAir) {
-        fallingDirection = fallingDirection === "down" ? "up" : "down";
-        gravity = fallingDirection === "down" ? 1 : -1;
-        dGravity = fallingDirection === "down" ? 0.25 : -0.25;
-    }
-}
-
-function drawCircle(x, y, r, fill = true) {
-    // takes in the 'x' and 'y' parameters for location and the 'r' and 'fill' parameters for design
-
-    ctx.beginPath();
-    ctx.arc(x, y, r, Math.PI*2, 0);
-    if (fill) ctx.fill();
-    else ctx.stroke();
-}
-
-
 // Draw Function //
 function draw() {
     ctx.clearRect(0, 0, cnv.width, cnv.height);
@@ -90,26 +74,9 @@ function draw() {
     ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
     ctx.fillRect(0, 0, cnv.width, borderHeight);
 
-
-    // player & rotation
-    ctx.save();
-    ctx.translate(player.x, player.y);
-    ctx.rotate(player.rotation);
-
-    ctx.fillStyle = "black";
-    drawCircle(0, 0, player.r, true);
-    ctx.drawImage(document.getElementById("grey-ball"), -25, -28, player.r * 3, player.r * 3);
-
-    // ctx.fillStyle = "white";
-    // drawCircle(0, -player.r+7, 5, true);
-    // drawCircle(0, player.r-7, 5, true);
-    // drawCircle(-player.r+7, 0, 5, true);
-    // drawCircle(player.r-7, 0, 5, true);
-    
-    ctx.restore();
-
-
     // player movement
+    let previousX = player.x;
+    let previousY = player.y;
     if (aPressed) {
         player.x -= player.speed;
         player.rotation -= player.spinSpeed;
@@ -120,29 +87,43 @@ function draw() {
     }
 
     // gravity
-    const midAirDown = player.y + player.r + gravity < cnv.height-borderHeight;
-    const midAirUp = player.y - player.r + gravity > borderHeight;
-    
-    isMidAir = fallingDirection === "down" ? midAirDown : midAirUp;
-    if (isMidAir) {
-        if (fallingDirection === "down") gravity = Math.min(gravity + dGravity, 7.5);
-        else gravity = Math.max(gravity + dGravity, -7.5);
-        player.y += gravity;
-    }
+    imposeGravity(borderHeight);
 
-    if (fallingDirection === "down" && !isMidAir) player.y = cnv.height-borderHeight - player.r;
-    if (fallingDirection === "up" && !isMidAir) player.y = borderHeight + player.r;
+    player.facingAngle = Math.atan2(-(player.y - previousY), player.x - previousX);
 
-    
     // map restrictions
     if (player.x - player.r < -80) player.x = cnv.width + 80 - player.r;
     if (player.x + player.r > cnv.width + 80) player.x = -80 + player.r;
 
-    
     // portal
-    ctx.fillStyle = "black";
-    drawCircle()
+    ctx.save();
+    ctx.translate(portal.x, portal.y)
+    ctx.rotate(portal.rotation);
+    ctx.drawImage(document.getElementById("portal-img"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
+    ctx.restore();
 
+    portal.rotation += portal.spinSpeed;
+
+    // get the distance of the player from the portal
+    const portalDx = portal.x - player.x;
+    const portalDy = portal.y - player.y;
+    const distFromPortal = Math.hypot(portalDx, portalDy);
+    const angleToPortal = Math.atan2(portalDy, portalDx);
+    
+    ctx.fillStyle = "black";
+    drawCircle(portal.x, portal.y, portal.r + 50, 2);
+    if (distFromPortal < portal.r + 50) {
+        // slowy add the dAngle to the players angle to get the 'spin' affect as the player enters the portal
+        const dAngle = (angleToPortal - player.facingAngle) / 100;
+        player.facingAngle += dAngle
+
+        player.x += portalDx/distFromPortal * 5;
+        player.y += portalDy/distFromPortal * 5;
+    }
+
+    // player
+    drawPlayer();
+    
     requestAnimationFrame(draw);
 }
 
