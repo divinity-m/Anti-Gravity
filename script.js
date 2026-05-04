@@ -1,27 +1,30 @@
 /// SCRIPT.JS ANTI GRAVITY ///
 
-// Canvas
+// Canvas Setup //
 const cnv = document.getElementById("game-canvas");
 const ctx = cnv.getContext("2d");
 
 
 // Global Variables //
+let now = Date.now();
 let wPressed, aPressed, sPressed, dPressed;
-let gravity = 0;
-let dGravity = 0.75;
-let fallingDirection = "down";
-let isMidAir = false;
+
+let [gravity, dGravity] = [0, 0.75];
+let [fallingDirection, isMidAir] = ["down", false];
+
+let [levels, currentLvlNum] = [[], 0];
 
 // objects
 const player = {
     x: cnv.width/5, y: cnv.height - cnv.height/3,
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
     speed: 5,
-    facingAngle: 0, enteringPortal: true,
+    facingAngle: 0, enteringPortal: false,
 }
 const portal = {
     x: cnv.width - cnv.width/5, y: cnv.height/2,
     r: 40, rotation: 0, spinSpeed: Math.PI/128,
+    timeSinceEntered: Date.now(),
 }
 
 // classes
@@ -32,18 +35,42 @@ class Obstacle {
         this.w = w;
         this.h = h;
     }
+}
 
-    collisions() {
-        if (player.x + player.r > this.x) {
-            
-        }
+/*
+data for @param
+{string} - Text like "Hello World".
+{number} - Integers or floats (e.g., 10, 3.14)
+{boolean}  - true or false.
+{null}
+{undefined}
+{symbol}
+{Object} - A generic object.
+{Array} - A generic array.
+*/
+
+class Level {
+    /**
+    * @param {number} number - The levels id
+    * @param {Array} spawnPoint - The players spawnpoint
+    * @param {Array} portalCoord - The portals spawnpoint
+    * @param {Array} obstacles - An array of all of the obstacles in the level
+    */
+    constructor(number, spawnPoint, portalCoord, obstacles) {
+        this.number = number;
+        this.spawnPoint = spawnPoint;
+        this.portalCoord = portalCoord;
+        this.obstacles = obstacles;
     }
 }
+
+let level1 = new Level(1, [cnv.width/5, cnv.height - cnv.height/3], [cnv.width - cnv.width/5, cnv.height/2], []);
 
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
 document.addEventListener("keyup", keyupHandler);
+
 
 // Handlers //
 function keydownHandler(e) {
@@ -73,6 +100,7 @@ function keyupHandler(e) {
 
 // Draw Function //
 function draw() {
+    now = Date.now();
     ctx.clearRect(0, 0, cnv.width, cnv.height);
     
     // background
@@ -88,53 +116,26 @@ function draw() {
     // player movement
     let previousX = player.x;
     let previousY = player.y;
-    if (aPressed) {
-        player.x -= player.speed;
-        player.rotation -= player.spinSpeed;
-    }
-    if (dPressed) {
-        player.x += player.speed;
-        player.rotation += player.spinSpeed;
-    }
+    playerMovement();
 
     // gravity
-    imposeGravity(borderHeight);
+    ImposeNaturalGravity(borderHeight);
 
-    player.facingAngle = Math.atan2(-(player.y - previousY), player.x - previousX);
+    // update the player's angle when the player is moving
+    if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteringPortal) {
+        player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
+    }
 
     // map restrictions
     if (player.x - player.r < -80) player.x = cnv.width + 80 - player.r;
     if (player.x + player.r > cnv.width + 80) player.x = -80 + player.r;
 
-    // portal
-    ctx.save();
-    ctx.translate(portal.x, portal.y)
-    ctx.rotate(portal.rotation);
-    ctx.drawImage(document.getElementById("portal-img"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
-    ctx.restore();
+    // portal mechanics
+    drawPortal();
+    ImposePortalGravity();
+    proceedToNextLevel();
 
-    portal.rotation += portal.spinSpeed;
-
-    // get the distance of the player from the portal
-    const portalDx = portal.x - player.x;
-    const portalDy = portal.y - player.y;
-    const distFromPortal = Math.hypot(portalDx, portalDy);
-    const angleToPortal = Math.atan2(portalDy, portalDx);
-    
-    ctx.fillStyle = "black";
-    drawCircle(portal.x, portal.y, portal.r + 50, 2);
-    if (distFromPortal < portal.r + 50) {
-        player.enteringPortal = true;
-        
-        // slowy add the dAngle to the players angle to get the 'spin' affect as the player enters the portal
-        const dAngle = (angleToPortal - player.facingAngle) / 100;
-        player.facingAngle += dAngle
-
-        player.x += portalDx/distFromPortal * 5;
-        player.y += portalDy/distFromPortal * 5;
-    } else player.enteringPortal = false;
-
-    // player
+    // draw the player as the final layer
     drawPlayer();
     
     requestAnimationFrame(draw);
