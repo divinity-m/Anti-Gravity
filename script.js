@@ -3,6 +3,7 @@
 // Canvas Setup //
 const cnv = document.getElementById("game-canvas");
 const ctx = cnv.getContext("2d");
+let gameState = "startScreen";
 
 
 // Global Variables //
@@ -12,30 +13,37 @@ let wPressed, aPressed, sPressed, dPressed;
 let [gravity, dGravity] = [0, 0.75];
 let [fallingDirection, isMidAir] = ["down", false];
 
-let [levels, currentLvlNum] = [[], 0];
+let [allLevels, currentLvlNum] = [[], 0];
 
 // objects
 const player = {
     x: cnv.width/5, y: cnv.height - cnv.height/3,
+
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
+    
     speed: 5,
+
     facingAngle: 0, enteringPortal: false,
 }
 const portal = {
     x: cnv.width - cnv.width/5, y: cnv.height/2,
+
     r: 40, rotation: 0, spinSpeed: Math.PI/128,
+
     timeSinceEntered: Date.now(),
 }
 
-// classes
-class Obstacle {
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+const playBtn = {
+    x: 1, y: 1,
+
+    w: 1, h: 1,
+
+    effect() {
+        gameState = "levels";
     }
 }
+
+// classes
 
 /*
 data for @param
@@ -49,7 +57,26 @@ data for @param
 {Array} - A generic array.
 */
 
+class Obstacle {
+    // Obstacle: An object that has its own collision properties
+
+    /**
+    * @param {number} x - The obstacle's x coordinate
+    * @param {number} y - The obstacle's y coordinate
+    * @param {number} w - The obstacle's width
+    * @param {number} h - The obstacle's x height
+    */
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+}
+
 class Level {
+    // Level: A singular stage with its own unique obstacles
+
     /**
     * @param {number} number - The levels id
     * @param {Array} spawnPoint - The players spawnpoint
@@ -64,39 +91,18 @@ class Level {
     }
 }
 
-let level1 = new Level(1, [cnv.width/5, cnv.height - cnv.height/3], [cnv.width - cnv.width/5, cnv.height/2], []);
+const levelOnePlayerSpawn = [cnv.width/5, cnv.height - cnv.height/3];
+const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height/2];
 
+const levelOne = new Level(1, levelOnePlayerSpawn, levelOnePortalCoord, []);
+allLevels.push(levelOne);
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
 document.addEventListener("keyup", keyupHandler);
 
-
-// Handlers //
-function keydownHandler(e) {
-    // handles the logic for the "keydown" event listener
-
-    const key = e.code;
-
-    if (key === "KeyW" || key === "ArrowUp") {
-        wPressed = true;
-        swapGravity();
-    }
-    if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
-    if (key === "KeyS" || key === "ArrowDown") sPressed = true;
-    if (key === "KeyD" || key === "ArrowRight") dPressed = true;
-}
-
-function keyupHandler(e) {
-    // handles the logic for the "keyup" event listener
-    
-    const key = e.code;
-    
-    if (key === "KeyW" || key === "ArrowUp") wPressed = false;
-    if (key === "KeyA" || key === "ArrowLeft") aPressed = false;
-    if (key === "KeyS" || key === "ArrowDown") sPressed = false;
-    if (key === "KeyD" || key === "ArrowRight") dPressed = false;
-}
+document.addEventListener("mousemove", mouseMoveHandler);
+document.addEventListener("click", clickHandler);
 
 // Draw Function //
 function draw() {
@@ -112,6 +118,8 @@ function draw() {
     ctx.fillStyle = "rgb(150, 150, 150)";
     ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
     ctx.fillRect(0, 0, cnv.width, borderHeight);
+
+    // ctx.drawImage(document.getElementById("gavin"), 0, cnv.height-borderHeight, 600, 50);
 
     // player movement
     let previousX = player.x;
@@ -130,14 +138,22 @@ function draw() {
     if (player.x - player.r < -80) player.x = cnv.width + 80 - player.r;
     if (player.x + player.r > cnv.width + 80) player.x = -80 + player.r;
 
-    // portal mechanics
-    drawPortal();
+    // portal mechanics, levels, and obstacles
+    currentLvlNum = 1;
     ImposePortalGravity();
     proceedToNextLevel();
 
-    // draw the player as the final layer
-    drawPlayer();
+    // visuals
+    if (gameState === "startScreen") {
+        drawStartScreen();
+    }
+    else if (gameState === "levels") {
+        drawObstacles();
+        drawPortal();
+        drawPlayer();
+    }
     
+    // repeat the animation
     requestAnimationFrame(draw);
 }
 
