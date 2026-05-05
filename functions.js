@@ -1,4 +1,62 @@
 /// FUNCTIONS.JS ANTI GRAVITY ///
+// Handlers //
+function keydownHandler(e) {
+    // handles the keyboard inputs for the "keydown" event listener
+
+    const key = e.code;
+
+    if (key === "KeyW" || key === "ArrowUp") {
+        wPressed = true;
+        swapGravity();
+    }
+    if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
+    if (key === "KeyS" || key === "ArrowDown") sPressed = true;
+    if (key === "KeyD" || key === "ArrowRight") dPressed = true;
+}
+
+function keyupHandler(e) {
+    // handles the keyboard inputs for the "keyup" event listener
+    
+    const key = e.code;
+    
+    if (key === "KeyW" || key === "ArrowUp") wPressed = false;
+    if (key === "KeyA" || key === "ArrowLeft") aPressed = false;
+    if (key === "KeyS" || key === "ArrowDown") sPressed = false;
+    if (key === "KeyD" || key === "ArrowRight") dPressed = false;
+}
+
+function mouseMoveHandler(e) {
+    // checks where the cursor is hovering over
+
+    const rect = cnv.getBoundingClientRect();
+
+    // rect.left and rect.top are both 0, so this is kinda redundant, but there may be edge cases that I might miss if I remove them from this equation
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    if (gameState === "startScreen") {
+        const mouseInPlayBtn = (
+            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
+            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
+        )
+        if (mouseInPlayBtn) {
+            playBtn.bgColor = "rgb(175, 175, 175)"
+        }
+        else {
+            playBtn.bgColor = "rgb(150, 150, 150)"
+        }
+    }
+}
+
+function clickHandler(e) {
+    // checks if the user clicks any buttons
+
+    const rect = cnv.getBoundingClientRect();
+
+    if (gameState === "startScreen") {
+        
+    }
+}
 
 // Process Functions //
 function playerMovement() {
@@ -51,10 +109,6 @@ function ImposePortalGravity() {
     
     const portalRange = portal.r + 50;
 
-    // depiction of the portal's range
-    ctx.strokeStyle = "blue";
-    drawCircle(portal.x, portal.y, portalRange, 2);
-
     if (portalDist < portalRange) {
         player.enteringPortal = true;
         player.spinSpeed =  Math.PI/32;
@@ -81,11 +135,20 @@ function ImposePortalGravity() {
     else {
         player.enteringPortal = false;
         player.spinSpeed =  Math.PI/16;
+        portal.timeSinceEntered = now;
     }
 }
 
 function proceedToNextLevel() {
+    if (player.enteringPortal && now - portal.timeSinceEntered > 2500) {
+        currentLvlNum++;
+        const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
 
+        player.x = currentLevel.spawnPoint[0];
+        player.y = currentLevel.spawnPoint[1];
+        portal.x = currentLevel.portalCoord[0];
+        portal.y = currentLevel.portalCoord[1];
+    }
 }
 
 // Draw Functions //
@@ -121,4 +184,29 @@ function drawPortal() {
     ctx.restore();
 
     portal.rotation += portal.spinSpeed;
+}
+
+function drawObstacles() {
+    // drawObstacles(): loops through the current levels obstacles and draws all them
+
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    for (let i in currentLevel.obstacles) {
+        const obstacle = currentLevel.obstacles[i];
+    
+        ctx.fillStyle = "gray"
+        fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+    }
+}
+
+function drawStartScreen() {
+    // drawStartScreen(): draws the games start screen, including the play button, which starts the game
+    ctx.drawImage(document.getElementById("grey-ball"), cnv.width/2 - player.r * 10, cnv.height/2 - player.r * 10, player.r * 20, player.r * 20);
+    
+    w = 150;
+    h = 75;
+
+    ctx.fillStyle = playBtn.bgColor;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(cnv.width/2 - w/2, cnv.height/2 - h/2, w, h);
+    ctx.fillRect(cnv.width/2 - w/2, cnv.height/2 - h/2, w, h);
 }
