@@ -26,8 +26,24 @@ Things Added:
 
 
 
-# Day 3 - Thursday | In class work #
+# Day 4 - Friday | In class work #
 I started working on the mechanics for the portal, which marks the checkpoint for the end of a level and warps the player into a new level. Gavin created a design for it. The portals functionality is still very incomplete, right now I'm just working on a 'gravitational pull' effect to suck the player into the portal when they get close enough.
 
 Things Added:
  - Portal Design
+
+
+
+# Day 7 - Monday | In class work #
+Continued working on the gravity for the portal, it was initially very rigid and jarring, so I smoothened it out by gradually incrementing the players angle, then modifying the players coordinates based off that angle like so:
+``` javascript
+player.x += Math.cos(player.facingAngle);
+player.y += Math.sin(player.facingAngle);
+```
+
+Things Added:
+ - Portal Gravity
+
+
+
+#
