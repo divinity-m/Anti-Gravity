@@ -1,7 +1,7 @@
 /// FUNCTIONS.JS ANTI GRAVITY ///
 // Handlers //
 function keydownHandler(e) {
-    // handles the keyboard inputs for the "keydown" event listener
+    // keydownHandler(): handles the keyboard inputs for the "keydown" event listener
 
     const key = e.code;
 
@@ -15,7 +15,7 @@ function keydownHandler(e) {
 }
 
 function keyupHandler(e) {
-    // handles the keyboard inputs for the "keyup" event listener
+    // keyupHandler(): handles the keyboard inputs for the "keyup" event listener
     
     const key = e.code;
     
@@ -26,13 +26,17 @@ function keyupHandler(e) {
 }
 
 function mouseMoveHandler(e) {
-    // checks where the cursor is hovering over
+    // mouseMoveHandler(): checks where the cursor is hovering over and updates mouseX & mouseY
 
     const rect = cnv.getBoundingClientRect();
 
-    // rect.left and rect.top are both 0, so this is kinda redundant, but there may be edge cases that I might miss if I remove them from this equation
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    // scales the cursor coordinates to the canvas dimensions
+    const scaleX = cnv.width / rect.width;
+    const scaleY = cnv.height / rect.height;
+
+    // rect.left and rect.top are both 0, so subtracting them is kinda redundant, but there may be edge cases that I might miss if I remove them from this equation
+    mouseX = (e.clientX - rect.left) * scaleX;
+    mouseY = (e.clientY - rect.top) * scaleX * 1.05;
     
     if (gameState === "startScreen") {
         const mouseInPlayBtn = (
@@ -40,10 +44,10 @@ function mouseMoveHandler(e) {
             mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
         )
         if (mouseInPlayBtn) {
-            playBtn.bgColor = "rgb(175, 175, 175)"
+            playBtn.bgColor = "rgb(175, 175, 175)";
         }
         else {
-            playBtn.bgColor = "rgb(150, 150, 150)"
+            playBtn.bgColor = "rgb(150, 150, 150)";
         }
     }
 }
@@ -52,9 +56,12 @@ function clickHandler(e) {
     // checks if the user clicks any buttons
 
     const rect = cnv.getBoundingClientRect();
-
     if (gameState === "startScreen") {
-        
+        const mouseInPlayBtn = (
+            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
+            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
+        )
+        if (mouseInPlayBtn) gameState = "levels"
     }
 }
 
@@ -63,11 +70,15 @@ function playerMovement() {
     if (aPressed) {
         if (!player.enteringPortal) player.x -= player.speed;
 
+        player.spinSpeed = gameState !== "startScreen" ? Math.PI/16 : Math.PI/128;
+
         player.rotation -= player.spinSpeed;
     }
     if (dPressed) {
         if (!player.enteringPortal) player.x += player.speed;
     
+        player.spinSpeed = gameState !== "startScreen" ? Math.PI/16 : Math.PI/128;
+
         player.rotation += player.spinSpeed;
     }
 }
@@ -200,13 +211,27 @@ function drawObstacles() {
 
 function drawStartScreen() {
     // drawStartScreen(): draws the games start screen, including the play button, which starts the game
-    ctx.drawImage(document.getElementById("grey-ball"), cnv.width/2 - player.r * 10, cnv.height/2 - player.r * 10, player.r * 20, player.r * 20);
     
-    w = 150;
-    h = 75;
+    ctx.save();
+    ctx.translate(cnv.width/2, cnv.height/2);
+    ctx.rotate(player.rotation);
+    ctx.drawImage(document.getElementById("grey-ball"), -player.r * 10, -player.r * 10, player.r * 20, player.r * 20);
+    ctx.restore();
 
-    ctx.fillStyle = playBtn.bgColor;
+
+    ctx.fillStyle = playBtn.bgdColor;
     ctx.lineWidth = 4;
-    ctx.strokeRect(cnv.width/2 - w/2, cnv.height/2 - h/2, w, h);
-    ctx.fillRect(cnv.width/2 - w/2, cnv.height/2 - h/2, w, h);
+    ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
+    ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
+
+    
+    if (mouseX && mouseY) {
+        const mouseInPlayBtn = (
+            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
+            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
+        )
+
+        ctx.fillStyle = mouseInPlayBtn ? "blue" : "red";
+        drawCircle(mouseX, mouseY, 5);
+    }
 }
