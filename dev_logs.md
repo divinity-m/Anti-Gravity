@@ -68,7 +68,28 @@ Things Added:
 # Day 8 - Tuesday | In class work #
 Began shifting my focus away from player/portal design & funcitionality, and towards the games core concepts, which included the use of classes. I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen. The play button on the title screen required me to add a `mousemove` and `click` event listener to the document to check for hover and click inputs. Because of all of these new goals, I wasn't able to complete anything specific this class.
 
-
 Things Worked On:
  - Levels & Obstacles
- - Start Screen
+ - Title Screen
+
+
+
+# Day 9 - Wednesday | In class work #
+Gavin created a lot of new designs for the game, such as a background, a grassy floor, and a cloudy roof. I finalized the title screen and got the play button working. I had issues detecting the cursors coordinates accurately for a while, I eventually found out that the problems stems from how the coordinates on the canvas differ from that of the clients screen, so to make them accurate, I needed to scale the cursors coordinates to match the canvas:
+```javascript
+function mouseMoveHandler(e) {
+    const rect = cnv.getBoundingClientRect();
+    
+    // scale
+    const scaleX = cnv.width / rect.width;
+    const scaleY = cnv.height / rect.height;
+    
+    // save the coordinates in global variables
+    mouseX = (e.clientX - rect.left) * scaleX;
+    mouseY = (e.clientY - rect.top) * scaleX * 1.05; // slightly increase mouseY due to slight differences which the scale fails to account for
+}
+```
+
+Things Added:
+ - Custom Background & Floor/Roof Design
+ - Title Screen
