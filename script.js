@@ -15,6 +15,8 @@ let [fallingDirection, isMidAir] = ["down", false];
 
 let [allLevels, currentLvlNum] = [[], 0];
 
+let mouseX, mouseY;
+
 // objects
 const player = {
     x: cnv.width/5, y: cnv.height - cnv.height/3,
@@ -34,9 +36,9 @@ const portal = {
 }
 
 const playBtn = {
-    x: 1, y: 1,
+    x: cnv.width/2 - 150/2, y: cnv.height/2 - 75/2,
 
-    w: 1, h: 1,
+    w: 150, h: 75,
 
     effect() {
         gameState = "levels";
@@ -113,13 +115,14 @@ function draw() {
     ctx.fillStyle = "rgb(200, 200, 200)";
     ctx.fillRect(0, 0, cnv.width, cnv.height);
 
-    // floor & roof
-    const borderHeight = cnv.height/5;
-    ctx.fillStyle = "rgb(150, 150, 150)";
-    ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
-    ctx.fillRect(0, 0, cnv.width, borderHeight);
+    // backdrop
+    ctx.drawImage(document.getElementById("backdrop"), 0, 0, cnv.width, cnv.height);
 
-    // ctx.drawImage(document.getElementById("gavin"), 0, cnv.height-borderHeight, 600, 50);
+    // floor & roof baseplate
+    const borderHeight = cnv.height/5;
+    // ctx.fillStyle = "rgb(150, 150, 150)";
+    // ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
+    // ctx.fillRect(0, 0, cnv.width, borderHeight);
 
     // player movement
     let previousX = player.x;
@@ -152,6 +155,14 @@ function draw() {
         drawPortal();
         drawPlayer();
     }
+    
+    // grass floor
+    ctx.drawImage(document.getElementById("plane"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
+    ctx.drawImage(document.getElementById("grass"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
+
+    // top bar
+    ctx.drawImage(document.getElementById("cloud-bar"), 0, borderHeight-0.5, cnv.width, 10);
+    ctx.drawImage(document.getElementById("top-bar"), 0, 0, cnv.width, borderHeight);
     
     // repeat the animation
     requestAnimationFrame(draw);
