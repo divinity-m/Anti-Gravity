@@ -50,8 +50,10 @@ dAngle = Math.atan2(Math.sin(dAngle), Math.cos(dAngle));
 // get a turn speed proportional to the distance from the player to the portal
 const turnSpeed = 0.1;
 
-// add either the dAngle or the turnSpeed to the players angle (the players angle is recalculated whenever the user moves it)
+// add either the dAngle or the turnSpeed to the players angle
 player.facingAngle += Math.sign(dAngle) * Math.min(Math.abs(dAngle), turnSpeed);
+
+// player.facingAngle is recalculated outside of this section of the script
 
 // increment the coordinates
 player.x += Math.cos(player.facingAngle);
