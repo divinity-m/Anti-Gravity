@@ -35,8 +35,25 @@ Things Added:
 
 
 # Day 7 - Monday | In class work #
-Continued working on the gravity for the portal, it was initially very rigid and jarring, so I smoothened it out by gradually incrementing the players angle, then modifying the players coordinates based off that angle like so:
+Continued working on the gravity for the portal, it was initially very rigid and jarring, so I smoothened it out. This was done by finding the angle from the player to the portal, getting the difference in that angle and the angle the player is facing, gradually incrementing the players angle by portions of that difference, then incrementing the players coordinates based off that angle. The following code is a summarized rundown of my solution:
 ``` javascript
+const portalDx = portal.x - player.x;
+const portalDy = portal.y - player.y;
+
+// the angle from the player to the portal
+const angleToPortal = Math.atan2(portalDy, portalDx);
+
+// gets the angular difference then normalizes it
+let dAngle = angleToPortal - player.facingAngle;
+dAngle = Math.atan2(Math.sin(dAngle), Math.cos(dAngle));
+
+// get a turn speed proportional to the distance from the player to the portal
+const turnSpeed = 0.1;
+
+// add either the dAngle or the turnSpeed to the players angle (the players angle is recalculated whenever the user moves it)
+player.facingAngle += Math.sign(dAngle) * Math.min(Math.abs(dAngle), turnSpeed);
+
+// increment the coordinates
 player.x += Math.cos(player.facingAngle);
 player.y += Math.sin(player.facingAngle);
 ```
