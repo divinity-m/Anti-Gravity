@@ -46,4 +46,8 @@ Things Added:
 
 
 
-#
+# Day 8 - Tuesday | In class work #
+Began shifting my focus away from player/portal design & funcitionality, and towards the games core concepts, which included the use of classes. I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen.
+
+Things Added:
+ - 
