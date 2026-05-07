@@ -13,7 +13,7 @@ let wPressed, aPressed, sPressed, dPressed;
 let [gravity, dGravity] = [0, 0.75];
 let [fallingDirection, isMidAir] = ["down", false];
 
-let [allLevels, currentLvlNum] = [[], 1];
+let [allLevels, currentLvlNum] = [[], 0];
 
 let mouseX, mouseY;
 
@@ -83,15 +83,15 @@ class Level {
 
     /**
     * @param {number} number - The levels id
-    * @param {Array} playerSpawn - The players playerSpawn
-    * @param {Array} portalCoord - The portals playerSpawn
     * @param {Array} obstacles - An array of all of the obstacles in the level
+    * @param {Array} portalCoord - The portals coordinates
+    * @param {Array} playerSpawn - The players spawnpoint
     */
-    constructor(number, playerSpawn, portalCoord, obstacles) {
+    constructor(number, obstacles, portalCoord, playerSpawn = []) {
         this.number = number;
-        this.playerSpawn = playerSpawn;
-        this.portalCoord = portalCoord;
         this.obstacles = obstacles;
+        this.portalCoord = portalCoord;
+        this.playerSpawn = playerSpawn;
     }
 
     addBlock(x, y, w, h) {
@@ -99,11 +99,7 @@ class Level {
     }
 }
 
-const levelOnePlayerSpawn = [cnv.width/5, cnv.height - cnv.height/3];
-const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height/2];
-
-const levelOne = new Level(1, levelOnePlayerSpawn, levelOnePortalCoord, []);
-allLevels.push(levelOne);
+setUpLevels();
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
@@ -117,6 +113,8 @@ function draw() {
     now = Date.now();
     ctx.clearRect(0, 0, cnv.width, cnv.height);
     
+    const borderHeight = cnv.height/5;
+    
     // background
     ctx.fillStyle = "rgb(200, 200, 200)";
     ctx.fillRect(0, 0, cnv.width, cnv.height);
@@ -124,35 +122,32 @@ function draw() {
     // backdrop
     ctx.drawImage(document.getElementById("sky-backdrop"), 0, 0, cnv.width, cnv.height);
 
-    // floor & roof baseplate
-    const borderHeight = cnv.height/5;
-
-    // player movement
-    let previousX = player.x;
-    let previousY = player.y;
-    playerMovement();
-
-    // gravity
-    ImposeNaturalGravity(borderHeight);
-
-    // update the player's angle when the player is moving
-    if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteringPortal) {
-        player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
-    }
-
-    // map restrictions
-    if (player.x - player.r < -70) player.x = cnv.width + 70 - player.r;
-    if (player.x + player.r > cnv.width + 70) player.x = -70 + player.r;
-
-    // portal mechanics, levels, and obstacles
-    ImposePortalGravity();
-    proceedToNextLevel();
-
-    // visuals
     if (gameState === "titleScreen") {
         drawTitleScreen();
     }
     else if (gameState === "levels") {
+        // player movement
+        let previousX = player.x;
+        let previousY = player.y;
+        playerMovement();
+
+        // gravity
+        ImposeNaturalGravity(borderHeight);
+
+        // update the player's angle when the player is moving
+        if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteringPortal) {
+            player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
+        }
+
+        // map restrictions
+        if (player.x - player.r < -70) player.x = cnv.width + 70 - player.r;
+        if (player.x + player.r > cnv.width + 70) player.x = -70 + player.r;
+
+        // portal mechanics, levels, and obstacles
+        ImposePortalGravity();
+        proceedToNextLevel();
+
+        // collision visuals
         drawObstacles();
         drawPortal();
         drawPlayer();
