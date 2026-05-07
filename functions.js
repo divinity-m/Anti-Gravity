@@ -234,13 +234,7 @@ function drawObstacles() {
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     for (let i in currentLevel.obstacles) {
         const obstacle = currentLevel.obstacles[i];
-    
-        ctx.fillStyle = "gray";
-
-        if (obstacle.type = "block") {
-            if (currentLevel.number <= 5) ctx.drawImage(document.getElementById("grass-platform"), obstacle.x, obstacle.y, obstacle.w, obstacle.h);
-            else ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
-        }
+        obstacle.draw();
     }
 }
 
