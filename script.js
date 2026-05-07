@@ -3,7 +3,7 @@
 // Canvas Setup //
 const cnv = document.getElementById("game-canvas");
 const ctx = cnv.getContext("2d");
-let gameState = "startScreen";
+let gameState = "titleScreen";
 
 
 // Global Variables //
@@ -13,7 +13,7 @@ let wPressed, aPressed, sPressed, dPressed;
 let [gravity, dGravity] = [0, 0.75];
 let [fallingDirection, isMidAir] = ["down", false];
 
-let [allLevels, currentLvlNum] = [[], 0];
+let [allLevels, currentLvlNum] = [[], 1];
 
 let mouseX, mouseY;
 
@@ -40,15 +40,16 @@ const playBtn = {
 
     w: 150, h: 75,
 
+    bgColor: "rgb(170, 170, 170)",
+
     effect() {
         gameState = "levels";
     }
 }
 
 // classes
-
 /*
-data for @param
+data types for @param
 {string} - Text like "Hello World".
 {number} - Integers or floats (e.g., 10, 3.14)
 {boolean}  - true or false.
@@ -59,20 +60,21 @@ data for @param
 {Array} - A generic array.
 */
 
-class Obstacle {
-    // Obstacle: An object that has its own collision properties
+class Block {
+    // Block: A harmless rectangle that has its own collision properties
 
     /**
-    * @param {number} x - The obstacle's x coordinate
-    * @param {number} y - The obstacle's y coordinate
-    * @param {number} w - The obstacle's width
-    * @param {number} h - The obstacle's x height
+    * @param {number} x - The block's x coordinate
+    * @param {number} y - The block's y coordinate
+    * @param {number} w - The block's width
+    * @param {number} h - The block's x height
     */
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.type = "block";
     }
 }
 
@@ -81,15 +83,19 @@ class Level {
 
     /**
     * @param {number} number - The levels id
-    * @param {Array} spawnPoint - The players spawnpoint
-    * @param {Array} portalCoord - The portals spawnpoint
+    * @param {Array} playerSpawn - The players playerSpawn
+    * @param {Array} portalCoord - The portals playerSpawn
     * @param {Array} obstacles - An array of all of the obstacles in the level
     */
-    constructor(number, spawnPoint, portalCoord, obstacles) {
+    constructor(number, playerSpawn, portalCoord, obstacles) {
         this.number = number;
-        this.spawnPoint = spawnPoint;
+        this.playerSpawn = playerSpawn;
         this.portalCoord = portalCoord;
         this.obstacles = obstacles;
+    }
+
+    addBlock(x, y, w, h) {
+        this.obstacles.push(new Block(x, y, w, h));
     }
 }
 
@@ -116,13 +122,10 @@ function draw() {
     ctx.fillRect(0, 0, cnv.width, cnv.height);
 
     // backdrop
-    ctx.drawImage(document.getElementById("backdrop"), 0, 0, cnv.width, cnv.height);
+    ctx.drawImage(document.getElementById("sky-backdrop"), 0, 0, cnv.width, cnv.height);
 
     // floor & roof baseplate
     const borderHeight = cnv.height/5;
-    // ctx.fillStyle = "rgb(150, 150, 150)";
-    // ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
-    // ctx.fillRect(0, 0, cnv.width, borderHeight);
 
     // player movement
     let previousX = player.x;
@@ -138,17 +141,16 @@ function draw() {
     }
 
     // map restrictions
-    if (player.x - player.r < -80) player.x = cnv.width + 80 - player.r;
-    if (player.x + player.r > cnv.width + 80) player.x = -80 + player.r;
+    if (player.x - player.r < -70) player.x = cnv.width + 70 - player.r;
+    if (player.x + player.r > cnv.width + 70) player.x = -70 + player.r;
 
     // portal mechanics, levels, and obstacles
-    currentLvlNum = 1;
     ImposePortalGravity();
     proceedToNextLevel();
 
     // visuals
-    if (gameState === "startScreen") {
-        drawStartScreen();
+    if (gameState === "titleScreen") {
+        drawTitleScreen();
     }
     else if (gameState === "levels") {
         drawObstacles();
@@ -157,8 +159,8 @@ function draw() {
     }
     
     // grass floor
-    ctx.drawImage(document.getElementById("plane"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
-    ctx.drawImage(document.getElementById("grass"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
+    ctx.drawImage(document.getElementById("grass-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
+    ctx.drawImage(document.getElementById("grass-detail"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
 
     // top bar
     ctx.drawImage(document.getElementById("cloud-bar"), 0, borderHeight-0.5, cnv.width, 10);
