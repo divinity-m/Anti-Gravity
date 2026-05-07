@@ -67,7 +67,7 @@ class Block {
     * @param {number} x - The block's x coordinate
     * @param {number} y - The block's y coordinate
     * @param {number} w - The block's width
-    * @param {number} h - The block's x height
+    * @param {number} h - The block's height
     */
     constructor(x, y, w, h) {
         this.x = x;
@@ -75,6 +75,12 @@ class Block {
         this.w = w;
         this.h = h;
         this.type = "block";
+    }
+
+    draw() {
+        ctx.fillStyle = "gray"
+        if (currentLvlNum <= 5) ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
+        else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
 }
 
@@ -84,8 +90,8 @@ class Level {
     /**
     * @param {number} number - The levels id
     * @param {Array} obstacles - An array of all of the obstacles in the level
-    * @param {Array} portalCoord - The portals coordinates
-    * @param {Array} playerSpawn - The players spawnpoint
+    * @param {Array} portalCoord - The portal's coordinates
+    * @param {Array} playerSpawn - The player's spawnpoint
     */
     constructor(number, obstacles, portalCoord, playerSpawn = []) {
         this.number = number;
