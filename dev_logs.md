@@ -93,3 +93,11 @@ function mouseMoveHandler(e) {
 Things Added:
  - Custom Background & Floor/Roof Design
  - Title Screen
+
+
+
+# Day 10 - Thursday | In class work #
+
+Things Added:
+ - Levels Templates
+ - Some progress on the obstacles class
