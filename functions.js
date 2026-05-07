@@ -7,7 +7,8 @@ function keydownHandler(e) {
 
     if (key === "KeyW" || key === "ArrowUp") {
         wPressed = true;
-        swapGravity();
+
+        if (gameState !== "titleScreen") swapGravity();
     }
     if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
     if (key === "KeyS" || key === "ArrowDown") sPressed = true;
@@ -37,31 +38,18 @@ function mouseMoveHandler(e) {
     // rect.left and rect.top are both 0, so subtracting them is kinda redundant, but there may be edge cases that I might miss if I remove them from this equation
     mouseX = (e.clientX - rect.left) * scaleX;
     mouseY = (e.clientY - rect.top) * scaleX * 1.05;
-    
-    if (gameState === "startScreen") {
-        const mouseInPlayBtn = (
-            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
-            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
-        )
-        if (mouseInPlayBtn) {
-            playBtn.bgColor = "rgb(175, 175, 175)";
-        }
-        else {
-            playBtn.bgColor = "rgb(150, 150, 150)";
-        }
-    }
 }
 
 function clickHandler(e) {
     // checks if the user clicks any buttons
 
     const rect = cnv.getBoundingClientRect();
-    if (gameState === "startScreen") {
+    if (gameState === "titleScreen") {
         const mouseInPlayBtn = (
             mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
             mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
         )
-        if (mouseInPlayBtn) gameState = "levels"
+        if (mouseInPlayBtn) gameState = "levels";
     }
 }
 
@@ -70,14 +58,14 @@ function playerMovement() {
     if (aPressed) {
         if (!player.enteringPortal) player.x -= player.speed;
 
-        player.spinSpeed = gameState !== "startScreen" ? Math.PI/16 : Math.PI/128;
+        player.spinSpeed = gameState !== "titleScreen" ? Math.PI/16 : Math.PI/128;
 
         player.rotation -= player.spinSpeed;
     }
     if (dPressed) {
         if (!player.enteringPortal) player.x += player.speed;
     
-        player.spinSpeed = gameState !== "startScreen" ? Math.PI/16 : Math.PI/128;
+        player.spinSpeed = gameState !== "titleScreen" ? Math.PI/16 : Math.PI/128;
 
         player.rotation += player.spinSpeed;
     }
@@ -151,20 +139,34 @@ function ImposePortalGravity() {
 }
 
 function proceedToNextLevel() {
+    // proceedToNextLevel(): checks if the player has been inside the portal long enough then creates a new level and swaps the current level to the new level
+
     if (player.enteringPortal && now - portal.timeSinceEntered > 2500) {
         currentLvlNum++;
-        const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
 
-        player.x = currentLevel.spawnPoint[0];
-        player.y = currentLevel.spawnPoint[1];
-        portal.x = currentLevel.portalCoord[0];
-        portal.y = currentLevel.portalCoord[1];
+        // the player spawn is always just where they completed the level
+        const playerSpawn = [player.x, player.y];
+
+        // the portal coordinates simply reflect where the portal was originally
+        const portalCoordX = portal.x > cnv.width/2 ? cnv.width/5 : cnv.width - cnv.width/5;
+        const portalCoord = [portalCoordX, cnv.height/2];
+
+        // create the next level
+        const nextLevel = new Level(currentLvlNum, playerSpawn, portalCoord, []);
+        nextLevel.addBlock(cnv.width/2-50, cnv.height/2-10, 100, 20);
+
+        allLevels.push(nextLevel);
+
+        player.x = nextLevel.playerSpawn[0];
+        player.y = nextLevel.playerSpawn[1];
+        portal.x = nextLevel.portalCoord[0];
+        portal.y = nextLevel.portalCoord[1];
     }
 }
 
 // Draw Functions //
 function drawCircle(x, y, r, lw = 0) {
-    // takes in the 'x' and 'y' parameters for location and the 'r' and 'fill' parameters for design
+    // drawCircle(): takes in the 'x' and 'y' parameters for location and the 'r' and 'fill' parameters for design
 
     ctx.beginPath();
     ctx.arc(x, y, r, Math.PI*2, 0);
@@ -198,19 +200,22 @@ function drawPortal() {
 }
 
 function drawObstacles() {
-    // drawObstacles(): loops through the current levels obstacles and draws all them
+    // drawObstacles(): loops through the current levels obstacles and draws all of them
 
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     for (let i in currentLevel.obstacles) {
         const obstacle = currentLevel.obstacles[i];
     
         ctx.fillStyle = "gray"
-        fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+
+        if (obstacle.type = "block") {
+            ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+        }
     }
 }
 
-function drawStartScreen() {
-    // drawStartScreen(): draws the games start screen, including the play button, which starts the game
+function drawTitleScreen() {
+    // drawTitleScreen(): draws the games title screen, including the play button, which starts the game
     
     ctx.save();
     ctx.translate(cnv.width/2, cnv.height/2);
@@ -218,20 +223,41 @@ function drawStartScreen() {
     ctx.drawImage(document.getElementById("grey-ball"), -player.r * 10, -player.r * 10, player.r * 20, player.r * 20);
     ctx.restore();
 
-
-    ctx.fillStyle = playBtn.bgdColor;
-    ctx.lineWidth = 4;
-    ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
-    ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
-
-    
+    // mouseX and mouseY are undefined by default, so check if they have values before using them
+    let mouseInPlayBtn;
     if (mouseX && mouseY) {
-        const mouseInPlayBtn = (
+        mouseInPlayBtn = (
             mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
             mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
         )
+    }
 
+    let playTextColor = "rgb(215, 215, 215)";
+    
+    // checks if mouseInPlayBtn isn't undefined before setting the color properties
+    if (mouseInPlayBtn !== undefined) {
+        playBtn.bgColor = mouseInPlayBtn ? "rgb(200, 200, 200)" : "rgb(170, 170, 170)";
+        playTextColor = mouseInPlayBtn ? "rgb(255, 255, 255)" : "rgb(215, 215, 215)";
+    }
+
+    ctx.fillStyle = playBtn.bgColor;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
+    ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
+ 
+
+    ctx.fillStyle = playTextColor;
+    ctx.font = "25px Outfit";
+    ctx.textAlign = "center";
+    ctx.fillText("PLAY", playBtn.x + 75, playBtn.y + 75/1.7);
+
+    if (mouseX && mouseY) {
         ctx.fillStyle = mouseInPlayBtn ? "blue" : "red";
         drawCircle(mouseX, mouseY, 5);
     }
+
+    ctx.fillStyle = "rgb(110, 110, 110)";
+    ctx.font = "20px Outfit";
+    ctx.textAlign = "center";
+    ctx.fillText("Don't Use Full Screen", cnv.width/2, cnv.height/6);
 }
