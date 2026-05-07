@@ -92,12 +92,12 @@ function mouseMoveHandler(e) {
 
 Things Added:
  - Custom Background & Floor/Roof Design
- - Title Screen
+ - Title Screen & Play Button
 
 
 
 # Day 10 - Thursday | In class work #
+I've done a lot of work on the levels. It took me a while to decide on where to place all of the code and I decided to put it all inside a function called `setUpLevels` rather than making a seprarate JS file for it. Inside the function, I've set up 10 level objects from the `Level` class, 9 of which were made inside a for-loop so they all have the same properties right now. Tommorrow, I'll make each level unique by giving them their obstacles. I plan to make level one void of obstacles and have a very simple guide on the games controls.
 
 Things Added:
- - Levels Templates
- - Some progress on the obstacles class
+ - Levels (no obstacles yet)
