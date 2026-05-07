@@ -142,26 +142,55 @@ function proceedToNextLevel() {
     // proceedToNextLevel(): checks if the player has been inside the portal long enough then creates a new level and swaps the current level to the new level
 
     if (player.enteringPortal && now - portal.timeSinceEntered > 2500) {
+        // increment the currentLvlNum
         currentLvlNum++;
+        const nextLevel = allLevels.find((level) => level.number === currentLvlNum);
 
-        // the player spawn is always just where they completed the level
-        const playerSpawn = [player.x, player.y];
-
-        // the portal coordinates simply reflect where the portal was originally
-        const portalCoordX = portal.x > cnv.width/2 ? cnv.width/5 : cnv.width - cnv.width/5;
-        const portalCoord = [portalCoordX, cnv.height/2];
-
-        // create the next level
-        const nextLevel = new Level(currentLvlNum, playerSpawn, portalCoord, []);
-        nextLevel.addBlock(cnv.width/2-50, cnv.height/2-10, 100, 20);
-
-        allLevels.push(nextLevel);
-
-        player.x = nextLevel.playerSpawn[0];
-        player.y = nextLevel.playerSpawn[1];
+        // set the portal coordinates
         portal.x = nextLevel.portalCoord[0];
         portal.y = nextLevel.portalCoord[1];
+
+        // only set the player coordinates if they exist, otherwise, they dont change
+        if (nextLevel.playerSpawn.length > 0) {
+            player.x = nextLevel.playerSpawn[0];
+            player.y = nextLevel.playerSpawn[1];
+        }
+
+        // force the player to fall back down
+        fallingDirection = "down";
+        gravity = 3;
+        dGravity = 0.25;
     }
+}
+
+function setUpLevels() {
+    // setUpLevels(): creates every single level in the game
+
+    // LEVEL 1
+    currentLvlNum = 1;
+    const levelOnePlayerSpawn = [cnv.width/5, cnv.height/2];
+    const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height/2];
+
+    const levelOne = new Level(currentLvlNum, [], levelOnePortalCoord, levelOnePlayerSpawn);
+    allLevels.push(levelOne);
+
+    // set up the following levels
+    for (let i = 1; i < 10; i++) {
+        const previousLevel = allLevels[i-1];
+
+        // the portal coordinates simply reflect where the last portal originally was
+        const portalCoordX = previousLevel.portalCoord[0] > cnv.width/2 ? cnv.width/5 : cnv.width - cnv.width/5;
+        const portalCoord = [portalCoordX, cnv.height/2];
+
+        // playerSpawn's default value is the players current coordinates
+        const newLevel = new Level(i+1, [], portalCoord);
+        allLevels.push(newLevel);
+    }
+
+    // LEVEL 2
+    const levelTwo = allLevels.find((level) => level.number === 2);
+
+    levelTwo.addBlock(cnv.width/2-50, cnv.height/2-10, 100, 20);
 }
 
 // Draw Functions //
@@ -206,10 +235,11 @@ function drawObstacles() {
     for (let i in currentLevel.obstacles) {
         const obstacle = currentLevel.obstacles[i];
     
-        ctx.fillStyle = "gray"
+        ctx.fillStyle = "gray";
 
         if (obstacle.type = "block") {
-            ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+            if (currentLevel.number <= 5) ctx.drawImage(document.getElementById("grass-platform"), obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+            else ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
         }
     }
 }
