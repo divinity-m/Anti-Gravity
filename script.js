@@ -11,7 +11,7 @@ let now = Date.now();
 let wPressed, aPressed, sPressed, dPressed;
 
 let [gravity, dGravity] = [0, 0.75];
-let [fallingDirection, isMidAir] = ["down", false];
+let [fallingDirection, isMidAir, onObstacle] = ["down", false, false];
 
 let [allLevels, currentLvlNum] = [[], 0];
 
@@ -75,6 +75,7 @@ class Block {
         this.w = w;
         this.h = h;
         this.type = "block";
+        this.playerGrounded = false;
     }
 
     draw() {
@@ -84,32 +85,38 @@ class Block {
         else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
 
-    collisions() {
-        // Block.collisions(): checks if the player is colliding with the block
+    checkCollisions() {
+        // Block.checkCollisions(): checks if the player is colliding with the block
         const fallingUpIntoBlock = (
-            player.x + player.r > this.x + this.w*0.025 && player.x - player.r < this.x + this.w*0.975 &&
-            player.y + player.r > this.y + this.h/2 && player.y - player.r < this.y + this.h
+            player.y + player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
+            player.x + player.r + player.speed > this.x + this.w*0.1 && player.x - player.r - player.speed < this.x + this.w*0.9
         );
 
         const fallingDownIntoBlock = (
-            player.x + player.r > this.x + this.w*0.025 && player.x - player.r < this.x + this.w*0.975 &&
-            player.y + player.r > this.y && player.y - player.r < this.y + this.h/2
+            player.y + player.r + gravity > this.y && player.y - player.r < this.y + this.h*0.5 &&
+            player.x + player.r + player.speed > this.x + this.w*0.1 && player.x - player.r - player.speed < this.x + this.w*0.9
         );
 
-        if (fallingUpIntoBlock || fallingDownIntoBlock) player.y -= gravity;
-
         const movingRightIntoBlock = (
-            player.x + player.r > this.x && player.x - player.r < this.x + this.w/2
-            player.y + player.r > this.y + this.h*0.025 && player.y - player.r < this.y + this.h*0.975
+            player.x + player.r + player.speed > this.x && player.x - player.r < this.x + this.w * 0.25 &&
+            player.y + player.r > this.y && player.y - player.r < this.y
         );
 
         const movingLeftIntoBlock = (
-            player.x + player.r > this.x + this.w/2 && player.x - player.r < this.x + this.w
-            player.y + player.r > this.y + this.h*0.025 && player.y - player.r < this.y + this.h*0.975
+            player.x + player.r > this.x + this.w * 0.75 && player.x - player.r - player.speed < this.x + this.w &&
+            player.y + player.r > this.y && player.y - player.r < this.y
         );
 
-        if (movingRightIntoBlock) player.x -= player.speed;
-        if (movingLeftIntoBlock) player.x += player.speed;
+        const fallingIntoBlock = fallingUpIntoBlock || fallingDownIntoBlock;
+        const movingIntoBlock = movingRightIntoBlock || movingLeftIntoBlock;
+
+        this.playerGrounded = fallingIntoBlock ? true : false;
+
+        if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
+        if (fallingDownIntoBlock) player.y = this.y - player.r;
+
+        if (movingRightIntoBlock) player.x = this.x - player.r;
+        if (movingLeftIntoBlock) player.x = this.x + this.w + player.r;
     }
 }
 
