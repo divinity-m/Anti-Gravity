@@ -78,23 +78,38 @@ class Block {
     }
 
     draw() {
+        // Block.draw(): draws the block as either a grass platform or a plane gray slate
         ctx.fillStyle = "gray"
         if (currentLvlNum <= 5) ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
         else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
 
     collisions() {
+        // Block.collisions(): checks if the player is colliding with the block
         const fallingUpIntoBlock = (
-            player.x + player.r > this.x && player.x - player.r < this.x + this.w &&
-            player.y - player.r < this.y + this.h && player.y + player.r > this.y + this.h/2
+            player.x + player.r > this.x + this.w*0.025 && player.x - player.r < this.x + this.w*0.975 &&
+            player.y + player.r > this.y + this.h/2 && player.y - player.r < this.y + this.h
         );
 
         const fallingDownIntoBlock = (
-            player.x + player.r > this.x && player.x - player.r < this.x + this.w &&
-            player.y - player.r < this.y + this.h/2 && player.y + player.r > this.y
+            player.x + player.r > this.x + this.w*0.025 && player.x - player.r < this.x + this.w*0.975 &&
+            player.y + player.r > this.y && player.y - player.r < this.y + this.h/2
         );
 
         if (fallingUpIntoBlock || fallingDownIntoBlock) player.y -= gravity;
+
+        const movingRightIntoBlock = (
+            player.x + player.r > this.x && player.x - player.r < this.x + this.w/2
+            player.y + player.r > this.y + this.h*0.025 && player.y - player.r < this.y + this.h*0.975
+        );
+
+        const movingLeftIntoBlock = (
+            player.x + player.r > this.x + this.w/2 && player.x - player.r < this.x + this.w
+            player.y + player.r > this.y + this.h*0.025 && player.y - player.r < this.y + this.h*0.975
+        );
+
+        if (movingRightIntoBlock) player.x -= player.speed;
+        if (movingLeftIntoBlock) player.x += player.speed;
     }
 }
 
@@ -115,6 +130,7 @@ class Level {
     }
 
     addBlock(x, y, w, h) {
+        // Level.addBlock(): adds a block object to the level's obstacles array
         this.obstacles.push(new Block(x, y, w, h));
     }
 }
