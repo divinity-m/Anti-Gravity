@@ -7,7 +7,6 @@ function keydownHandler(e) {
 
     if (key === "KeyW" || key === "ArrowUp") {
         wPressed = true;
-
         if (gameState !== "titleScreen") swapGravity();
     }
     if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
@@ -41,7 +40,7 @@ function mouseMoveHandler(e) {
 }
 
 function clickHandler(e) {
-    // checks if the user clicks any buttons
+    // clickHandler(): checks if the user clicks any buttons
 
     const rect = cnv.getBoundingClientRect();
     if (gameState === "titleScreen") {
@@ -53,8 +52,10 @@ function clickHandler(e) {
     }
 }
 
+
 // Process Functions //
 function playerMovement() {
+    // playerMovement(): checks if certain buttons are pressed to move the player
     if (aPressed) {
         if (!player.enteringPortal) player.x -= player.speed;
 
@@ -71,23 +72,42 @@ function playerMovement() {
     }
 }
 
+function resetGravity() {
+    gravity = fallingDirection === "down" ? 3 : -3;
+    dGravity = fallingDirection === "down" ? 0.25 : -0.25;
+}
+
 function swapGravity() {
     // Determines the falling direciton and changes the values of gravity and dGravity acoordingly
-    if (!isMidAir) {
+    if (!isMidAir || onObstacle) {
         fallingDirection = fallingDirection === "down" ? "up" : "down";
-        gravity = fallingDirection === "down" ? 3 : -3;
-        dGravity = fallingDirection === "down" ? 0.25 : -0.25;
+        resetGravity();
     }
 }
 
 function ImposeNaturalGravity(borderHeight) {
     // ImposeNaturalGravity(): checks if the player is falling to apply the gravity mechanic
 
+    // checks if the player is not mounted on the bottom or top bar
     const midAirDown = player.y + player.r + gravity < cnv.height-borderHeight;
     const midAirUp = player.y - player.r + gravity > borderHeight;
-    
+
     isMidAir = fallingDirection === "down" ? midAirDown : midAirUp;
-    if (isMidAir && !player.enteringPortal) {
+
+    // checks if the player is mounted on an obstacle by looping through every obstacle and checking their `playerGrounded` property
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    onObstacle = false;
+
+    for (let i in currentLevel.obstacles) {
+        const obstacle = currentLevel.obstacles[i];
+        obstacle.checkCollisions();
+        if (obstacle.playerGrounded) onObstacle = true;
+    }
+
+    if (onObstacle) resetGravity();
+
+    // imposes gravity based on the direction the player is falling (if the player isn't influenced by something else)
+    if (isMidAir && !player.enteringPortal && !onObstacle) {
         if (fallingDirection === "down") gravity = Math.min(gravity + dGravity, 10);
         else gravity = Math.max(gravity + dGravity, -10);
 
@@ -111,6 +131,7 @@ function ImposePortalGravity() {
     if (portalDist < portalRange) {
         player.enteringPortal = true;
         player.spinSpeed =  Math.PI/32;
+        resetGravity();
 
         // the angle from the player to the portal
         const angleToPortal = Math.atan2(portalDy, portalDx);
@@ -158,8 +179,7 @@ function proceedToNextLevel() {
 
         // force the player to fall back down
         fallingDirection = "down";
-        gravity = 3;
-        dGravity = 0.25;
+        resetGravity();
     }
 }
 
@@ -192,6 +212,7 @@ function setUpLevels() {
 
     levelTwo.addBlock(cnv.width/2-50, cnv.height/2-10, 100, 20);
 }
+
 
 // Draw Functions //
 function drawCircle(x, y, r, lw = 0) {
