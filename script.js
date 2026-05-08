@@ -82,6 +82,20 @@ class Block {
         if (currentLvlNum <= 5) ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
         else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
+
+    collisions() {
+        const fallingUpIntoBlock = (
+            player.x + player.r > this.x && player.x - player.r < this.x + this.w &&
+            player.y - player.r < this.y + this.h && player.y + player.r > this.y + this.h/2
+        );
+
+        const fallingDownIntoBlock = (
+            player.x + player.r > this.x && player.x - player.r < this.x + this.w &&
+            player.y - player.r < this.y + this.h/2 && player.y + player.r > this.y
+        );
+
+        if (fallingUpIntoBlock || fallingDownIntoBlock) player.y -= gravity;
+    }
 }
 
 class Level {
