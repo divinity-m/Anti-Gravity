@@ -118,7 +118,7 @@ const movingRightIntoBlock = (
 );
 ```
 
-**At Home Work**
+**At Home Work**  
 It took a while, but I found a solution to the collisions issue. I counteracted the overlapping values by expanding the range required for a sideways collisions to be detected.
 
 ```javascript
