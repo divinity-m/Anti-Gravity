@@ -98,13 +98,13 @@ class Block {
         );
 
         const movingRightIntoBlock = (
-            player.x + player.r + player.speed > this.x && player.x - player.r < this.x + this.w * 0.25 &&
-            player.y + player.r > this.y && player.y - player.r < this.y
+            player.x + player.r > this.x - player.speed*0.1 && player.x - player.r < this.x + this.w*0.25 &&
+            player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
         const movingLeftIntoBlock = (
-            player.x + player.r > this.x + this.w * 0.75 && player.x - player.r - player.speed < this.x + this.w &&
-            player.y + player.r > this.y && player.y - player.r < this.y
+            player.x + player.r > this.x + this.w*0.75 && player.x - player.r < this.x + this.w + player.speed*0.1 &&
+            player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
         const fallingIntoBlock = fallingUpIntoBlock || fallingDownIntoBlock;
@@ -115,8 +115,8 @@ class Block {
         if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
         if (fallingDownIntoBlock) player.y = this.y - player.r;
 
-        if (movingRightIntoBlock) player.x = this.x - player.r;
-        if (movingLeftIntoBlock) player.x = this.x + this.w + player.r;
+        if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.1;
+        if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.1;
     }
 }
 
