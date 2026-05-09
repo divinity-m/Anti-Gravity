@@ -101,3 +101,33 @@ I've done a lot of work on the levels. It took me a while to decide on where to 
 
 Things Added:
  - Levels (no obstacles yet)
+
+
+
+# Day 10 - Friday | In class work && After school work #
+I've been struggling to get the player collisions with obstacles working properly, specifically, the collisions that happens when the player comes into contact with the side of a block. These collisions cause the player to teleport to the top of the block instead of simply keeping it's x coordinate. I'm aware that this is due to how the conditions which check for collisions overlap one another.
+``` javascript
+const fallingUpIntoBlock = (
+    player.y + player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
+    player.x + player.r + player.speed > this.x && player.x - player.r - player.speed < this.x + this.w
+);
+// vs
+const movingRightIntoBlock = (
+    player.x + player.r + player.speed > this.x && player.x - player.r < this.x + this.w && // extremely similar conditions to the above variable
+    player.y + player.r > this.y && player.y - player.r < this.y + this.h
+);
+```
+
+- At Home Work -
+It took a while, but I found a solution to the collisions issue. I counteracted the overlapping values by expanding the range required for a sideways collisions to be detected.
+
+```javascript
+const movingRightIntoBlock = (
+    player.x + player.r > this.x - player.speed*0.1 && player.x - player.r < this.x + this.w*0.25 &&
+    player.y + player.r > this.y && player.y - player.r < this.y + this.h
+);
+```
+Due to the `this.x - player.speed*0.1` the player doesn't need to directly go past the block's x coordinate for a collision to be detected. This creates some leeway in comparison to the collisions for falling up and down into the block, which are far stricter.
+
+Things Added:
+ - Obstacle Collisions
