@@ -104,7 +104,7 @@ Things Added:
 
 
 
-# Day 10 - Friday | In class work && After school work #
+# Day 11 - Friday | In class work & After school work #
 I've been struggling to get the player collisions with obstacles working properly, specifically, the collisions that happens when the player comes into contact with the side of a block. These collisions cause the player to teleport to the top of the block instead of simply keeping it's x coordinate. I'm aware that this is due to how the conditions which check for collisions overlap one another.
 ``` javascript
 const fallingUpIntoBlock = (
