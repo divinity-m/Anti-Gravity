@@ -66,11 +66,13 @@ class Obstacle {
     /**
     * @param {number} x - The obstacles's x coordinate
     * @param {number} y - The obstacles's y coordinate
+    * @param {string} color - The obstacles's fillStyle/strokeStyle
     */
     
-    constructor(x, y) {
+    constructor(x, y, color) {
         this.x = x;
         this.y = y;
+        this.color = color;
     }
 
     draw() {
@@ -78,7 +80,7 @@ class Obstacle {
     }
 
     checkCollisions() {
-        // Obstacle.draw(): A template method for inheritance, classes which inherit it would run multiple checks to detect player collisions
+        // Obstacle.checkCollisions(): A template method for inheritance, classes which inherit it would run multiple checks to detect player collisions
     }
 }
 
@@ -91,8 +93,8 @@ class Block extends Obstacle {
     * @param {number} w - The block's width
     * @param {number} h - The block's height
     */
-    constructor(x, y, w, h) {
-        super(x, y);
+    constructor(x, y, w, h, color = "gray") {
+        super(x, y, color);
         this.w = w;
         this.h = h;
         this.type = "block";
@@ -101,6 +103,8 @@ class Block extends Obstacle {
 
     draw() {
         // Block.draw(): draws the block as either a grass platform or a plane gray slate
+        ctx.fillStyle = this.color;
+        
         if (currentLvlNum <= 5) ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
         else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
@@ -151,8 +155,8 @@ class Text extends Obstacle {
     * @param {number} size - The text's size (in px)
     * @param {string} align - Where to align the text (left, centre, or right)
     */
-    constructor(x, y, content, size, align) {
-        super(x, y);
+    constructor(x, y, content, size, align, color = "gray") {
+        super(x, y, color);
         this.content = content;
         this.size = size;
         this.align = align;
@@ -161,6 +165,7 @@ class Text extends Obstacle {
 
     draw() {
         // Text.draw(): draws the text using the object's parameters
+        ctx.fillStyle = this.color;
         ctx.font = `${this.size}px Outfit`;
         ctx.textAlign = this.align;
         ctx.fillText(this.content, this.x, this.y);
@@ -184,14 +189,14 @@ class Level {
         this.playerSpawn = playerSpawn;
     }
 
-    addBlock(x, y, w, h) {
+    addBlock(x, y, w, h, color = "gray") {
         // Level.addBlock(): pushes a block object to the level's obstacles array
-        this.obstacles.push(new Block(x, y, w, h));
+        this.obstacles.push(new Block(x, y, w, h, color));
     }
 
-    addText(x, y, content, size, align) {
+    addText(x, y, content, size, align, color = "gray") {
         // Level.addText(): pushes a text object to the level's obstacles array
-        this.obstacles.push(new Text(x, y, content, size, align));
+        this.obstacles.push(new Text(x, y, content, size, align, color));
     }
 }
 
@@ -229,22 +234,28 @@ function draw() {
         let previousY = player.y;
         playerMovement();
 
+        
         // gravity
         ImposeNaturalGravity(borderHeight);
 
+        
         // update the player's angle when the player is moving
         if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteringPortal) {
             player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
         }
 
+        
         // map restrictions
         if (player.x - player.r < -70) player.x = cnv.width + 70 - player.r;
         if (player.x + player.r > cnv.width + 70) player.x = -70 + player.r;
 
+        
         // portal mechanics, levels, and obstacles
         ImposePortalGravity();
-        proceedToNextLevel();
+        
+        if (player.enteringPortal && now - portal.timeSinceEntered > 2500) proceedToNextLevel();
 
+        
         // collision visuals
         drawObstacles();
         drawPortal();
