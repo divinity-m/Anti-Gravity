@@ -60,7 +60,29 @@ data types for @param
 {Array} - A generic array.
 */
 
-class Block {
+class Obstacle {
+    // Block: A template class for classes involved in level creation
+
+    /**
+    * @param {number} x - The obstacles's x coordinate
+    * @param {number} y - The obstacles's y coordinate
+    */
+    
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    draw() {
+        // Obstacle.draw(): A template method for inheritance, classes which inherit it would use JS canvas to draw their design
+    }
+
+    checkCollisions() {
+        // Obstacle.draw(): A template method for inheritance, classes which inherit it would run multiple checks to detect player collisions
+    }
+}
+
+class Block extends Obstacle {
     // Block: A harmless rectangle that has its own collision properties
 
     /**
@@ -70,8 +92,7 @@ class Block {
     * @param {number} h - The block's height
     */
     constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
         this.w = w;
         this.h = h;
         this.type = "block";
@@ -80,7 +101,6 @@ class Block {
 
     draw() {
         // Block.draw(): draws the block as either a grass platform or a plane gray slate
-        ctx.fillStyle = "gray"
         if (currentLvlNum <= 5) ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
         else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
@@ -120,6 +140,34 @@ class Block {
     }
 }
 
+
+class Text extends Obstacle {
+    // Text: A string of text to display information
+
+    /**
+    * @param {number} x - The text's x coordinate
+    * @param {number} y - The text's y coordinate
+    * @param {string} content - The words in the text
+    * @param {number} size - The text's size (in px)
+    * @param {string} align - Where to align the text (left, centre, or right)
+    */
+    constructor(x, y, content, size, align) {
+        super(x, y);
+        this.content = content;
+        this.size = size;
+        this.align = align;
+        this.type = "text";
+    }
+
+    draw() {
+        // Text.draw(): draws the text using the object's parameters
+        ctx.font = `${this.size}px Outfit`;
+        ctx.textAlign = this.align;
+        ctx.fillText(this.content, this.x, this.y);
+    }
+}
+
+
 class Level {
     // Level: A singular stage with its own unique obstacles
 
@@ -137,12 +185,18 @@ class Level {
     }
 
     addBlock(x, y, w, h) {
-        // Level.addBlock(): adds a block object to the level's obstacles array
+        // Level.addBlock(): pushes a block object to the level's obstacles array
         this.obstacles.push(new Block(x, y, w, h));
+    }
+
+    addText(x, y, content, size, align) {
+        // Level.addText(): pushes a text object to the level's obstacles array
+        this.obstacles.push(new Text(x, y, content, size, align));
     }
 }
 
 setUpLevels();
+
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
@@ -150,6 +204,7 @@ document.addEventListener("keyup", keyupHandler);
 
 document.addEventListener("mousemove", mouseMoveHandler);
 document.addEventListener("click", clickHandler);
+
 
 // Draw Function //
 function draw() {
