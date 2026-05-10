@@ -114,8 +114,10 @@ function ImposeNaturalGravity(borderHeight) {
         player.y += gravity;
     }
 
-    if (fallingDirection === "down" && !isMidAir) player.y = cnv.height-borderHeight - player.r;
-    if (fallingDirection === "up" && !isMidAir) player.y = borderHeight + player.r;
+    const notInfluenced = !isMidAir && !player.enteringPortal && !onObstacle;
+
+    if (fallingDirection === "down" && notInfluenced) player.y = cnv.height-borderHeight - player.r;
+    if (fallingDirection === "up" && notInfluenced) player.y = borderHeight + player.r;
 }
 
 function ImposePortalGravity() {
@@ -146,7 +148,7 @@ function ImposePortalGravity() {
         // add either the dAngle or the turnSpeed to the players angle
         player.facingAngle += Math.sign(dAngle) * Math.min(Math.abs(dAngle), turnSpeed);
         
-        const clampSpeed = Math.max(portalDist / portalRange, 0.1);
+        const clampSpeed = Math.max(portalDist / portalRange, 0.2);
 
         // move the player in the direciton of the angle
         player.x += Math.cos(player.facingAngle) * player.speed * clampSpeed;
@@ -160,50 +162,53 @@ function ImposePortalGravity() {
 }
 
 function proceedToNextLevel() {
-    // proceedToNextLevel(): checks if the player has been inside the portal long enough then creates a new level and swaps the current level to the new level
+    // proceedToNextLevel(): finds the next level then sets the player's & the portal's coordinates to that of the level's
+    
+    // increment the currentLvlNum
+    currentLvlNum++;
+    const nextLevel = allLevels.find((level) => level.number === currentLvlNum);
 
-    if (player.enteringPortal && now - portal.timeSinceEntered > 2500) {
-        // increment the currentLvlNum
-        currentLvlNum++;
-        const nextLevel = allLevels.find((level) => level.number === currentLvlNum);
+    // set the portal coordinates
+    portal.x = nextLevel.portalCoord[0];
+    portal.y = nextLevel.portalCoord[1];
 
-        // set the portal coordinates
-        portal.x = nextLevel.portalCoord[0];
-        portal.y = nextLevel.portalCoord[1];
-
-        // only set the player coordinates if they exist, otherwise, they dont change
-        if (nextLevel.playerSpawn.length > 0) {
-            player.x = nextLevel.playerSpawn[0];
-            player.y = nextLevel.playerSpawn[1];
-        }
-
-        // force the player to fall back down
-        fallingDirection = "down";
-        resetGravity();
+    // only set the player coordinates if they exist, otherwise, they dont change
+    if (nextLevel.playerSpawn.length > 0) {
+        player.x = nextLevel.playerSpawn[0];
+        player.y = nextLevel.playerSpawn[1];
     }
+
+    // force the player to fall back down
+    fallingDirection = "down";
+    resetGravity();
 }
 
 function setUpLevels() {
     // setUpLevels(): creates every single level in the game
 
     // LEVEL 1
-    currentLvlNum = 1;
+    const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/3];
     const levelOnePlayerSpawn = [cnv.width/5, cnv.height/2];
-    const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/4];
 
-    const levelOne = new Level(currentLvlNum, [], levelOnePortalCoord, levelOnePlayerSpawn);
+    const levelOne = new Level(1, [], levelOnePortalCoord, levelOnePlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
 
     levelOne.addText(cnv.width/10, cnv.height/2, "Press A/D or ⇐/⇒ to move around", 15, "left");
     
     allLevels.push(levelOne);
+
+    // call proceedToNextLevel() to actualize level 1's values 
+    currentLvlNum = 0;
+    proceedToNextLevel();
     
 
-    // set up the following levels
+    // Set Up The Following Levels
     for (let i = 1; i < 10; i++) {
         const previousLevel = allLevels[i-1];
 
-        // the portal coordinates simply reflect where the last portal originally was
-        const portalCoordX = previousLevel.portalCoord[0] > cnv.width/2 ? cnv.width/5 : cnv.width - cnv.width/5;
+        // by default, the portal coordinates simply reflect where the last portal originally was
+        const portalIsOnTheRightSide = previousLevel.portalCoord[0] > cnv.width/2;
+        
+        const portalCoordX = portalIsOnTheRightSide ? cnv.width/5 : cnv.width - cnv.width/5;
         const portalCoord = [portalCoordX, cnv.height/2];
 
         // playerSpawn's default value is the players current coordinates
@@ -217,7 +222,7 @@ function setUpLevels() {
 
     levelTwo.addText(cnv.width-cnv.width/10, cnv.height/2, "Press W or ⇑ to swap gravity", 15, "right");
     
-    levelTwo.addBlock(cnv.width/2-50, cnv.height*0.7, 200, 40);
+    levelTwo.addBlock(cnv.width/2-50, cnv.height*0.725, 200, 40);
 }
 
 
@@ -258,8 +263,8 @@ function drawPortal() {
 
 function drawObstacles() {
     // drawObstacles(): loops through the current levels obstacles and draws all of them
-
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    
     for (let i in currentLevel.obstacles) {
         const obstacle = currentLevel.obstacles[i];
         obstacle.draw();
