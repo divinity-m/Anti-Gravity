@@ -94,16 +94,12 @@ function ImposeNaturalGravity(borderHeight) {
 
     isMidAir = fallingDirection === "down" ? midAirDown : midAirUp;
 
-    // checks if the player is mounted on an obstacle by looping through every obstacle and checking their `playerGrounded` property
+    // checks if the player is mounted on a block by checking if any existing obstacle has a true `playerGrounded` property
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
-    onObstacle = false;
-
-    for (let i in currentLevel.obstacles) {
-        const obstacle = currentLevel.obstacles[i];
-        obstacle.checkCollisions();
-        if (obstacle.playerGrounded) onObstacle = true;
-    }
-
+    
+    blockExists = currentLevel.obstacles.find((block) => block.playerGrounded);
+    
+    onObstacle = blockExists ? true : false;
     if (onObstacle) resetGravity();
 
     // imposes gravity based on the direction the player is falling (if the player isn't influenced by something else)
@@ -190,7 +186,7 @@ function setUpLevels() {
     const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/3];
     const levelOnePlayerSpawn = [cnv.width/5, cnv.height/2];
 
-    const levelOne = new Level(1, [], levelOnePortalCoord, levelOnePlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
+    const levelOne = new Level(1, "grassy", [], levelOnePortalCoord, levelOnePlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
 
     levelOne.addText(cnv.width/10, cnv.height/2, "Press A/D or ⇐/⇒ to move around", 15, "left");
     
@@ -202,7 +198,7 @@ function setUpLevels() {
     
 
     // Set Up The Following Levels
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < 11; i++) {
         const previousLevel = allLevels[i-1];
 
         // by default, the portal coordinates simply reflect where the last portal originally was
@@ -211,8 +207,11 @@ function setUpLevels() {
         const portalCoordX = portalIsOnTheRightSide ? cnv.width/5 : cnv.width - cnv.width/5;
         const portalCoord = [portalCoordX, cnv.height/2];
 
+        // levels 1-5 & 11 are grassy, levels 6-10 are rocky
+        const terrain = (i+1 <= 5 || i+1 === 11) ? "grassy" : "rocky";
+
         // playerSpawn's default value is the players current coordinates
-        const newLevel = new Level(i+1, [], portalCoord);
+        const newLevel = new Level(i+1, terrain, [], portalCoord);
         allLevels.push(newLevel);
     }
     
@@ -223,6 +222,21 @@ function setUpLevels() {
     levelTwo.addText(cnv.width-cnv.width/10, cnv.height/2, "Press W or ⇑ to swap gravity", 15, "right");
     
     levelTwo.addBlock(cnv.width/2-50, cnv.height*0.725, 200, 40);
+
+    
+    // LEVEL 11 (Finale)
+    const levelEleven = allLevels.find((level) => level.number === 11);
+    levelEleven.portalCoord = [-500, -500]; // No Portal
+    levelEleven.playerSpawn = [cnv.width/2, cnv.height/2]; // Center
+}
+
+function checkObstacleCollisions() {
+// drawObstacles(): loops through the current level's obstacles to check their collisions
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    
+    for (let i in currentLevel.obstacles) {
+        currentLevel.obstacles[i].checkCollisions();
+    }
 }
 
 
@@ -262,12 +276,11 @@ function drawPortal() {
 }
 
 function drawObstacles() {
-    // drawObstacles(): loops through the current levels obstacles and draws all of them
+    // drawObstacles(): loops through the current level's obstacles and draws all of them
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     
     for (let i in currentLevel.obstacles) {
-        const obstacle = currentLevel.obstacles[i];
-        obstacle.draw();
+        currentLevel.obstacles[i].draw();
     }
 }
 
