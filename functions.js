@@ -36,7 +36,7 @@ function mouseMoveHandler(e) {
 
     // rect.left and rect.top are both 0, so subtracting them is kinda redundant, but there may be edge cases that I might miss if I remove them from this equation
     mouseX = (e.clientX - rect.left) * scaleX;
-    mouseY = (e.clientY - rect.top) * scaleX * 1.05;
+    mouseY = (e.clientY - rect.top) * scaleY;
 }
 
 function clickHandler(e) {
@@ -189,10 +189,14 @@ function setUpLevels() {
     // LEVEL 1
     currentLvlNum = 1;
     const levelOnePlayerSpawn = [cnv.width/5, cnv.height/2];
-    const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height/2];
+    const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/4];
 
     const levelOne = new Level(currentLvlNum, [], levelOnePortalCoord, levelOnePlayerSpawn);
+
+    levelOne.addText(cnv.width/10, cnv.height/2, "Press A/D or ⇐/⇒ to move around", 15, "left");
+    
     allLevels.push(levelOne);
+    
 
     // set up the following levels
     for (let i = 1; i < 10; i++) {
@@ -206,11 +210,14 @@ function setUpLevels() {
         const newLevel = new Level(i+1, [], portalCoord);
         allLevels.push(newLevel);
     }
+    
 
     // LEVEL 2
     const levelTwo = allLevels.find((level) => level.number === 2);
 
-    levelTwo.addBlock(cnv.width/2-50, cnv.height/2-10, 100, 20);
+    levelTwo.addText(cnv.width-cnv.width/10, cnv.height/2, "Press W or ⇑ to swap gravity", 15, "right");
+    
+    levelTwo.addBlock(cnv.width/2-50, cnv.height*0.7, 200, 40);
 }
 
 
@@ -304,5 +311,6 @@ function drawTitleScreen() {
     ctx.fillStyle = "rgb(110, 110, 110)";
     ctx.font = "20px Outfit";
     ctx.textAlign = "center";
-    ctx.fillText("Don't Use Full Screen", cnv.width/2, cnv.height/6);
+    ctx.fillText("This Took Forever", cnv.width/2, cnv.height/6-20);
+    ctx.fillText("Credits to Gavin Diep For The Art", cnv.width/2, cnv.height/6);
 }
