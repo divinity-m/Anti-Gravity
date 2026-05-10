@@ -131,10 +131,7 @@ class Block extends Obstacle {
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
-        const fallingIntoBlock = fallingUpIntoBlock || fallingDownIntoBlock;
-        const movingIntoBlock = movingRightIntoBlock || movingLeftIntoBlock;
-
-        this.playerGrounded = fallingIntoBlock ? true : false;
+        this.playerGrounded = fallingUpIntoBlock || fallingDownIntoBlock;
 
         if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
         if (fallingDownIntoBlock) player.y = this.y - player.r;
