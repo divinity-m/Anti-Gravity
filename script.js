@@ -103,9 +103,10 @@ class Block extends Obstacle {
 
     draw() {
         // Block.draw(): draws the block as either a grass platform or a plane gray slate
+        const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
         ctx.fillStyle = this.color;
         
-        if (currentLvlNum <= 5) ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
+        if (currentLevel.terrain === "grassy") ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
         else ctx.fillRect(this.x, this.y, this.w, this.h);
     }
 
@@ -174,13 +175,15 @@ class Level {
     // Level: A singular stage with its own unique obstacles
 
     /**
-    * @param {number} number - The levels id
+    * @param {number} number - The level's id
+    * @param {string} terrain - The level's overall design
     * @param {Array} obstacles - An array of all of the obstacles in the level
     * @param {Array} portalCoord - The portal's coordinates
     * @param {Array} playerSpawn - The player's spawnpoint
     */
-    constructor(number, obstacles, portalCoord, playerSpawn = []) {
+    constructor(number, terrain, obstacles, portalCoord, playerSpawn = []) {
         this.number = number;
+        this.terrain = terrain;
         this.obstacles = obstacles;
         this.portalCoord = portalCoord;
         this.playerSpawn = playerSpawn;
@@ -252,8 +255,10 @@ function draw() {
         
         if (player.enteringPortal && now - portal.timeSinceEntered > 2500) proceedToNextLevel(); // waits for 2.5s before moving on
 
+        checkObstacleCollisions();
         
-        // collision visuals
+        
+        // content visuals
         drawObstacles();
         drawPortal();
         drawPlayer();
