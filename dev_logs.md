@@ -69,7 +69,7 @@ Things Added:
 Began shifting my focus away from player/portal design & funcitionality, and towards the games core concepts, which included the use of classes. I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen. The play button on the title screen required me to add a `mousemove` and `click` event listener to the document to check for hover and click inputs. Because of all of these new goals, I wasn't able to complete anything specific this class.
 
 Things Worked On:
- - Levels & Obstacles
+ - Levels & Obstacles (Blocks are currently the only obstacle I've worked on)
  - Title Screen
 
 
@@ -104,7 +104,7 @@ Things Added:
 
 
 
-# Day 11 - Friday | In class work & After school work #
+# Day 11 - Friday | In class work & At home work #
 I've been struggling to get the player collisions with obstacles working properly, specifically, the collisions that happens when the player comes into contact with the side of a block. These collisions cause the player to teleport to the top of the block instead of simply keeping it's x coordinate. I'm aware that this is due to how the conditions which check for collisions overlap one another.
 ``` javascript
 const fallingUpIntoBlock = (
@@ -132,3 +132,13 @@ Due to the `this.x - player.speed*0.1` the player doesn't need to directly go pa
 
 Things Added:
  - Obstacle Collisions
+
+
+
+# Day 13 - Sunday | At home work #
+I wanted to add a bit of a tutorial to the game for explaining the controls so I created a text class. I realized that there were some similarities between the `Text` and `Block` classes, and the obstacles I plan to add will likley have the same similarities, so I made an `Obstacle` class with properties and methods that every type of obstacle in the game should have. It's only a template so the class itself won't ever be used, just inherited.
+Level one and two are pretty much complete, they don't have much content at all, but thats intentional because they only exist to explain the controls.
+
+Things Added:
+- Obstacle Class, Text Class, and Inheritance
+- Level 1 and 2 + tutorial text
