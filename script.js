@@ -250,7 +250,7 @@ function draw() {
         // portal mechanics, levels, and obstacles
         ImposePortalGravity();
         
-        if (player.enteringPortal && now - portal.timeSinceEntered > 2500) proceedToNextLevel();
+        if (player.enteringPortal && now - portal.timeSinceEntered > 2500) proceedToNextLevel(); // waits for 2.5s before moving on
 
         
         // collision visuals
