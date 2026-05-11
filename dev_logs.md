@@ -142,3 +142,13 @@ Level one and two are pretty much complete, they don't have much content at all,
 Things Added:
 - Obstacle Class, Text Class, and Inheritance
 - Level 1 and 2 + tutorial text
+
+
+
+# Day 14 - Monday | In class work #
+While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on furthur improving the collision conditions in the block class's `checkCollisions()`. Gavin helped me design a gradient play button for the game as well.
+
+Things Worked On:
+ - Improved collision detection
+ - Some of level 3
+ - Title screen design
