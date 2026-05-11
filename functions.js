@@ -7,7 +7,7 @@ function keydownHandler(e) {
 
     if (key === "KeyW" || key === "ArrowUp") {
         wPressed = true;
-        if (gameState !== "titleScreen") swapGravity();
+        if (gameState !== "titleScreen" && currentLvlNum !== 1) swapGravity();
     }
     if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
     if (key === "KeyS" || key === "ArrowDown") sPressed = true;
@@ -48,7 +48,7 @@ function clickHandler(e) {
             mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
             mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
         )
-        if (mouseInPlayBtn) gameState = "levels";
+        if (mouseInPlayBtn) playBtn.effect();
     }
 }
 
@@ -183,14 +183,14 @@ function setUpLevels() {
     // setUpLevels(): creates every single level in the game
 
     // LEVEL 1
-    const levelOnePortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/3];
-    const levelOnePlayerSpawn = [cnv.width/5, cnv.height/2];
+    const level1PortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/3];
+    const level1PlayerSpawn = [cnv.width/5, cnv.height/2];
 
-    const levelOne = new Level(1, "grassy", [], levelOnePortalCoord, levelOnePlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
+    const level1 = new Level(1, "grassy", [], level1PortalCoord, level1PlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
 
-    levelOne.addText(cnv.width/10, cnv.height/2, "Press A/D or ⇐/⇒ to move around", 15, "left");
+    level1.addText(cnv.width/10, cnv.height/2, "Press A/D or ⇐/⇒ to move around", 15, "left");
     
-    allLevels.push(levelOne);
+    allLevels.push(level1);
 
     // call proceedToNextLevel() to actualize level 1's values 
     currentLvlNum = 0;
@@ -217,17 +217,28 @@ function setUpLevels() {
     
 
     // LEVEL 2
-    const levelTwo = allLevels.find((level) => level.number === 2);
+    const level2 = allLevels.find((level) => level.number === 2);
+    level2.portalCoord = [cnv.width/5 + 100, cnv.height*0.35];
 
-    levelTwo.addText(cnv.width-cnv.width/10, cnv.height/2, "Press W or ⇑ to swap gravity", 15, "right");
+    level2.addText(cnv.width-cnv.width/10, cnv.height/2, "Press W or ⇑ to swap gravity", 15, "right");
+    level2.addBlock(cnv.width/5, cnv.height/2, 200, 150, "tallGrass");
+
+
+    // LEVEL 3
+    const level3 = allLevels.find((level) => level.number === 3);
     
-    levelTwo.addBlock(cnv.width/2-50, cnv.height*0.725, 200, 40);
+    level3.addBlock(cnv.width-60, 0, 50, cnv.height, "normal", "rgb(143, 89, 43)"); // cnv.width-100 is the x
+
+    level3.addBlock(cnv.width/5, cnv.height/2, 200, 150, "tallGrass");
+
 
     
     // LEVEL 11 (Finale)
-    const levelEleven = allLevels.find((level) => level.number === 11);
-    levelEleven.portalCoord = [-500, -500]; // No Portal
-    levelEleven.playerSpawn = [cnv.width/2, cnv.height/2]; // Center
+    const level11 = allLevels.find((level) => level.number === 11);
+    level11.portalCoord = [-500, -500]; // No Portal
+    level11.playerSpawn = [cnv.width/2, cnv.height/2]; // Center Player
+
+    level11.addText(cnv.width/2, cnv.height/2, "Thanks for playing!", 35, "center");
 }
 
 function checkObstacleCollisions() {
@@ -287,6 +298,7 @@ function drawObstacles() {
 function drawTitleScreen() {
     // drawTitleScreen(): draws the games title screen, including the play button, which starts the game
     
+    // Grey Ball
     ctx.save();
     ctx.translate(cnv.width/2, cnv.height/2);
     ctx.rotate(player.rotation);
@@ -302,30 +314,27 @@ function drawTitleScreen() {
         )
     }
 
-    let playTextColor = "rgb(215, 215, 215)";
-    
     // checks if mouseInPlayBtn isn't undefined before setting the color properties
     if (mouseInPlayBtn !== undefined) {
-        playBtn.bgColor = mouseInPlayBtn ? "rgb(200, 200, 200)" : "rgb(170, 170, 170)";
-        playTextColor = mouseInPlayBtn ? "rgb(255, 255, 255)" : "rgb(215, 215, 215)";
+        playBtn.bgColor = mouseInPlayBtn ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
     }
 
+    // Play Btn
     ctx.fillStyle = playBtn.bgColor;
+    ctx.strokeStyle = playBtn.bgColor;
     ctx.lineWidth = 4;
-    ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
+
+    ctx.drawImage(document.getElementById("playbtn"), playBtn.x, playBtn.y, playBtn.w, playBtn.h);
     ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
- 
+    ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
 
-    ctx.fillStyle = playTextColor;
-    ctx.font = "25px Outfit";
-    ctx.textAlign = "center";
-    ctx.fillText("PLAY", playBtn.x + 75, playBtn.y + 75/1.7);
-
+    // Cursor
     if (mouseX && mouseY) {
-        ctx.fillStyle = mouseInPlayBtn ? "blue" : "red";
+        ctx.fillStyle = mouseInPlayBtn ? "rgb(171, 249, 255)" : "rgb(27, 240, 255)";
         drawCircle(mouseX, mouseY, 5);
     }
 
+    // Credits
     ctx.fillStyle = "rgb(110, 110, 110)";
     ctx.font = "20px Outfit";
     ctx.textAlign = "center";
