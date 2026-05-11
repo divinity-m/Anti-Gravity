@@ -27,6 +27,7 @@ const player = {
 
     facingAngle: 0, enteringPortal: false,
 }
+
 const portal = {
     x: cnv.width - cnv.width/5, y: cnv.height/2,
 
@@ -40,7 +41,7 @@ const playBtn = {
 
     w: 150, h: 75,
 
-    bgColor: "rgb(170, 170, 170)",
+    bgColor: "rgba(255, 255, 255, 0)",
 
     effect() {
         gameState = "levels";
@@ -93,10 +94,11 @@ class Block extends Obstacle {
     * @param {number} w - The block's width
     * @param {number} h - The block's height
     */
-    constructor(x, y, w, h, color = "gray") {
+    constructor(x, y, w, h, blockType = "normal", color = "gray") {
         super(x, y, color);
         this.w = w;
         this.h = h;
+        this.blockType = blockType;
         this.type = "block";
         this.playerGrounded = false;
     }
@@ -106,29 +108,32 @@ class Block extends Obstacle {
         const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
         ctx.fillStyle = this.color;
         
-        if (currentLevel.terrain === "grassy") ctx.drawImage(document.getElementById("grass-platform"), this.x, this.y, this.w, this.h);
-        else ctx.fillRect(this.x, this.y, this.w, this.h);
+        if (this.blockType === "normal") ctx.fillRect(this.x, this.y, this.w, this.h);
+
+        if (this.blockType === "tallGrass") ctx.drawImage(document.getElementById("tall-grass-platform"), this.x, this.y, this.w, this.h);
+
+        if (this.blockType === "shortGrass") ctx.drawImage(document.getElementById("short-grass-platform"), this.x, this.y, this.w, this.h);
     }
 
     checkCollisions() {
         // Block.checkCollisions(): checks if the player is colliding with the block
         const fallingUpIntoBlock = (
             player.y + player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
-            player.x + player.r + player.speed > this.x + this.w*0.1 && player.x - player.r - player.speed < this.x + this.w*0.9
+            player.x + player.r > this.x + this.w*0.1 && player.x - player.r < this.x + this.w*0.9
         );
 
         const fallingDownIntoBlock = (
             player.y + player.r + gravity > this.y && player.y - player.r < this.y + this.h*0.5 &&
-            player.x + player.r + player.speed > this.x + this.w*0.1 && player.x - player.r - player.speed < this.x + this.w*0.9
+            player.x + player.r > this.x + this.w*0.1 && player.x - player.r < this.x + this.w*0.9
         );
 
         const movingRightIntoBlock = (
-            player.x + player.r > this.x - player.speed*0.1 && player.x - player.r < this.x + this.w*0.25 &&
+            player.x + player.r > this.x - player.speed*0.1 && player.x + player.r < this.x + this.w &&
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
         const movingLeftIntoBlock = (
-            player.x + player.r > this.x + this.w*0.75 && player.x - player.r < this.x + this.w + player.speed*0.1 &&
+            player.x - player.r > this.x && player.x - player.r < this.x + this.w + player.speed*0.1 &&
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
@@ -139,6 +144,8 @@ class Block extends Obstacle {
 
         if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.1;
         if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.1;
+
+        if (fallingDownIntoBlock) console.log(player.x, player.y);
     }
 }
 
@@ -189,9 +196,9 @@ class Level {
         this.playerSpawn = playerSpawn;
     }
 
-    addBlock(x, y, w, h, color = "gray") {
+    addBlock(x, y, w, h, blockType = "normal", color = "gray") {
         // Level.addBlock(): pushes a block object to the level's obstacles array
-        this.obstacles.push(new Block(x, y, w, h, color));
+        this.obstacles.push(new Block(x, y, w, h, blockType, color));
     }
 
     addText(x, y, content, size, align, color = "gray") {
@@ -225,10 +232,7 @@ function draw() {
     // backdrop
     ctx.drawImage(document.getElementById("sky-backdrop"), 0, 0, cnv.width, cnv.height);
 
-    if (gameState === "titleScreen") {
-        drawTitleScreen();
-    }
-    else if (gameState === "levels") {
+    if (gameState === "levels") {
         // player movement
         let previousX = player.x;
         let previousY = player.y;
@@ -268,6 +272,10 @@ function draw() {
     ctx.drawImage(document.getElementById("grass-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
     ctx.drawImage(document.getElementById("grass-detail"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
 
+
+    // title screen
+    if (gameState === "titleScreen") drawTitleScreen();
+
     // top bar
     ctx.drawImage(document.getElementById("cloud-bar"), 0, borderHeight-0.5, cnv.width, 10);
     ctx.drawImage(document.getElementById("top-bar"), 0, 0, cnv.width, borderHeight);
@@ -277,3 +285,13 @@ function draw() {
 }
 
 draw();
+
+
+function warpToLevel(levelNum) {
+    gameState = "levels";
+
+    while (currentLvlNum < levelNum) {
+        proceedToNextLevel();
+    }
+}
+warpToLevel(3);
