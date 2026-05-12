@@ -152,3 +152,13 @@ Things Worked On:
  - Improved collision detection
  - Some of level 3
  - Title screen design
+
+
+
+# Day 14 - Monday | In class work #
+I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them on creation.
+
+Things Added:
+ - Level 3
+ - Furthur improved on obstacle collisions
+ - rotation property for obstacle-related classes
