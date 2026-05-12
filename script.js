@@ -8,6 +8,10 @@ let gameState = "titleScreen";
 
 // Global Variables //
 let now = Date.now();
+
+const borderHeight = cnv.height/5;
+const dirtColor = "rgb(143, 89, 43)"
+
 let wPressed, aPressed, sPressed, dPressed;
 
 let [gravity, dGravity] = [0, 0.75];
@@ -67,12 +71,16 @@ class Obstacle {
     /**
     * @param {number} x - The obstacles's x coordinate
     * @param {number} y - The obstacles's y coordinate
+    * @param {string} variant - The specific design/type of the obstacle
+    * @param {integer} rotation - How much the obstacle is rotated in radians
     * @param {string} color - The obstacles's fillStyle/strokeStyle
     */
     
-    constructor(x, y, color) {
+    constructor(x, y, variant, rotation, color) {
         this.x = x;
         this.y = y;
+        this.variant = variant;
+        this.rotation = rotation;
         this.color = color;
     }
 
@@ -89,16 +97,13 @@ class Block extends Obstacle {
     // Block: A harmless rectangle that has its own collision properties
 
     /**
-    * @param {number} x - The block's x coordinate
-    * @param {number} y - The block's y coordinate
     * @param {number} w - The block's width
     * @param {number} h - The block's height
     */
-    constructor(x, y, w, h, blockType = "normal", color = "gray") {
-        super(x, y, color);
+    constructor(x, y, w, h, variant, rotation = 0, color = "gray") {
+        super(x, y, variant, rotation, color);
         this.w = w;
         this.h = h;
-        this.blockType = blockType;
         this.type = "block";
         this.playerGrounded = false;
     }
@@ -107,33 +112,39 @@ class Block extends Obstacle {
         // Block.draw(): draws the block as either a grass platform or a plane gray slate
         const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
         ctx.fillStyle = this.color;
+
+        ctx.save();
+        ctx.translate(this.x+this.w/2, this.y+this.h/2);
+        ctx.rotate(this.rotation);
         
-        if (this.blockType === "normal") ctx.fillRect(this.x, this.y, this.w, this.h);
+        if (this.variant === "normal") ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
 
-        if (this.blockType === "tallGrass") ctx.drawImage(document.getElementById("tall-grass-platform"), this.x, this.y, this.w, this.h);
+        if (this.variant === "tallGrass") ctx.drawImage(document.getElementById("tall-grass-platform"), -this.w/2, -this.h/2, this.w, this.h);
 
-        if (this.blockType === "shortGrass") ctx.drawImage(document.getElementById("short-grass-platform"), this.x, this.y, this.w, this.h);
+        if (this.variant === "shortGrass") ctx.drawImage(document.getElementById("short-grass-platform"), -this.w/2, -this.h/2, this.w, this.h);
+
+        ctx.restore();
     }
 
     checkCollisions() {
         // Block.checkCollisions(): checks if the player is colliding with the block
         const fallingUpIntoBlock = (
-            player.y + player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
+            player.y - player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
             player.x + player.r > this.x + this.w*0.1 && player.x - player.r < this.x + this.w*0.9
         );
 
         const fallingDownIntoBlock = (
-            player.y + player.r + gravity > this.y && player.y - player.r < this.y + this.h*0.5 &&
+            player.y + player.r + gravity > this.y && player.y + player.r < this.y + this.h*0.5 &&
             player.x + player.r > this.x + this.w*0.1 && player.x - player.r < this.x + this.w*0.9
         );
 
         const movingRightIntoBlock = (
-            player.x + player.r > this.x - player.speed*0.1 && player.x + player.r < this.x + this.w &&
+            player.x + player.r > this.x - player.speed*0.4 && player.x + player.r < this.x + this.w &&
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
         const movingLeftIntoBlock = (
-            player.x - player.r > this.x && player.x - player.r < this.x + this.w + player.speed*0.1 &&
+            player.x - player.r > this.x && player.x - player.r < this.x + this.w + player.speed*0.4 &&
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
@@ -142,8 +153,8 @@ class Block extends Obstacle {
         if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
         if (fallingDownIntoBlock) player.y = this.y - player.r;
 
-        if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.1;
-        if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.1;
+        if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.4;
+        if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.4;
 
         if (fallingDownIntoBlock) console.log(player.x, player.y);
     }
@@ -154,14 +165,12 @@ class Text extends Obstacle {
     // Text: A string of text to display information
 
     /**
-    * @param {number} x - The text's x coordinate
-    * @param {number} y - The text's y coordinate
     * @param {string} content - The words in the text
     * @param {number} size - The text's size (in px)
     * @param {string} align - Where to align the text (left, centre, or right)
     */
-    constructor(x, y, content, size, align, color = "gray") {
-        super(x, y, color);
+    constructor(x, y, content, size, align, variant = "fill", rotation = 0, color = "gray") {
+        super(x, y, variant, rotation, color);
         this.content = content;
         this.size = size;
         this.align = align;
@@ -171,9 +180,12 @@ class Text extends Obstacle {
     draw() {
         // Text.draw(): draws the text using the object's parameters
         ctx.fillStyle = this.color;
+        ctx.strokeStyle = this.color;
         ctx.font = `${this.size}px Outfit`;
         ctx.textAlign = this.align;
-        ctx.fillText(this.content, this.x, this.y);
+
+        if (this.variant === "fill") ctx.fillText(this.content, this.x, this.y);
+        else if (this.variant === "stroke" ) ctx.strokeText(this.content, this.x, this.y);
     }
 }
 
@@ -196,14 +208,14 @@ class Level {
         this.playerSpawn = playerSpawn;
     }
 
-    addBlock(x, y, w, h, blockType = "normal", color = "gray") {
+    addBlock(x, y, w, h, variant = "normal", rotation = 0, color = "gray") {
         // Level.addBlock(): pushes a block object to the level's obstacles array
-        this.obstacles.push(new Block(x, y, w, h, blockType, color));
+        this.obstacles.push(new Block(x, y, w, h, variant, rotation, color));
     }
 
-    addText(x, y, content, size, align, color = "gray") {
+    addText(x, y, content, size, align, variant = "fill", rotation = 0, color = "gray") {
         // Level.addText(): pushes a text object to the level's obstacles array
-        this.obstacles.push(new Text(x, y, content, size, align, color));
+        this.obstacles.push(new Text(x, y, content, size, align, variant, rotation, color));
     }
 }
 
@@ -222,8 +234,6 @@ document.addEventListener("click", clickHandler);
 function draw() {
     now = Date.now();
     ctx.clearRect(0, 0, cnv.width, cnv.height);
-    
-    const borderHeight = cnv.height/5;
     
     // background
     ctx.fillStyle = "rgb(200, 200, 200)";
