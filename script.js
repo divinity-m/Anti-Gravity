@@ -184,8 +184,14 @@ class Text extends Obstacle {
         ctx.font = `${this.size}px Outfit`;
         ctx.textAlign = this.align;
 
-        if (this.variant === "fill") ctx.fillText(this.content, this.x, this.y);
-        else if (this.variant === "stroke" ) ctx.strokeText(this.content, this.x, this.y);
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        if (this.variant === "fill") ctx.fillText(this.content, 0, 0);
+        else if (this.variant === "stroke" ) ctx.strokeText(this.content, 0, 0);
+        
+        ctx.restore();
     }
 }
 
