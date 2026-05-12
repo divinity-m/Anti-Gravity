@@ -126,6 +126,10 @@ function ImposePortalGravity() {
     
     const portalRange = portal.r + 50;
 
+    // a visual of the portals range
+    // ctx.strokeStyle = "blue"
+    // drawCircle(portal.x, portal.y, portalRange, 2);
+
     if (portalDist < portalRange) {
         player.enteringPortal = true;
         player.spinSpeed =  Math.PI/32;
@@ -201,11 +205,12 @@ function setUpLevels() {
     for (let i = 1; i < 11; i++) {
         const previousLevel = allLevels[i-1];
 
-        // by default, the portal coordinates simply reflect where the last portal originally was
+        // by default, the portal coordinates reflect where the last portal originally was
         const portalIsOnTheRightSide = previousLevel.portalCoord[0] > cnv.width/2;
         
         const portalCoordX = portalIsOnTheRightSide ? cnv.width/5 : cnv.width - cnv.width/5;
         const portalCoord = [portalCoordX, cnv.height/2];
+
 
         // levels 1-5 & 11 are grassy, levels 6-10 are rocky
         const terrain = (i+1 <= 5 || i+1 === 11) ? "grassy" : "rocky";
@@ -227,11 +232,23 @@ function setUpLevels() {
     // LEVEL 3
     const level3 = allLevels.find((level) => level.number === 3);
     
-    level3.addBlock(cnv.width-60, 0, 50, cnv.height, "normal", "rgb(143, 89, 43)"); // cnv.width-100 is the x
+    level3.addBlock(cnv.width-60, 0, 50, cnv.height, "normal", 0, dirtColor); // border
 
-    level3.addBlock(cnv.width/5, cnv.height/2, 200, 150, "tallGrass");
+    level3.addBlock(cnv.width/5+25, cnv.height-borderHeight-150/4, 150, 150/4, "shortGrass");
+    level3.addBlock(cnv.width/5+25+150, cnv.height-borderHeight-120, 120, 120, "tallGrass");
+    
+    level3.addBlock(cnv.width/2+25, borderHeight+60, 100, 30, "shortGrass", Math.PI);
+    level3.addBlock(cnv.width/2+60, borderHeight+20, 30, 40, "normal", 0, dirtColor);
+    level3.addBlock(cnv.width/2+90, borderHeight+20, 350, 30, "normal", 0, dirtColor);
+
+    level3.addBlock(cnv.width/2+100, cnv.height/2+50, 150, 150/4, "shortGrass");
+    level3.addBlock(cnv.width/2+150, cnv.height/2+87, 50, 50, "normal", 0, dirtColor);
+    level3.addBlock(cnv.width/2+150+50, cnv.height/2+110, 240, 27, "normal", 0, dirtColor);
 
 
+    // Level 4
+    const level4 = allLevels.find((level) => level.number === 4);
+    level4.portalCoord = [cnv.width/2 + 200, cnv.height/2];
     
     // LEVEL 11 (Finale)
     const level11 = allLevels.find((level) => level.number === 11);
@@ -277,10 +294,21 @@ function drawPlayer(x, y, r, rotation) {
 function drawPortal() {
     // drawPlayer(): draws the portal and handles it's rotation
 
+    // Black Portal
+    ctx.globalAlpha = 0.75;
+    ctx.save();
+    ctx.translate(portal.x, portal.y)
+    ctx.rotate(-portal.rotation);
+    ctx.drawImage(document.getElementById("black-portal"), -portal.r * 2, -portal.r * 2, portal.r * 4, portal.r * 4);
+    ctx.restore();
+
+
+    // Blue Portal
+    ctx.globalAlpha = 1;
     ctx.save();
     ctx.translate(portal.x, portal.y)
     ctx.rotate(portal.rotation);
-    ctx.drawImage(document.getElementById("portal-img"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
+    ctx.drawImage(document.getElementById("blue-portal"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
     ctx.restore();
 
     portal.rotation += portal.spinSpeed;
