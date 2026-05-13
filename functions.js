@@ -252,17 +252,39 @@ function setUpLevels() {
 
     // Level 4 (First level with spikes)
     const level4 = allLevels.find((level) => level.number === 4);
-    level4.portalCoord = [500 + 125, cnv.height/2];
+    level4.portalCoord = [500 + 125, cnv.height/2-25];
 
-    level4.addBlock(500+200, 0, 30, cnv.height, "normal", 0, dirtColor); // border
+    level4.addBlock(700, 0, 30, cnv.height, "normal", 0, dirtColor); // border
     
+    level4.addSpike(900, cnv.height-borderHeight-25, 25, "normal", 0, lightGrassColor);
+
     level4.addBlock(100, cnv.height-borderHeight-100, 150, 100, "tallGrass");
     level4.addSpike(100, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
 
+    level4.addBlock(260, borderHeight, 150, 100, "cloud", Math.PI);
+    level4.addSpike(260, borderHeight+100, 20, "normal", Math.PI, cloudColor);
+
+    for (let i = 0; i < 5; i++) {
+        level4.addSpike(250+i*40, cnv.height-borderHeight-30, 40, "wide", 0, lightGrassColor);
+    }
+    for (let i = 0; i < 7; i++) {
+        if (i < 2 || i > 4) level4.addSpike(410+i*40, borderHeight-15, 40, "wide", Math.PI, cloudColor);
+    }
     
-    level4.addBlock(260, borderHeight, 150, 100, "tallGrass", Math.PI);
-    level4.addSpike(300, borderHeight+100, 25, "normal", Math.PI, grassColor);
+    level4.addBlock(450, cnv.height-borderHeight-100, 125, 100, "tallGrass");
+    level4.addBlock(575, cnv.height-borderHeight-100, 125, 100, "tallGrass");
+    level4.addSpike(510, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
     
+
+    // Level 5
+    const level5 = allLevels.find((level) => level.number === 5);
+    level5.portalCoord = [level5.portalCoord[0] + 5, level5.portalCoord[1]];
+
+    level5.addBlock(700, 0, 30, cnv.height, "normal", 0, dirtColor); // border
+
+    level5.addBlock(300, borderHeight, 75, 75, "cloud", Math.PI);
+    
+    level5.addBlock(200, cnv.height-borderHeight-100, 125, 100, "tallGrass"); // border
     
     // LEVEL 11 (Finale)
     const level11 = allLevels.find((level) => level.number === 11);
