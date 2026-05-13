@@ -12,6 +12,8 @@ let now = Date.now();
 const borderHeight = cnv.height/5;
 const dirtColor = "rgb(143, 89, 43)";
 const grassColor = "rgb(42, 191, 42)";
+const lightGrassColor = "rgb(82, 213, 82)";
+const cloudColor = "rgba(237, 253, 255, 0.8)";
 
 let wPressed, aPressed, sPressed, dPressed;
 
@@ -123,6 +125,11 @@ class Block extends Obstacle {
 
         if (this.variant === "shortGrass") ctx.drawImage(document.getElementById("short-grass-platform"), -this.w/2, -this.h/2, this.w, this.h);
 
+        if (this.variant === "cloud") {
+            ctx.drawImage(document.getElementById("cloud-platform"), -this.w/2, -this.h/2, this.w, this.h);
+            ctx.drawImage(document.getElementById("cloud-platform-fluff"), -this.w/2-this.w*0.075, -this.h/2-this.h*0.075, this.w+this.w*0.15, this.h+this.h*0.15);
+        }
+
         ctx.restore();
     }
 
@@ -186,21 +193,21 @@ class Spike extends Obstacle {
             ctx.lineTo(-this.size/2, this.size/2);
         }
         if (this.variant === "wide") {
-            ctx.moveTo(0, 0);
-            ctx.lineTo(this.size/2, this.size/2);
-            ctx.lineTo(-this.size/2, this.size/2);
+            ctx.moveTo(0, -this.size/4);
+            ctx.lineTo(this.size/2, this.size/4);
+            ctx.lineTo(-this.size/2, this.size/4);
         }
 
         ctx.fill();
 
         // spike hitbox
-            ctx.strokeStyle = "red";
-            ctx.lineWidth = 0.5;
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 0.5;
         if (this.variant === "normal") {
             // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/2, this.size*0.35, this.size);
         }
         if (this.variant === "wide") {
-            ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/2, this.size*0.35, this.size);
+            // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/4, this.size*0.35, this.size/2);
         }
         
         ctx.restore();
@@ -218,7 +225,7 @@ class Spike extends Obstacle {
         if (this.variant === "wide")  {
             playerHitSpike = (
                 player.x+player.r > this.x+this.size*0.325 && player.x - player.r < this.x+this.size*0.325+this.size*0.35 &&
-                player.y+player.r > this.y && player.y-player.r < this.y+this.size
+                player.y+player.r > this.y+this.size/4 && player.y-player.r < this.y+this.size*0.75
             );
         }
         if (playerHitSpike) respawnPlayer();
@@ -349,9 +356,9 @@ function draw() {
         
         
         // content visuals
-        drawObstacles();
         drawPortal();
         drawPlayer();
+        drawObstacles();
     }
     
     // bottom bar
@@ -373,11 +380,15 @@ function draw() {
 draw();
 
 
-function warpToLevel(levelNum) {
+function warpToLevel(levelNum, spawn) {
     gameState = "levels";
 
+    const level = allLevels.find((level) => level.number === levelNum);
+    level.playerSpawn = spawn;
+
     while (currentLvlNum < levelNum) {
+
         proceedToNextLevel();
     }
 }
-warpToLevel(4);
+warpToLevel(5, [650, 250]);
