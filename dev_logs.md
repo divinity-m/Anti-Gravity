@@ -155,7 +155,7 @@ Things Worked On:
 
 
 
-# Day 14 - Monday | In class work  & At home work #
+# Day 15 - Tuesday | In class work  & At home work #
 I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. 
 
 **At Home Work**
