@@ -156,13 +156,14 @@ function ImposePortalGravity() {
     }
     else {
         player.enteringPortal = false;
-        player.spinSpeed =  Math.PI/16;
+        player.spinSpeed = Math.PI/16;
         portal.timeSinceEntered = now;
     }
 }
 
 function proceedToNextLevel() {
     // proceedToNextLevel(): finds the next level then sets the player's & the portal's coordinates to that of the level's
+    portal.timeSinceEntered = now;
     
     // increment the currentLvlNum
     currentLvlNum++;
@@ -172,10 +173,13 @@ function proceedToNextLevel() {
     portal.x = nextLevel.portalCoord[0];
     portal.y = nextLevel.portalCoord[1];
 
-    // only set the player coordinates if they exist, otherwise, they dont change
+    // only set the player coordinates if they exist, otherwise, make the spawn point where the player started the level
     if (nextLevel.playerSpawn.length > 0) {
         player.x = nextLevel.playerSpawn[0];
         player.y = nextLevel.playerSpawn[1];
+    }
+    else {
+        nextLevel.playerSpawn = [player.x, player.y];
     }
 
     // force the player to fall back down
@@ -186,13 +190,13 @@ function proceedToNextLevel() {
 function setUpLevels() {
     // setUpLevels(): creates every single level in the game
 
-    // LEVEL 1
-    const level1PortalCoord = [cnv.width - cnv.width/5, cnv.height - cnv.height/3];
-    const level1PlayerSpawn = [cnv.width/5, cnv.height/2];
+    // LEVEL 1 (Tutorial for Left/Right movement)
+    const level1PortalCoord = [800, 320];
+    const level1PlayerSpawn = [200, 250];
 
     const level1 = new Level(1, "grassy", [], level1PortalCoord, level1PlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
 
-    level1.addText(cnv.width/10, cnv.height/2, "Press A/D or ⇐/⇒ to move around", 15, "left");
+    level1.addText(100, 250, 15, "Press A/D or ⇐/⇒ to move around", "left");
     
     allLevels.push(level1);
 
@@ -221,41 +225,50 @@ function setUpLevels() {
     }
     
 
-    // LEVEL 2
+    // LEVEL 2 (Tutorial for Gravity Swapping)
     const level2 = allLevels.find((level) => level.number === 2);
-    level2.portalCoord = [cnv.width/5 + 100, cnv.height*0.35];
+    level2.portalCoord = [300, 185];
 
-    level2.addText(cnv.width-cnv.width/10, cnv.height/2, "Press W or ⇑ to swap gravity", 15, "right");
-    level2.addBlock(cnv.width/5, cnv.height/2, 200, 150, "tallGrass");
+    level2.addText(900, 250, 15, "Press W or ⇑ to swap gravity", "right");
+    level2.addBlock(200, cnv.height-borderHeight-135, 200, 135, "tallGrass");
 
 
     // LEVEL 3
     const level3 = allLevels.find((level) => level.number === 3);
     
-    level3.addBlock(cnv.width-60, 0, 50, cnv.height, "normal", 0, dirtColor); // border
+    level3.addBlock(940, 0, 50, cnv.height, "normal", 0, dirtColor); // border
 
-    level3.addBlock(cnv.width/5+25, cnv.height-borderHeight-150/4, 150, 150/4, "shortGrass");
-    level3.addBlock(cnv.width/5+25+150, cnv.height-borderHeight-120, 120, 120, "tallGrass");
+    level3.addBlock(225, cnv.height-borderHeight-150/4, 150, 150/4, "shortGrass");
+    level3.addBlock(225+150, cnv.height-borderHeight-80, 120, 80, "tallGrass");
     
-    level3.addBlock(cnv.width/2+25, borderHeight+60, 100, 30, "shortGrass", Math.PI);
-    level3.addBlock(cnv.width/2+60, borderHeight+20, 30, 40, "normal", 0, dirtColor);
-    level3.addBlock(cnv.width/2+90, borderHeight+20, 350, 30, "normal", 0, dirtColor);
+    level3.addBlock(525, borderHeight+60, 100, 30, "shortGrass", Math.PI);
+    level3.addBlock(525+35, borderHeight+20, 30, 40, "normal", 0, dirtColor);
+    level3.addBlock(525+35+30, borderHeight+20, 350, 20, "normal", 0, dirtColor);
 
-    level3.addBlock(cnv.width/2+100, cnv.height/2+50, 150, 150/4, "shortGrass");
-    level3.addBlock(cnv.width/2+150, cnv.height/2+87, 50, 50, "normal", 0, dirtColor);
-    level3.addBlock(cnv.width/2+150+50, cnv.height/2+110, 240, 27, "normal", 0, dirtColor);
+    level3.addBlock(500+100, 300, 150, 150/4, "shortGrass");
+    level3.addBlock(500+150, 300+37, 50, 50, "normal", 0, dirtColor);
+    level3.addBlock(500+150+50, 300+60, 240, 27, "normal", 0, dirtColor);
 
 
-    // Level 4
+    // Level 4 (First level with spikes)
     const level4 = allLevels.find((level) => level.number === 4);
-    level4.portalCoord = [cnv.width/2 + 200, cnv.height/2];
+    level4.portalCoord = [500 + 125, cnv.height/2];
+
+    level4.addBlock(500+200, 0, 30, cnv.height, "normal", 0, dirtColor); // border
+    
+    level4.addBlock(100, cnv.height-borderHeight-100, 150, 100, "tallGrass");
+    level4.addSpike(100, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
+
+    
+    level4.addBlock(260, borderHeight, 150, 100, "tallGrass", Math.PI);
+    level4.addSpike(300, borderHeight+100, 25, "normal", Math.PI, grassColor);
+    
     
     // LEVEL 11 (Finale)
     const level11 = allLevels.find((level) => level.number === 11);
     level11.portalCoord = [-500, -500]; // No Portal
-    level11.playerSpawn = [cnv.width/2, cnv.height/2]; // Center Player
 
-    level11.addText(cnv.width/2, cnv.height/2, "Thanks for playing!", 35, "center");
+    level11.addText(500, 250, 35, "Thanks for playing!", "center");
 }
 
 function checkObstacleCollisions() {
@@ -265,6 +278,14 @@ function checkObstacleCollisions() {
     for (let i in currentLevel.obstacles) {
         currentLevel.obstacles[i].checkCollisions();
     }
+}
+
+function respawnPlayer() {
+// respawnPlayer(): resets the players coordinates to the start of the level
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    
+    player.x = currentLevel.playerSpawn[0];
+    player.y = currentLevel.playerSpawn[1];
 }
 
 
