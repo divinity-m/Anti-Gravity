@@ -155,8 +155,11 @@ Things Worked On:
 
 
 
-# Day 14 - Monday | In class work #
-I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. I've also began working on a `Spike` class and created a `respawnPlayer()` function to account for deaths.
+# Day 14 - Monday | In class work  & At home work #
+I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. 
+
+**At Home Work**
+I began working on a `Spike` class and created a `respawnPlayer()` function to account for deaths.
 
 Things Added:
  - All of level 3 and small bits of level 4
