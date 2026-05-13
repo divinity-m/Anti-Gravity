@@ -10,7 +10,8 @@ let gameState = "titleScreen";
 let now = Date.now();
 
 const borderHeight = cnv.height/5;
-const dirtColor = "rgb(143, 89, 43)"
+const dirtColor = "rgb(143, 89, 43)";
+const grassColor = "rgb(42, 191, 42)";
 
 let wPressed, aPressed, sPressed, dPressed;
 
@@ -109,8 +110,7 @@ class Block extends Obstacle {
     }
 
     draw() {
-        // Block.draw(): draws the block as either a grass platform or a plane gray slate
-        const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+        // Block.draw(): draws the block
         ctx.fillStyle = this.color;
 
         ctx.save();
@@ -155,8 +155,73 @@ class Block extends Obstacle {
 
         if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.4;
         if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.4;
+    }
+}
 
-        if (fallingDownIntoBlock) console.log(player.x, player.y);
+class Spike extends Obstacle {
+    // Block: A harmless rectangle that has its own collision properties
+
+    /**
+    * @param {string} size - The spikes overall height and width
+    */
+    constructor(x, y, size, variant, rotation = 0, color = "gray") {
+        super(x, y, variant, rotation, color);
+        this.size = size;
+        this.type = "spike";
+    }
+
+    draw() {
+        // Spike.draw(): draws the spike
+        ctx.fillStyle = this.color;
+
+        ctx.save();
+        ctx.translate(this.x+this.size/2, this.y+this.size/2);
+        ctx.rotate(this.rotation);
+        
+        ctx.beginPath();
+        
+        if (this.variant === "normal") {
+            ctx.moveTo(0, -this.size/2);
+            ctx.lineTo(this.size/2, this.size/2);
+            ctx.lineTo(-this.size/2, this.size/2);
+        }
+        if (this.variant === "wide") {
+            ctx.moveTo(0, 0);
+            ctx.lineTo(this.size/2, this.size/2);
+            ctx.lineTo(-this.size/2, this.size/2);
+        }
+
+        ctx.fill();
+
+        // spike hitbox
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 0.5;
+        if (this.variant === "normal") {
+            // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/2, this.size*0.35, this.size);
+        }
+        if (this.variant === "wide") {
+            ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/2, this.size*0.35, this.size);
+        }
+        
+        ctx.restore();
+    }
+
+    checkCollisions() {
+        // Spike.checkCollisions(): checks if the player is colliding with the spike
+        let playerHitSpike;
+        if (this.variant === "normal")  {
+            playerHitSpike = (
+                player.x+player.r > this.x+this.size*0.325 && player.x - player.r < this.x+this.size*0.325+this.size*0.35 &&
+                player.y+player.r > this.y && player.y-player.r < this.y+this.size
+            );
+        }
+        if (this.variant === "wide")  {
+            playerHitSpike = (
+                player.x+player.r > this.x+this.size*0.325 && player.x - player.r < this.x+this.size*0.325+this.size*0.35 &&
+                player.y+player.r > this.y && player.y-player.r < this.y+this.size
+            );
+        }
+        if (playerHitSpike) respawnPlayer();
     }
 }
 
@@ -169,10 +234,10 @@ class Text extends Obstacle {
     * @param {number} size - The text's size (in px)
     * @param {string} align - Where to align the text (left, centre, or right)
     */
-    constructor(x, y, content, size, align, variant = "fill", rotation = 0, color = "gray") {
+    constructor(x, y, size, content, align, variant = "fill", rotation = 0, color = "gray") {
         super(x, y, variant, rotation, color);
-        this.content = content;
         this.size = size;
+        this.content = content;
         this.align = align;
         this.type = "text";
     }
@@ -215,13 +280,18 @@ class Level {
     }
 
     addBlock(x, y, w, h, variant = "normal", rotation = 0, color = "gray") {
-        // Level.addBlock(): pushes a block object to the level's obstacles array
+        // Level.addBlock(): pushes a block object into the level's obstacles array
         this.obstacles.push(new Block(x, y, w, h, variant, rotation, color));
     }
+    
+    addSpike(x, y, size, variant = "normal", rotation = 0, color = "gray") {
+        // Level.addSpike(): pushes a spike object into the level's obstacles array
+        this.obstacles.push(new Spike(x, y, size, variant, rotation, color));
+    }
 
-    addText(x, y, content, size, align, variant = "fill", rotation = 0, color = "gray") {
-        // Level.addText(): pushes a text object to the level's obstacles array
-        this.obstacles.push(new Text(x, y, content, size, align, variant, rotation, color));
+    addText(x, y, size, content, align, variant = "fill", rotation = 0, color = "gray") {
+        // Level.addText(): pushes a text object into the level's obstacles array
+        this.obstacles.push(new Text(x, y, size, content, align, variant, rotation, color));
     }
 }
 
@@ -310,4 +380,5 @@ function warpToLevel(levelNum) {
         proceedToNextLevel();
     }
 }
-warpToLevel(3);
+warpToLevel(4);
+
