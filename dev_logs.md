@@ -149,16 +149,17 @@ Things Added:
 While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on furthur improving the collision conditions in the block class's `checkCollisions()`. Gavin helped me design a gradient play button for the game as well.
 
 Things Worked On:
- - Improved collision detection
+ - Improved block collision detection
  - Some of level 3
  - Title screen design
 
 
 
 # Day 14 - Monday | In class work #
-I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them on creation.
+I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. I've also began working on a `Spike` class and created a `respawnPlayer()` function to account for deaths.
 
 Things Added:
- - Level 3
- - Furthur improved on obstacle collisions
+ - All of level 3 and small bits of level 4
+ - Furthur improved on block collisions
  - rotation property for obstacle-related classes
+ - Started developing spikes and created a `respawnPlayer()` function
