@@ -146,7 +146,7 @@ Things Added:
 
 
 # Day 14 - Monday | In class work #
-While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on furthur improving the collision conditions in the block class's `checkCollisions()`. Gavin helped me design a gradient play button for the game as well.
+While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on improving the conditions in the block class's `checkCollisions()` method. Gavin helped me design a gradient play button for the game as well.
 
 Things Worked On:
  - Improved block collision detection
