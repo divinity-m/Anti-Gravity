@@ -354,17 +354,17 @@ function draw() {
         drawPlayer();
     }
     
-    // grass floor
+    // bottom bar
     ctx.drawImage(document.getElementById("grass-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
-    ctx.drawImage(document.getElementById("grass-detail"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
+    ctx.drawImage(document.getElementById("grass-blades"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
 
 
     // title screen
     if (gameState === "titleScreen") drawTitleScreen();
 
     // top bar
-    ctx.drawImage(document.getElementById("cloud-bar"), 0, borderHeight-0.5, cnv.width, 10);
-    ctx.drawImage(document.getElementById("top-bar"), 0, 0, cnv.width, borderHeight);
+    ctx.drawImage(document.getElementById("cloud-fluff"), 0, borderHeight-0.5, cnv.width, 10);
+    ctx.drawImage(document.getElementById("cloud-bar"), 0, 0, cnv.width, borderHeight);
     
     // repeat the animation
     requestAnimationFrame(draw);
@@ -381,4 +381,3 @@ function warpToLevel(levelNum) {
     }
 }
 warpToLevel(4);
-
