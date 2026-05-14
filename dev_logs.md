@@ -169,7 +169,7 @@ Things Added:
 
 
 
-# Day 15 - Tuesday | In class work  & At home work #
+# Day 16 - Tuesday | In class work  & At home work #
 I finished the `Spike` class and used it in the creation of level 4. Player death and respawning has also been fully accounted for.
 
 Things Added:
