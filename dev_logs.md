@@ -69,7 +69,7 @@ Things Added:
 Began shifting my focus away from player/portal design & funcitionality, and towards the games core concepts, which included the use of classes. I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen. The play button on the title screen required me to add a `mousemove` and `click` event listener to the document to check for hover and click inputs. Because of all of these new goals, I wasn't able to complete anything specific this class.
 
 Things Worked On:
- - Levels & Obstacles (Blocks are currently the only obstacle I've worked on)
+ - `Level` class and `Block` class
  - Title Screen
 
 
@@ -140,7 +140,7 @@ I wanted to add a bit of a tutorial to the game for explaining the controls so I
 Level one and two are pretty much complete, they don't have much content at all, but thats intentional because they only exist to explain the controls.
 
 Things Added:
-- Obstacle Class, Text Class, and Inheritance
+- `Obstacle` Class, `Text` Class, and Inheritance
 - Level 1 and 2 + tutorial text
 
 
@@ -166,3 +166,12 @@ Things Added:
  - Furthur improved on block collisions
  - rotation property for obstacle-related classes
  - Started developing spikes and created a `respawnPlayer()` function
+
+
+
+# Day 15 - Tuesday | In class work  & At home work #
+I finished the `Spike` class and used it in the creation of level 4. Player death and respawning has also been fully accounted for.
+
+Things Added:
+ - All of level 4
+ - Completed the `Spike` class
