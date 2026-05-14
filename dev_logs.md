@@ -179,7 +179,7 @@ Things Added:
 
 
 # Day 17 - Thursday | In class work #
-I spent the entire class designing level 5 and I didn't encounter any issues/bugs while making it.
+I spent the entire class designing level 5 and I didn't encounter any issues/bugs while making it. I plan for level 6 and above to have a cave-like design, thankfully, gavin has already designed a backdrop for the cave, the platforms however are just going to be blank grey slates.
 
 Things Added:
  - All of level 5
