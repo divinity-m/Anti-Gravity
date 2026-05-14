@@ -261,7 +261,7 @@ function setUpLevels() {
     level4.addBlock(100, cnv.height-borderHeight-100, 150, 100, "tallGrass");
     level4.addSpike(100, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
 
-    level4.addBlock(260, borderHeight, 150, 100, "cloud", Math.PI);
+    level4.addBlock(260, borderHeight, 150, 100, "cloud");
     level4.addSpike(260, borderHeight+100, 20, "normal", Math.PI, cloudColor);
 
     for (let i = 0; i < 5; i++) {
@@ -276,15 +276,57 @@ function setUpLevels() {
     level4.addSpike(510, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
     
 
-    // Level 5
+    // Level 5 (intro to cave section)
     const level5 = allLevels.find((level) => level.number === 5);
     level5.portalCoord = [level5.portalCoord[0] + 5, level5.portalCoord[1]];
 
-    level5.addBlock(700, 0, 30, cnv.height, "normal", 0, dirtColor); // border
+    level5.addBlock(700, 0, 30, cnv.height, "normal", 0, rockColor); // border
 
-    level5.addBlock(300, borderHeight, 75, 75, "cloud", Math.PI);
+    for (let i = 0; i < 5; i++) {
+        level5.addBlock(300+i*75, borderHeight, 100, 75, "cloud");
+        level5.addBlock(300+i*75, cnv.height-borderHeight-100, 100, 100, "tallGrass");
+    }
+
+    for (let i = 0; i < 3; i++) {
+        level5.addSpike(365+i*125, borderHeight+65, 35, "wide", Math.PI, cloudColor2);
+        level5.addSpike(300+i*125, cnv.height-borderHeight-126, 35, "wide", 0, grassColor);
+    }
+
+    for (let i = 0; i < 29; i++) {
+        level5.addSpike(-5+i*35, borderHeight-10, 35, "wide", Math.PI, cloudColor2);
+    }
     
-    level5.addBlock(200, cnv.height-borderHeight-100, 125, 100, "tallGrass"); // border
+    level5.addBlock(85, cnv.height-borderHeight-100, 140, 100, "tallGrass");
+
+    level5.addBlock(0, cnv.height-borderHeight-25, 700, 25, "normal", 0, "rgb(133, 82, 39)");
+    level5.addBlock(700, cnv.height-borderHeight-25, 300, 25, "normal", 0, rockColor);
+
+    for (let i = 0; i < 9; i++) {
+        level5.addSpike(-14+i*35, cnv.height-borderHeight-51, 35, "wide", 0, "rgb(133, 82, 39)");
+        level5.addSpike(730+i*35, cnv.height-borderHeight-51, 35, "wide", 0, rockColor);
+    }
+    
+    level5.addSpike(110, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
+
+
+    // platforms connecting to the border
+    level5.addBlock(730, borderHeight+20, 270, 30, "normal", 0, rockColor)
+    level5.addBlock(0, borderHeight+20, 100, 30, "normal", 0, rockColor)
+    level5.addBlock(70, borderHeight+50, 30, 20, "normal", 0, rockColor)
+
+    // floating platforms
+    level5.addBlock(0, borderHeight+70, 80, 35, "normal", 0, rockColor)
+    level5.addBlock(-80, borderHeight+70, 80, 35, "normal", 0, rockColor)
+    level5.addBlock(80, borderHeight+70, 80, 35, "normal", 0, rockColor)
+    level5.addBlock(950, borderHeight+70, 120, 35, "normal", 0, rockColor)
+
+    level5.addSpike(0, borderHeight+41, 35, "wide", Math.PI, rockColor);
+    level5.addSpike(35, borderHeight+41, 35, "wide", Math.PI, rockColor);
+    for (let i = 0; i < 8; i++) {
+        level5.addSpike(730+i*35, borderHeight+41, 35, "wide", Math.PI, rockColor);
+    }
+
+    level5.addBlock(890, 285, 80, 60, "cloud");
     
     // LEVEL 11 (Finale)
     const level11 = allLevels.find((level) => level.number === 11);
@@ -308,6 +350,9 @@ function respawnPlayer() {
     
     player.x = currentLevel.playerSpawn[0];
     player.y = currentLevel.playerSpawn[1];
+
+    fallingDirection = "down";
+    resetGravity();
 }
 
 
