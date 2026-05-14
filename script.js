@@ -14,6 +14,8 @@ const dirtColor = "rgb(143, 89, 43)";
 const grassColor = "rgb(42, 191, 42)";
 const lightGrassColor = "rgb(82, 213, 82)";
 const cloudColor = "rgba(237, 253, 255, 0.8)";
+const cloudColor2 = "rgba(218, 251, 255, 0.8)";
+const rockColor = "rgb(90, 90, 90)";
 
 let wPressed, aPressed, sPressed, dPressed;
 
@@ -387,8 +389,7 @@ function warpToLevel(levelNum, spawn) {
     level.playerSpawn = spawn;
 
     while (currentLvlNum < levelNum) {
-
         proceedToNextLevel();
     }
 }
-warpToLevel(5, [650, 250]);
+warpToLevel(5, [600, 250]);
