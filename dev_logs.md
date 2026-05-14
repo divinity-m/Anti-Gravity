@@ -169,9 +169,17 @@ Things Added:
 
 
 
-# Day 16 - Tuesday | In class work  & At home work #
-I finished the `Spike` class and used it in the creation of level 4. Player death and respawning has also been fully accounted for.
+# Day 16 - Wednesday | In class work #
+I finished creating the `Spike` class while working on level 4, the first level to use spikes. Player death and respawning has also been fully accounted for.
 
 Things Added:
  - All of level 4
  - Completed the `Spike` class
+
+
+
+# Day 17 - Thursday | In class work #
+I spent the entire class designing level 5 and I didn't encounter any issues/bugs while making it.
+
+Things Added:
+ - All of level 5
