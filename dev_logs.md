@@ -183,3 +183,11 @@ I spent the entire class designing level 5 and I didn't encounter any issues/bug
 
 Things Added:
  - All of level 5
+
+
+
+# Day 18 - Friday | In class work #
+
+
+Things Added:
+ - 
