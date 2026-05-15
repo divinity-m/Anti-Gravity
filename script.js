@@ -15,7 +15,7 @@ const grassColor = "rgb(42, 191, 42)";
 const lightGrassColor = "rgb(82, 213, 82)";
 const cloudColor = "rgba(237, 253, 255, 0.8)";
 const cloudColor2 = "rgba(218, 251, 255, 0.8)";
-const rockColor = "rgb(90, 90, 90)";
+const rockColor = "rgb(81, 79, 77)";
 
 let wPressed, aPressed, sPressed, dPressed;
 
@@ -32,7 +32,7 @@ const player = {
 
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
     
-    speed: 5,
+    speed: 5, phasing: false,
 
     facingAngle: 0, enteringPortal: false,
 }
@@ -157,13 +157,15 @@ class Block extends Obstacle {
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
-        this.playerGrounded = fallingUpIntoBlock || fallingDownIntoBlock;
-
-        if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
-        if (fallingDownIntoBlock) player.y = this.y - player.r;
-
-        if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.4;
-        if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.4;
+        if (this.variant !== "phase") {
+            this.playerGrounded = fallingUpIntoBlock || fallingDownIntoBlock;
+    
+            if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
+            if (fallingDownIntoBlock) player.y = this.y - player.r;
+    
+            if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.4;
+            if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.4;
+        }
     }
 }
 
@@ -234,7 +236,6 @@ class Spike extends Obstacle {
     }
 }
 
-
 class Text extends Obstacle {
     // Text: A string of text to display information
 
@@ -268,7 +269,6 @@ class Text extends Obstacle {
         ctx.restore();
     }
 }
-
 
 class Level {
     // Level: A singular stage with its own unique obstacles
@@ -317,6 +317,7 @@ document.addEventListener("click", clickHandler);
 
 // Draw Function //
 function draw() {
+    // draw(): the main function which is repeated to call other process and draw functions
     now = Date.now();
     ctx.clearRect(0, 0, cnv.width, cnv.height);
     
@@ -325,9 +326,18 @@ function draw() {
     ctx.fillRect(0, 0, cnv.width, cnv.height);
 
     // backdrop
-    ctx.drawImage(document.getElementById("sky-backdrop"), 0, 0, cnv.width, cnv.height);
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
 
-    if (gameState === "levels") {
+    if (currentLevel.terrain === "grassy") {
+        ctx.drawImage(document.getElementById("sky-backdrop"), 0, 0, cnv.width, cnv.height);
+    }
+    else if (currentLevel.terrain === "rocky") {
+        ctx.drawImage(document.getElementById("cave-backdrop"), 0, 0, cnv.width, cnv.height);
+    }
+
+    // title screen
+    if (gameState === "titleScreen") drawTitleScreen();
+    else if (gameState === "levels") {
         // player movement
         let previousX = player.x;
         let previousY = player.y;
@@ -364,16 +374,24 @@ function draw() {
     }
     
     // bottom bar
-    ctx.drawImage(document.getElementById("grass-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
-    ctx.drawImage(document.getElementById("grass-blades"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
+    if (currentLevel.terrain === "grassy") {
+        ctx.drawImage(document.getElementById("grass-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
+        ctx.drawImage(document.getElementById("grass-blades"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
+    }
+    else if (currentLevel.terrain === "rocky") {
+        ctx.drawImage(document.getElementById("cave-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
+    }
 
-
-    // title screen
-    if (gameState === "titleScreen") drawTitleScreen();
+    if (gameState === "titleScreen") drawCursor();
 
     // top bar
-    ctx.drawImage(document.getElementById("cloud-fluff"), 0, borderHeight-0.5, cnv.width, 10);
-    ctx.drawImage(document.getElementById("cloud-bar"), 0, 0, cnv.width, borderHeight);
+    if (currentLevel.terrain === "grassy") {
+        ctx.drawImage(document.getElementById("cloud-fluff"), 0, borderHeight-0.5, cnv.width, 10);
+        ctx.drawImage(document.getElementById("cloud-bar"), 0, 0, cnv.width, borderHeight);
+    }
+    else if (currentLevel.terrain === "rocky") {
+        ctx.drawImage(document.getElementById("cave-bar"), 0, 0, cnv.width, borderHeight);
+    }
     
     // repeat the animation
     requestAnimationFrame(draw);
@@ -392,4 +410,4 @@ function warpToLevel(levelNum, spawn) {
         proceedToNextLevel();
     }
 }
-warpToLevel(5, [650, 250]);
+warpToLevel(6, [800, 250]);
