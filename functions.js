@@ -309,6 +309,10 @@ function setUpLevels() {
     level5.addSpike(110, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
 
 
+    // Level 6 (first cave level and first level with phase)
+    const level6 = allLevels.find((level) => level.number === 6);
+    
+
     // platforms connecting to the border
     level5.addBlock(730, borderHeight+20, 270, 30, "normal", 0, rockColor)
     level5.addBlock(0, borderHeight+20, 100, 30, "normal", 0, rockColor)
@@ -444,16 +448,25 @@ function drawTitleScreen() {
     ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
     ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
 
-    // Cursor
-    if (mouseX && mouseY) {
-        ctx.fillStyle = mouseInPlayBtn ? "rgb(171, 249, 255)" : "rgb(27, 240, 255)";
-        drawCircle(mouseX, mouseY, 5);
-    }
-
     // Credits
     ctx.fillStyle = "rgb(110, 110, 110)";
     ctx.font = "20px Outfit";
     ctx.textAlign = "center";
     ctx.fillText("This Took Forever", cnv.width/2, cnv.height/6-20);
     ctx.fillText("Credits to Gavin Diep For The Art", cnv.width/2, cnv.height/6);
+}
+
+function drawCursor() {
+    // drawCursor(): draws a circle at the cursors coordinates
+    
+    // Cursor
+    if (mouseX && mouseY) {
+        mouseInPlayBtn = (
+            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
+            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
+        )
+        
+        ctx.fillStyle = mouseInPlayBtn ? "rgb(171, 249, 255)" : "rgb(27, 240, 255)";
+        drawCircle(mouseX, mouseY, 5);
+    }
 }
