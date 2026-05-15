@@ -9,8 +9,11 @@ function keydownHandler(e) {
         wPressed = true;
         if (gameState !== "titleScreen" && currentLvlNum !== 1) swapGravity();
     }
+    if (key === "KeyS" || key === "ArrowDown") {
+        sPressed = true;
+        if (gameState !== "titleScreen" && currentLvlNum !== 1) player.phase();
+    }
     if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
-    if (key === "KeyS" || key === "ArrowDown") sPressed = true;
     if (key === "KeyD" || key === "ArrowRight") dPressed = true;
 }
 
@@ -20,8 +23,8 @@ function keyupHandler(e) {
     const key = e.code;
     
     if (key === "KeyW" || key === "ArrowUp") wPressed = false;
-    if (key === "KeyA" || key === "ArrowLeft") aPressed = false;
     if (key === "KeyS" || key === "ArrowDown") sPressed = false;
+    if (key === "KeyA" || key === "ArrowLeft") aPressed = false;
     if (key === "KeyD" || key === "ArrowRight") dPressed = false;
 }
 
@@ -73,8 +76,13 @@ function playerMovement() {
 }
 
 function resetGravity() {
-    gravity = fallingDirection === "down" ? 3 : -3;
-    dGravity = fallingDirection === "down" ? 0.25 : -0.25;
+    if (!player.phasing) {
+        gravity = fallingDirection === "down" ? 3 : -3;
+        dGravity = fallingDirection === "down" ? 0.25 : -0.25;
+    } else {
+        gravity = fallingDirection === "down" ? 9 : -9;
+        dGravity = fallingDirection === "down" ? 0.75 : -0.75;
+    }
 }
 
 function swapGravity() {
@@ -110,6 +118,7 @@ function ImposeNaturalGravity(borderHeight) {
         player.y += gravity;
     }
 
+    player.checkPhase();
     const notInfluenced = !isMidAir && !player.enteringPortal && !onObstacle;
 
     if (fallingDirection === "down" && notInfluenced) player.y = cnv.height-borderHeight - player.r;
@@ -134,6 +143,7 @@ function ImposePortalGravity() {
         player.enteringPortal = true;
         player.spinSpeed =  Math.PI/32;
         resetGravity();
+        player.checkPhase();
 
         // the angle from the player to the portal
         const angleToPortal = Math.atan2(portalDy, portalDx);
@@ -205,7 +215,7 @@ function setUpLevels() {
     proceedToNextLevel();
     
 
-    // Set Up The Following Levels
+    // Set Up The Template of the Following Levels
     for (let i = 1; i < 11; i++) {
         const previousLevel = allLevels[i-1];
 
@@ -241,6 +251,7 @@ function setUpLevels() {
     level3.addBlock(225, cnv.height-borderHeight-150/4, 150, 150/4, "shortGrass");
     level3.addBlock(225+150, cnv.height-borderHeight-80, 120, 80, "tallGrass");
     
+    // floating flatform
     level3.addBlock(525, borderHeight+60, 100, 30, "shortGrass", Math.PI);
     level3.addBlock(525+35, borderHeight+20, 30, 40, "normal", 0, dirtColor);
     level3.addBlock(525+35+30, borderHeight+20, 350, 20, "normal", 0, dirtColor);
@@ -308,11 +319,6 @@ function setUpLevels() {
     
     level5.addSpike(110, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
 
-
-    // Level 6 (first cave level and first level with phase)
-    const level6 = allLevels.find((level) => level.number === 6);
-    
-
     // platforms connecting to the border
     level5.addBlock(730, borderHeight+20, 270, 30, "normal", 0, rockColor)
     level5.addBlock(0, borderHeight+20, 100, 30, "normal", 0, rockColor)
@@ -331,6 +337,22 @@ function setUpLevels() {
     }
 
     level5.addBlock(890, 285, 80, 60, "cloud");
+
+
+    // Level 6 (first cave level and first level with phase)
+    const level6 = allLevels.find((level) => level.number === 6);
+
+    for (let i = 0; i < 5; i++) { // spike border
+        level6.addSpike(850+i*35, cnv.height-borderHeight-26, 35, "wide", 0, rockColor);
+        level6.addSpike(850+i*35, borderHeight-9, 35, "wide", Math.PI, rockColor);
+    }
+    
+    level6.addText(600, 175, 12.5, "Press S or ⇓ while midair to phase through transparent objects", "left");
+
+    level6.addBlock(650, 250, 30, 150, "normal", 0, rockColor);
+    level6.addBlock(545, borderHeight, 30, 180, "normal", 0, rockColor);
+    level6.addBlock(575, 250, 75, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+
     
     // LEVEL 11 (Finale)
     const level11 = allLevels.find((level) => level.number === 11);
@@ -379,7 +401,13 @@ function drawPlayer(x, y, r, rotation) {
     ctx.save();
     ctx.translate(player.x, player.y);
     ctx.rotate(player.rotation);
+
+    if (player.phasing) ctx.globalAlpha = 0.5;
+    
     ctx.drawImage(document.getElementById("grey-ball"), -player.r * 1.5, -player.r * 1.5, player.r * 3, player.r * 3);
+
+    ctx.globalAlpha = 1;
+
     ctx.restore();
 }
 
