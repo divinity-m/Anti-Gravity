@@ -32,9 +32,24 @@ const player = {
 
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
     
-    speed: 5, phasing: false,
+    speed: 5, facingAngle: 0,
+    
+    enteringPortal: false,
 
-    facingAngle: 0, enteringPortal: false,
+    phasing: false,
+
+    phase() {
+        if (!this.phasing && isMidAir && !onObstacle) {
+            this.phasing = true;
+            resetGravity();
+        }
+    },
+    checkPhase() {
+        if (this.enteringPortal || !isMidAir || onObstacle) {
+            this.phasing = false;
+            resetGravity();
+        }
+    },
 }
 
 const portal = {
@@ -121,15 +136,15 @@ class Block extends Obstacle {
         ctx.translate(this.x+this.w/2, this.y+this.h/2);
         ctx.rotate(this.rotation);
         
-        if (this.variant === "normal") ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
+        if (this.variant === "normal" || this.variant === "phase") ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
 
         if (this.variant === "tallGrass") ctx.drawImage(document.getElementById("tall-grass-platform"), -this.w/2, -this.h/2, this.w, this.h);
 
         if (this.variant === "shortGrass") ctx.drawImage(document.getElementById("short-grass-platform"), -this.w/2, -this.h/2, this.w, this.h);
 
         if (this.variant === "cloud") {
-            ctx.drawImage(document.getElementById("cloud-platform"), -this.w/2, -this.h/2, this.w, this.h);
-            ctx.drawImage(document.getElementById("cloud-platform-fluff"), -this.w/2, -this.h/2, this.w, this.h);
+            ctx.drawImage(document.getElementById("cloud-platform"), -this.w/2-this.w*0.1, -this.h/2-this.h*0.1, this.w*1.2, this.h*1.2);
+            ctx.drawImage(document.getElementById("cloud-platform-fluff"), -this.w/2-this.w*0.075, -this.h/2-this.h*0.075, this.w*1.15, this.h*1.15);
         }
 
         ctx.restore();
@@ -157,7 +172,9 @@ class Block extends Obstacle {
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
-        if (this.variant !== "phase") {
+        const notPhasing = this.variant === "phase" && !player.phasing;
+
+        if (this.variant !== "phase" || notPhasing) {
             this.playerGrounded = fallingUpIntoBlock || fallingDownIntoBlock;
     
             if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
@@ -410,4 +427,4 @@ function warpToLevel(levelNum, spawn) {
         proceedToNextLevel();
     }
 }
-warpToLevel(6, [800, 250]);
+warpToLevel(6, [800, 200]);
