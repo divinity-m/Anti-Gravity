@@ -129,7 +129,7 @@ class Block extends Obstacle {
 
         if (this.variant === "cloud") {
             ctx.drawImage(document.getElementById("cloud-platform"), -this.w/2, -this.h/2, this.w, this.h);
-            ctx.drawImage(document.getElementById("cloud-platform-fluff"), -this.w/2-this.w*0.075, -this.h/2-this.h*0.075, this.w+this.w*0.15, this.h+this.h*0.15);
+            ctx.drawImage(document.getElementById("cloud-platform-fluff"), -this.w/2, -this.h/2, this.w, this.h);
         }
 
         ctx.restore();
@@ -392,4 +392,4 @@ function warpToLevel(levelNum, spawn) {
         proceedToNextLevel();
     }
 }
-warpToLevel(6, [800, 250]);
+warpToLevel(5, [650, 250]);
