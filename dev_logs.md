@@ -187,7 +187,7 @@ Things Added:
 
 
 # Day 18 - Friday | In class work #
-
+I started working on the players second ability, something I've been wanting to add since the beginning of the project. By pressing `S` or the down arrow key, the player can phase through certain blocks, this ability only reqiured a new `phasing` property for the player object along with two very small methods. I allowed for a `phase` variant for the `Block` class's `variant` property, this lets me identify which blocks can and cannot be phased through. Phase blocks will only be used in the cave-type levels.
 
 Things Added:
- - 
+ - Phasing ability
