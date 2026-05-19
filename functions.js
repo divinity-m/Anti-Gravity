@@ -341,6 +341,7 @@ function setUpLevels() {
 
     // Level 6 (first cave level and first level with phase)
     const level6 = allLevels.find((level) => level.number === 6);
+    level6.portalCoord = [120, level6.portalCoord[1]];
 
     for (let i = 0; i < 5; i++) { // spike border
         level6.addSpike(850+i*35, cnv.height-borderHeight-26, 35, "wide", 0, rockColor);
@@ -349,10 +350,47 @@ function setUpLevels() {
     
     level6.addText(600, 175, 12.5, "Press S or ⇓ while midair to phase through transparent objects", "left");
 
-    level6.addBlock(650, 250, 30, 150, "normal", 0, rockColor);
-    level6.addBlock(545, borderHeight, 30, 180, "normal", 0, rockColor);
-    level6.addBlock(575, 250, 75, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level6.addSpike(680, 370, 30, "normal", 0, rockColor);
+    level6.addBlock(650, 250, 30, 150, "vert-rock", 0, rockColor);
+    level6.addSpike(650, 228, 22, "normal", 0, rockColor);
+    level6.addSpike(665, 235, 15, "normal", 0, rockColor);
 
+    level6.addSpike(575, borderHeight, 30, "normal", Math.PI, rockColor);
+    level6.addBlock(545, borderHeight, 30, 180, "vert-rock", 0, rockColor);
+    level6.addSpike(545, 280, 10, "normal", Math.PI, rockColor);
+    level6.addSpike(548, 280, 27, "normal", Math.PI, rockColor);
+
+    level6.addBlock(575, 250, 75, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level6.addSpike(445, 370, 30, "normal", 0, rockColor);
+
+    level6.addBlock(370, 270, 75, 30, "horiz-rock", 0, rockColor);
+    level6.addBlock(415, 175, 30, 225, "vert-rock", 0, rockColor);
+    level6.addSpike(415, 165, 10, "normal", 0, rockColor);
+    level6.addSpike(421, 157, 18, "normal", 0, rockColor);
+    level6.addSpike(435, 165, 10, "normal", 0, rockColor);
+
+    level6.addBlock(445, 175, 100, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    for (let i = 0; i < 3; i++) {
+        level6.addSpike(445+i*(100/3), 150, 100/3, "phaseWide", 0, "rgba(81, 79, 77, 0.7)");
+        level6.addSpike(445+i*(100/3), 196.5, 100/3, "phaseWide", Math.PI, "rgba(81, 79, 77, 0.7)");
+    }
+
+    level6.addBlock(250, 270, 75, 30, "horiz-rock", 0, rockColor);
+    level6.addBlock(325, 270, 45, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+
+    level6.addBlock(250, borderHeight, 30, 200, "vert-rock", 0, rockColor);
+    level6.addSpike(250, 300, 24, "normal", Math.PI, rockColor);
+    level6.addSpike(265, 300, 20, "normal", Math.PI, rockColor);
+    level6.addSpike(273, 300, 28, "normal", Math.PI, rockColor);
+    level6.addSpike(295, 300, 22, "normal", Math.PI, rockColor);
+    level6.addSpike(313, 300, 12, "normal", Math.PI, rockColor);
+
+    level6.addSpike(385, 300, 30, "normal", Math.PI, rockColor);
+    level6.addSpike(370, 300, 25, "normal", Math.PI, rockColor);
+
+    level6.addSpike(385, 370, 30, "normal", 0, rockColor);
+    level6.addSpike(170, 370, 30, "normal", 0, rockColor);
+    
     
     // LEVEL 11 (Finale)
     const level11 = allLevels.find((level) => level.number === 11);
