@@ -147,11 +147,18 @@ class Block extends Obstacle {
             ctx.drawImage(document.getElementById("cloud-platform-fluff"), -this.w/2-this.w*0.075, -this.h/2-this.h*0.075, this.w*1.15, this.h*1.15);
         }
 
+        if (this.variant === "horiz-rock") {
+            ctx.drawImage(document.getElementById("horiz-rock-platform"), -this.w/2, -this.h/2, this.w, this.h);
+        }
+        if (this.variant === "vert-rock") {
+            ctx.drawImage(document.getElementById("vert-rock-platform"), -this.w/2, -this.h/2, this.w, this.h);
+        }
+
         ctx.restore();
     }
 
     checkCollisions() {
-        // Block.checkCollisions(): checks if the player is colliding with the block
+        // Block.checkCollisions(): checks if the player is colliding with the block by comparing coordinates
         const fallingUpIntoBlock = (
             player.y - player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
             player.x + player.r > this.x + this.w*0.1 && player.x - player.r < this.x + this.w*0.9
@@ -172,6 +179,7 @@ class Block extends Obstacle {
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
+        // checks if the conditions are right to allow the player to phase through the block
         const notPhasing = this.variant === "phase" && !player.phasing;
 
         if (this.variant !== "phase" || notPhasing) {
@@ -208,12 +216,12 @@ class Spike extends Obstacle {
         
         ctx.beginPath();
         
-        if (this.variant === "normal") {
+        if (this.variant.toLowerCase().includes("normal")) {
             ctx.moveTo(0, -this.size/2);
             ctx.lineTo(this.size/2, this.size/2);
             ctx.lineTo(-this.size/2, this.size/2);
         }
-        if (this.variant === "wide") {
+        if (this.variant.toLowerCase().includes("wide")) {
             ctx.moveTo(0, -this.size/4);
             ctx.lineTo(this.size/2, this.size/4);
             ctx.lineTo(-this.size/2, this.size/4);
@@ -221,13 +229,13 @@ class Spike extends Obstacle {
 
         ctx.fill();
 
-        // spike hitbox
+        // spike hitbox visualization
         ctx.strokeStyle = "red";
         ctx.lineWidth = 0.5;
-        if (this.variant === "normal") {
+        if (this.variant.toLowerCase().includes("normal")) {
             // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/2, this.size*0.35, this.size);
         }
-        if (this.variant === "wide") {
+        if (this.variant.toLowerCase().includes("wide")) {
             // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/4, this.size*0.35, this.size/2);
         }
         
@@ -235,21 +243,26 @@ class Spike extends Obstacle {
     }
 
     checkCollisions() {
-        // Spike.checkCollisions(): checks if the player is colliding with the spike
+        // Spike.checkCollisions(): checks if the player is colliding with the spike, spikes have a rectangular hitbox
         let playerHitSpike;
-        if (this.variant === "normal")  {
+        if (this.variant === "normal" || this.variant === "phaseNormal")  {
             playerHitSpike = (
                 player.x+player.r > this.x+this.size*0.325 && player.x - player.r < this.x+this.size*0.325+this.size*0.35 &&
                 player.y+player.r > this.y && player.y-player.r < this.y+this.size
             );
         }
-        if (this.variant === "wide")  {
+        if (this.variant === "wide" || this.variant === "phaseWide")  {
             playerHitSpike = (
                 player.x+player.r > this.x+this.size*0.325 && player.x - player.r < this.x+this.size*0.325+this.size*0.35 &&
                 player.y+player.r > this.y+this.size/4 && player.y-player.r < this.y+this.size*0.75
             );
         }
-        if (playerHitSpike) respawnPlayer();
+        
+        const notPhasing = this.variant.includes("phase") && !player.phasing;
+
+        if (!this.variant.includes("phase") || notPhasing) {
+            if (playerHitSpike) respawnPlayer();
+        }
     }
 }
 
@@ -396,7 +409,9 @@ function draw() {
         ctx.drawImage(document.getElementById("grass-blades"), 0, cnv.height - borderHeight - 9, cnv.width, 20);
     }
     else if (currentLevel.terrain === "rocky") {
-        ctx.drawImage(document.getElementById("cave-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
+        ctx.fillStyle = "rgb(60, 61, 64)";
+        ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
+        // ctx.drawImage(document.getElementById("cave-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
     }
 
     if (gameState === "titleScreen") drawCursor();
@@ -407,7 +422,9 @@ function draw() {
         ctx.drawImage(document.getElementById("cloud-bar"), 0, 0, cnv.width, borderHeight);
     }
     else if (currentLevel.terrain === "rocky") {
-        ctx.drawImage(document.getElementById("cave-bar"), 0, 0, cnv.width, borderHeight);
+        ctx.fillStyle = "rgb(60, 61, 64)";
+        ctx.fillRect(0, 0, cnv.width, borderHeight);
+        // ctx.drawImage(document.getElementById("cave-bar"), 0, 0, cnv.width, borderHeight);
     }
     
     // repeat the animation
