@@ -18,7 +18,7 @@ Things Added:
 
 
 # Day 3 - Thursday | In class work #
-I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right. Gavin Diep helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin.
+I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right. My friend, Gavin Diep, helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin.
 
 Things Added:
  - Player movement refinement
@@ -190,4 +190,13 @@ Things Added:
 I started working on the players second ability, something I've been wanting to add since the beginning of the project. By pressing `S` or the down arrow key, the player can phase through certain blocks, this ability only reqiured a new `phasing` property for the player object along with two very small methods. I allowed for a `phase` variant for the `Block` class's `variant` property, this lets me identify which blocks can and cannot be phased through. Phase blocks will only be used in the cave-type levels.
 
 Things Added:
- - Phasing ability
+ - Phasing ability and phase-variant blocks
+
+
+
+# Day 22 - Tuesday | In class work #
+I was hoping to finish all of level 6 today, but I got sidetracked by the idea of "phaseable spikes". Said spikes weren't necessarily challenging to code, but finding a unique way to use them took up a lot of my time, hence I couldn't complete all of level 6, but about 90% of it is done. Gavin also worked on a cave-like design for the blocks in cave levels and I did a lot of recoloring of other parts of the level to make everything look good.
+
+Things Added:
+ - Most of level 6 and phase-variant spikes
+ - Designs for cave levels
