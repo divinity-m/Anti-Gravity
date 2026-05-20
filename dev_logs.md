@@ -200,3 +200,31 @@ I was hoping to finish all of level 6 today, but I got sidetracked by the idea o
 Things Added:
  - Most of level 6 and phase-variant spikes
  - Designs for cave levels
+
+
+
+# Day 23 - Wednesday | In class work #
+I completed the rest of level 6, it only neede minor design improvements. While working on level 7, I was forced to pay attention to the collision flaws of the blocks hitboxes. Due to how I set up the conditions for the blocks, the hitboxes of every block would faultly scale with their size, for example:
+``` javascript
+const movingRightIntoBlock = (
+    player.x + player.r > this.x - player.speed*0.4 && player.x + player.r < this.x + this.w*0.1 &&
+    player.y + player.r > this.y && player.y - player.r < this.y + this.h
+
+if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.41;
+);
+```
+The section `player.x + player.r < this.x + this.w*0.1` may initially seem harmless, it simply checks if the players x coordinate is slightly inside the block's x coordinate by adding in 10% of it's width, then in the if statement, it forces the player behind the block so it doesn't enter it. However, when blocks are scaled up to widths of over 200 (and even with ones that are smaller), the player may be resting on top of the block, far past it's x-coordinate, then get forcibly shoved backwards despite not ever colliding with the right side of the block. I was already noticing this issue earlier in the project, but chose to ignore it because it had minor impact with small blocks and I havent yet used any greatly wide or greatly tall blocks.
+To fix this, I chose to use a relatively constant, independent number, which may still have its flaws. The players speed.
+``` javascript
+const movingRightIntoBlock = (
+    player.x + player.r > this.x - player.speed*0.4 && player.x + player.r < this.x + player.speed &&
+    player.y + player.r > this.y && player.y - player.r < this.y + this.h
+);
+```
+By replacing the blocks width with the players speed, the hitbox of every block scales similarly and prevents odd collision issues at large scales. At incredibly small scales, this solution may reveal bugs, but I'm willing to allow that.
+
+Level 7 was fully completed in class despite the time I spent solving this issue.
+
+Things Added:
+ - Level 6 and 7
+ - More improvements in collision hitboxes with the blocks
