@@ -216,7 +216,7 @@ function setUpLevels() {
     
 
     // Set Up The Template of the Following Levels
-    for (let i = 1; i < 11; i++) {
+    for (let i = 1; i < 9; i++) {
         const previousLevel = allLevels[i-1];
 
         // by default, the portal coordinates reflect where the last portal originally was
@@ -225,9 +225,8 @@ function setUpLevels() {
         const portalCoordX = portalIsOnTheRightSide ? cnv.width/5 : cnv.width - cnv.width/5;
         const portalCoord = [portalCoordX, cnv.height/2];
 
-
-        // levels 1-5 & 11 are grassy, levels 6-10 are rocky
-        const terrain = (i+1 <= 5 || i+1 === 11) ? "grassy" : "rocky";
+        // levels 1-5 & 9 are grassy, levels 6-8 are rocky
+        const terrain = (i+1 <= 5 || i+1 === 9) ? "grassy" : "rocky";
 
         // playerSpawn's default value is the players current coordinates
         const newLevel = new Level(i+1, terrain, [], portalCoord);
@@ -350,6 +349,7 @@ function setUpLevels() {
     
     level6.addText(600, 175, 12.5, "Press S or ⇓ while midair to phase through transparent objects", "left");
 
+    // beginning section //
     level6.addSpike(680, 370, 30, "normal", 0, rockColor);
     level6.addBlock(650, 250, 30, 150, "vert-rock", 0, rockColor);
     level6.addSpike(650, 228, 22, "normal", 0, rockColor);
@@ -369,34 +369,103 @@ function setUpLevels() {
     level6.addSpike(421, 157, 18, "normal", 0, rockColor);
     level6.addSpike(435, 165, 10, "normal", 0, rockColor);
 
+    // middle section //
+    // phase spikes
     level6.addBlock(445, 175, 100, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
     for (let i = 0; i < 3; i++) {
         level6.addSpike(445+i*(100/3), 150, 100/3, "phaseWide", 0, "rgba(81, 79, 77, 0.7)");
         level6.addSpike(445+i*(100/3), 196.5, 100/3, "phaseWide", Math.PI, "rgba(81, 79, 77, 0.7)");
     }
-
-    level6.addBlock(250, 270, 75, 30, "horiz-rock", 0, rockColor);
+    
+    level6.addBlock(250, 270, 75, 30, "horiz-rock");
     level6.addBlock(325, 270, 45, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level6.addBlock(250, borderHeight, 30, 200, "vert-rock");
 
-    level6.addBlock(250, borderHeight, 30, 200, "vert-rock", 0, rockColor);
+    // left top spikes
+    level6.addSpike(280, 240, 30, "normal", 0, rockColor);
+    level6.addSpike(300, 246, 24, "normal", 0, rockColor);
+    
+    // right top spikes
+    level6.addSpike(397, 252, 18, "normal", 0, rockColor);
+    level6.addSpike(380, 243, 27, "normal", 0, rockColor);
+    level6.addSpike(370, 250, 20, "normal", 0, rockColor);
+
+    // end section //
+    // left bottom spikes
     level6.addSpike(250, 300, 24, "normal", Math.PI, rockColor);
     level6.addSpike(265, 300, 20, "normal", Math.PI, rockColor);
     level6.addSpike(273, 300, 28, "normal", Math.PI, rockColor);
     level6.addSpike(295, 300, 22, "normal", Math.PI, rockColor);
     level6.addSpike(313, 300, 12, "normal", Math.PI, rockColor);
 
+    // right bottom spikes
     level6.addSpike(385, 300, 30, "normal", Math.PI, rockColor);
     level6.addSpike(370, 300, 25, "normal", Math.PI, rockColor);
 
     level6.addSpike(385, 370, 30, "normal", 0, rockColor);
     level6.addSpike(170, 370, 30, "normal", 0, rockColor);
     
-    
-    // LEVEL 11 (Finale)
-    const level11 = allLevels.find((level) => level.number === 11);
-    level11.portalCoord = [-500, -500]; // No Portal
 
-    level11.addText(500, 250, 35, "Thanks for playing!", "center");
+    // Level 7
+    const level7 = allLevels.find((level) => level.number === 7);
+
+    // center phase block
+    level7.addBlock(0, 235, cnv.width, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+
+    // start //
+    // bottom spikes
+    level7.addSpike(220, 340, 30, "normal", 0, rockColor);
+    level7.addSpike(320, 265, 30, "normal", Math.PI, rockColor);
+    level7.addSpike(320, 340, 30, "normal", 0, rockColor);
+
+    // top spikes
+    level7.addSpike(220, 130, 30, "normal", Math.PI, rockColor);
+    level7.addSpike(220, 205, 30, "normal", 0, rockColor);
+    level7.addSpike(320, 130, 30, "normal", Math.PI, rockColor);
+
+    // middle //
+    // top obstacles
+    level7.addSpike(380, 205, 30, "normal", 0, rockColor);
+    level7.addSpike(440, 130, 30, "normal", Math.PI, rockColor);
+    level7.addSpike(480, 205, 30, "normal", 0, rockColor);
+    level7.addSpike(520, 130, 30, "normal", Math.PI, rockColor);
+    level7.addSpike(560, 205, 30, "normal", 0, rockColor);
+    level7.addSpike(650, 205, 30, "normal", 0, rockColor);
+    level7.addSpike(720, 130, 30, "normal", Math.PI, rockColor);
+
+    // bottom obstacles
+    level7.addSpike(380, 265, 30, "normal", Math.PI, rockColor);
+    level7.addSpike(380, 340, 30, "normal", 0, rockColor);
+    level7.addSpike(430, 265, 30, "phaseNormal", Math.PI, "rgba(81, 79, 77, 0.7)");
+    level7.addBlock(520, 320, 30, 170, "vert-rock");
+    level7.addSpike(520, 297.5, 30, "wide", 0, rockColor);
+    
+    level7.addBlock(605, 265, 30, 50, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level7.addSpike(605, 307.5, 30, "wide", Math.PI, "rgba(81, 79, 77, 0.7)");
+    
+    level7.addBlock(690, 320, 30, 170, "vert-rock");
+    level7.addSpike(690, 290, 30, "normal", 0, rockColor);
+
+
+    // border //
+    for (let i = 0; i < 6; i++) {
+        level7.addBlock(i*169, 100, 170, 30, "horiz-rock"); // top blocks
+        level7.addBlock(30+i*169, 370, 170, 30, "horiz-rock"); // bottom blocks
+    }
+
+    // left border blocks
+    level7.addBlock(0, borderHeight, 30, 170, "vert-rock");
+    level7.addBlock(0, 269, 30, 170, "vert-rock");
+
+    // right border blocks
+    level7.addBlock(970, 70, 30, 170, "vert-rock");
+    level7.addBlock(970, 230, 30, 170, "vert-rock");
+    
+    // LEVEL 9
+    const level9 = allLevels.find((level) => level.number === 9);
+    level9.portalCoord = [-500, -500]; // No Portal
+
+    level9.addText(500, 250, 35, "Thanks for playing!", "center");
 }
 
 function checkObstacleCollisions() {
