@@ -158,7 +158,7 @@ Things Worked On:
 # Day 15 - Tuesday | In class work & At home work #
 I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. 
 
-**At Home Work**
+**At Home Work**  
 I began working on a `Spike` class and created a `respawnPlayer()` function to account for deaths.
 
 Things Added:
@@ -225,7 +225,7 @@ By replacing the blocks width with the players speed, the hitbox of every block 
 
 Level 7 was fully completed in class despite the time I spent solving this issue.
 
-**At Home Work**
+**At Home Work**  
 Made design improvements to level 7 and applied the above collision logic to top and bottom collisions for blocks like so:
 
 ```javascript
