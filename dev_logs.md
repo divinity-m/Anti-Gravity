@@ -155,7 +155,7 @@ Things Worked On:
 
 
 
-# Day 15 - Tuesday | In class work  & At home work #
+# Day 15 - Tuesday | In class work & At home work #
 I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. 
 
 **At Home Work**
@@ -203,7 +203,7 @@ Things Added:
 
 
 
-# Day 23 - Wednesday | In class work #
+# Day 23 - Wednesday | In class work & At home work#
 I completed the rest of level 6, it only neede minor design improvements. While working on level 7, I was forced to pay attention to the collision flaws of the blocks hitboxes. Due to how I set up the conditions for the blocks, the hitboxes of every block would faultly scale with their size, for example:
 ``` javascript
 const movingRightIntoBlock = (
@@ -224,6 +224,16 @@ const movingRightIntoBlock = (
 By replacing the blocks width with the players speed, the hitbox of every block scales similarly and prevents odd collision issues at large scales. At incredibly small scales, this solution may reveal bugs, but I'm willing to allow that.
 
 Level 7 was fully completed in class despite the time I spent solving this issue.
+
+**At Home Work**
+Make design improvements to level 7 and applied the above collision logic to top and bottom collisions for blocks like so:
+
+```javascript
+const fallingUpIntoBlock = (
+    player.y - player.r > this.y + this.h + gravity && player.y - player.r + gravity*0.4 < this.y + this.h &&
+    player.x + player.r > this.x + player.speed && player.x - player.r < this.x + this.w - player.speed
+);
+```
 
 Things Added:
  - Level 6 and 7
