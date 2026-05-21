@@ -195,6 +195,7 @@ function proceedToNextLevel() {
     // force the player to fall back down
     fallingDirection = "down";
     resetGravity();
+    player.phasing = false;
 }
 
 function setUpLevels() {
@@ -360,7 +361,7 @@ function setUpLevels() {
     level6.addSpike(545, 280, 10, "normal", Math.PI, rockColor);
     level6.addSpike(548, 280, 27, "normal", Math.PI, rockColor);
 
-    level6.addBlock(575, 250, 75, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level6.addBlock(575, 250, 75, 30, "phase", 0, phaseColor);
     level6.addSpike(445, 370, 30, "normal", 0, rockColor);
 
     level6.addBlock(370, 270, 75, 30, "horiz-rock", 0, rockColor);
@@ -373,12 +374,12 @@ function setUpLevels() {
     // phase spikes
     level6.addBlock(445, 175, 100, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
     for (let i = 0; i < 3; i++) {
-        level6.addSpike(445+i*(100/3), 150, 100/3, "phaseWide", 0, "rgba(81, 79, 77, 0.7)");
-        level6.addSpike(445+i*(100/3), 196.5, 100/3, "phaseWide", Math.PI, "rgba(81, 79, 77, 0.7)");
+        level6.addSpike(445+i*(100/3), 150, 100/3, "phaseWide", 0, phaseColor);
+        level6.addSpike(445+i*(100/3), 196.5, 100/3, "phaseWide", Math.PI, phaseColor);
     }
     
     level6.addBlock(250, 270, 75, 30, "horiz-rock");
-    level6.addBlock(325, 270, 45, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level6.addBlock(325, 270, 45, 30, "phase", 0, phaseColor);
     level6.addBlock(250, borderHeight, 30, 200, "vert-rock");
 
     // left top spikes
@@ -410,7 +411,7 @@ function setUpLevels() {
     const level7 = allLevels.find((level) => level.number === 7);
 
     // center phase block
-    level7.addBlock(0, 235, cnv.width, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level7.addBlock(0, 235, cnv.width, 30, "phase", 0, phaseColor);
 
     // start //
     // bottom spikes
@@ -430,21 +431,45 @@ function setUpLevels() {
     level7.addSpike(480, 205, 30, "normal", 0, rockColor);
     level7.addSpike(520, 130, 30, "normal", Math.PI, rockColor);
     level7.addSpike(560, 205, 30, "normal", 0, rockColor);
-    level7.addSpike(650, 205, 30, "normal", 0, rockColor);
+    
+    level7.addSpike(650, 205, 30, "phaseNormal", 0, phaseColor);
     level7.addSpike(720, 130, 30, "normal", Math.PI, rockColor);
+    level7.addSpike(845, 130, 30, "normal", Math.PI, rockColor);
+    
 
     // bottom obstacles
     level7.addSpike(380, 265, 30, "normal", Math.PI, rockColor);
     level7.addSpike(380, 340, 30, "normal", 0, rockColor);
-    level7.addSpike(430, 265, 30, "phaseNormal", Math.PI, "rgba(81, 79, 77, 0.7)");
+    level7.addSpike(430, 265, 30, "phaseNormal", Math.PI, phaseColor);
     level7.addBlock(520, 320, 30, 170, "vert-rock");
     level7.addSpike(520, 297.5, 30, "wide", 0, rockColor);
     
-    level7.addBlock(605, 265, 30, 50, "phase", 0, "rgba(81, 79, 77, 0.7)");
-    level7.addSpike(605, 307.5, 30, "wide", Math.PI, "rgba(81, 79, 77, 0.7)");
+    level7.addBlock(605, 265, 30, 50, "phase", 0, phaseColor);
+    level7.addSpike(605, 307.5, 30, "wide", Math.PI, phaseColor);
     
     level7.addBlock(690, 320, 30, 170, "vert-rock");
     level7.addSpike(690, 290, 30, "normal", 0, rockColor);
+
+    level7.addSpike(770, 340, 30, "normal", 0, rockColor);
+    level7.addSpike(800, 340, 30, "normal", 0, rockColor);
+    
+    // phase spikes design
+    for (let i = 0; i < 3; i++) {
+        level7.addSpike(755+i*30, 205, 30, "phaseNormal", 0, phaseColor);
+        level7.addSpike(755+i*30, 265, 30, "phaseNormal", Math.PI, phaseColor);
+    }
+
+    // left corners
+    level7.addBlock(70, 30, 30, 150, "vert-rock"); // top left
+    level7.addBlock(-50, 160, 150, 25, "horiz-rock"); // top left
+    level7.addBlock(70, 320, 30, 150, "vert-rock"); // bottom left
+    level7.addBlock(-50, 315, 150, 25, "horiz-rock"); // bottom left
+    
+    // right corners
+    level7.addBlock(900, 30, 30, 150, "vert-rock"); // top right
+    level7.addBlock(900, 160, 150, 25, "horiz-rock"); // top right
+    level7.addBlock(900, 320, 30, 150, "vert-rock"); // bottom right
+    level7.addBlock(900, 315, 150, 25, "horiz-rock"); // bottom right
 
 
     // border //
@@ -483,6 +508,7 @@ function respawnPlayer() {
     
     player.x = currentLevel.playerSpawn[0];
     player.y = currentLevel.playerSpawn[1];
+    player.phasing = false;
 
     fallingDirection = "down";
     resetGravity();
