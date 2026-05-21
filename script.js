@@ -449,3 +449,4 @@ function warpToLevel(levelNum, spawn) {
     }
 }
 warpToLevel(8, [800, 200]);
+// warpToLevel(7, [100, 200]);
