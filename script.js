@@ -16,6 +16,7 @@ const lightGrassColor = "rgb(82, 213, 82)";
 const cloudColor = "rgba(237, 253, 255, 0.8)";
 const cloudColor2 = "rgba(218, 251, 255, 0.8)";
 const rockColor = "rgb(81, 79, 77)";
+const phaseColor = "rgba(81, 79, 77, 0.7)";
 
 let wPressed, aPressed, sPressed, dPressed;
 
@@ -45,9 +46,12 @@ const player = {
         }
     },
     checkPhase() {
-        if (this.enteringPortal || !isMidAir || onObstacle) {
+        if (!isMidAir || onObstacle) {
             this.phasing = false;
             resetGravity();
+        }
+        if (this.enteringPortal) {
+            this.phasing = true;
         }
     },
 }
@@ -444,4 +448,4 @@ function warpToLevel(levelNum, spawn) {
         proceedToNextLevel();
     }
 }
-warpToLevel(7, [120, 200]);
+warpToLevel(8, [800, 200]);
