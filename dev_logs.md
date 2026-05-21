@@ -20,7 +20,7 @@ Got the full-screen canvas fully set up. For now the player's template is just a
 # Day 3 - Thursday | In class work #
 I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right. My friend, Gavin Diep, helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin.
 
-
+### Things Added:
  - Player movement refinement
  - Player Design
 
@@ -29,7 +29,7 @@ I refined some aspects of the game, such as making the gravity accelerate and ma
 # Day 4 - Friday | In class work #
 I started working on the mechanics for the portal, which marks the checkpoint for the end of a level and warps the player into a new level. Gavin created a design for it. The portals functionality is still very incomplete, right now I'm just working on a 'gravitational pull' effect to suck the player into the portal when they get close enough.
 
-
+### Things Added:
  - Portal Design
 
 
@@ -60,7 +60,7 @@ player.x += Math.cos(player.facingAngle);
 player.y += Math.sin(player.facingAngle);
 ```
 
-
+### Things Added:
  - Portal Gravity
 
 
@@ -68,7 +68,7 @@ player.y += Math.sin(player.facingAngle);
 # Day 8 - Tuesday | In class work #
 Began shifting my focus away from player/portal design & funcitionality, and towards the games core concepts, which included the use of classes. I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen. The play button on the title screen required me to add a `mousemove` and `click` event listener to the document to check for hover and click inputs. Because of all of these new goals, I wasn't able to complete anything specific this class.
 
-Things Worked On:
+### Things Worked On:
  - `Level` class and `Block` class
  - Title Screen
 
@@ -90,7 +90,7 @@ function mouseMoveHandler(e) {
 }
 ```
 
-
+### Things Added:
  - Custom Background & Floor/Roof Design
  - Title Screen & Play Button
 
@@ -99,7 +99,7 @@ function mouseMoveHandler(e) {
 # Day 10 - Thursday | In class work #
 I've done a lot of work on the levels. It took me a while to decide on where to place all of the code and I decided to put it all inside a function called `setUpLevels` rather than making a seprarate JS file for it. Inside the function, I've set up 10 level objects from the `Level` class, 9 of which were made inside a for-loop so they all have the same properties right now. Tommorrow, I'll make each level unique by giving them their obstacles. I plan to make level one void of obstacles and have a very simple guide on the games controls.
 
-
+### Things Added:
  - Levels (no obstacles yet)
 
 
@@ -119,7 +119,7 @@ const movingRightIntoBlock = (
 ```
   
   
-**At Home Work**  
+### At Home Work
 It took a while, but I found a solution to the collisions issue. I counteracted the overlapping values by expanding the range required for a sideways collisions to be detected.
 
 ```javascript
@@ -130,7 +130,7 @@ const movingRightIntoBlock = (
 ```
 Due to the `this.x - player.speed*0.1` the player doesn't need to directly go past the block's x coordinate for a collision to be detected. This creates some leeway in comparison to the collisions for falling up and down into the block, which are far stricter.
 
-
+### Things Added:
  - Obstacle Collisions
 
 
@@ -139,7 +139,7 @@ Due to the `this.x - player.speed*0.1` the player doesn't need to directly go pa
 I wanted to add a bit of a tutorial to the game for explaining the controls so I created a text class. I realized that there were some similarities between the `Text` and `Block` classes, and the obstacles I plan to add will likley have the same similarities, so I made an `Obstacle` class with properties and methods that every type of obstacle in the game should have. It's only a template so the class itself won't ever be used, just inherited.
 Level one and two are pretty much complete, they don't have much content at all, but thats intentional because they only exist to explain the controls.
 
-
+### Things Added:
 - `Obstacle` Class, `Text` Class, and Inheritance
 - Level 1 and 2 + tutorial text
 
@@ -148,7 +148,7 @@ Level one and two are pretty much complete, they don't have much content at all,
 # Day 14 - Monday | In class work #
 While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on improving the conditions in the block class's `checkCollisions()` method. Gavin helped me design a gradient play button for the game as well.
 
-Things Worked On:
+### Things Worked On:
  - Improved block collision detection
  - Some of level 3
  - Title screen design
@@ -158,10 +158,10 @@ Things Worked On:
 # Day 15 - Tuesday | In class work & At home work #
 I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. 
 
-**At Home Work**  
+### At Home Work
 I began working on a `Spike` class and created a `respawnPlayer()` function to account for deaths.
 
-
+### Things Added:
  - All of level 3 and small bits of level 4
  - Furthur improved on block collisions
  - rotation property for obstacle-related classes
@@ -172,7 +172,7 @@ I began working on a `Spike` class and created a `respawnPlayer()` function to a
 # Day 16 - Wednesday | In class work #
 I finished creating the `Spike` class while working on level 4, the first level to use spikes. Player death and respawning has also been fully accounted for.
 
-
+### Things Added:
  - All of level 4
  - Completed the `Spike` class
 
@@ -181,7 +181,7 @@ I finished creating the `Spike` class while working on level 4, the first level 
 # Day 17 - Thursday | In class work #
 I spent the entire class designing level 5 and I didn't encounter any issues/bugs while making it. I plan for level 6 and above to have a cave-like design, thankfully, gavin has already designed a backdrop for the cave, the platforms however are just going to be blank grey slates.
 
-
+### Things Added:
  - All of level 5
 
 
@@ -189,7 +189,7 @@ I spent the entire class designing level 5 and I didn't encounter any issues/bug
 # Day 18 - Friday | In class work #
 I started working on the players second ability, something I've been wanting to add since the beginning of the project. By pressing `S` or the down arrow key, the player can phase through certain blocks, this ability only reqiured a new `phasing` property for the player object along with two very small methods. I allowed for a `phase` variant for the `Block` class's `variant` property, this lets me identify which blocks can and cannot be phased through. Phase blocks will only be used in the cave-type levels.
 
-
+### Things Added:
  - Phasing ability and phase-variant blocks
 
 
@@ -197,7 +197,7 @@ I started working on the players second ability, something I've been wanting to 
 # Day 22 - Tuesday | In class work #
 I was hoping to finish all of level 6 today, but I got sidetracked by the idea of "phaseable spikes". Said spikes weren't necessarily challenging to code, but finding a unique way to use them took up a lot of my time, hence I couldn't complete all of level 6, but about 90% of it is done. Gavin also worked on a cave-like design for the blocks in cave levels and I did a lot of recoloring of other parts of the level to make everything look good.
 
-
+### Things Added:
  - Most of level 6 and phase-variant spikes
  - Designs for cave levels
 
@@ -225,7 +225,7 @@ By replacing the blocks width with the players speed, the hitbox of every block 
 
 Level 7 was fully completed in class despite the time I spent solving this issue.
 
-**At Home Work**  
+### At Home Work
 Made design improvements to level 7 and applied the above collision logic to top and bottom collisions for blocks like so:
 
 ```javascript
@@ -235,6 +235,6 @@ const fallingUpIntoBlock = (
 );
 ```
 
-
+### Things Added:
  - Level 6 and 7
  - More improvements in collision hitboxes with the blocks
