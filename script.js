@@ -160,22 +160,22 @@ class Block extends Obstacle {
     checkCollisions() {
         // Block.checkCollisions(): checks if the player is colliding with the block by comparing coordinates
         const fallingUpIntoBlock = (
-            player.y - player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
+            player.y - player.r > this.y + this.h + gravity && player.y - player.r + gravity*0.4 < this.y + this.h &&
             player.x + player.r > this.x + player.speed && player.x - player.r < this.x + this.w - player.speed
         );
 
         const fallingDownIntoBlock = (
-            player.y + player.r + gravity > this.y && player.y + player.r < this.y + this.h*0.5 &&
+            player.y + player.r + gravity*0.4 > this.y && player.y + player.r < this.y + gravity &&
             player.x + player.r > this.x + player.speed && player.x - player.r < this.x + this.w - player.speed
         );
 
         const movingRightIntoBlock = (
-            player.x + player.r > this.x - player.speed*0.4 && player.x + player.r < this.x + player.speed &&
+            player.x + player.r > this.x - player.speed*0.3 && player.x + player.r < this.x + player.speed &&
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
         const movingLeftIntoBlock = (
-            player.x - player.r > this.x + this.w - player.speed && player.x - player.r < this.x + this.w + player.speed*0.4 &&
+            player.x - player.r > this.x + this.w - player.speed && player.x - player.r < this.x + this.w + player.speed*0.3 &&
             player.y + player.r > this.y && player.y - player.r < this.y + this.h
         );
 
@@ -185,11 +185,11 @@ class Block extends Obstacle {
         if (this.variant !== "phase" || notPhasing) {
             this.playerGrounded = fallingUpIntoBlock || fallingDownIntoBlock;
     
-            if (fallingUpIntoBlock) player.y = this.y + this.h + player.r;
-            if (fallingDownIntoBlock) player.y = this.y - player.r;
+            if (fallingUpIntoBlock) player.y = this.y + this.h + player.r - gravity*0.2;
+            if (fallingDownIntoBlock) player.y = this.y - player.r - gravity*0.2;
     
-            if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.41;
-            if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.41;
+            if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.31;
+            if (movingLeftIntoBlock) player.x = this.x + this.w + player.r + player.speed*0.31;
         }
     }
 }
@@ -444,4 +444,4 @@ function warpToLevel(levelNum, spawn) {
         proceedToNextLevel();
     }
 }
-warpToLevel(3, [120, 200]);
+warpToLevel(7, [120, 200]);
