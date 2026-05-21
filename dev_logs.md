@@ -226,7 +226,7 @@ By replacing the blocks width with the players speed, the hitbox of every block 
 Level 7 was fully completed in class despite the time I spent solving this issue.
 
 **At Home Work**
-Make design improvements to level 7 and applied the above collision logic to top and bottom collisions for blocks like so:
+Made design improvements to level 7 and applied the above collision logic to top and bottom collisions for blocks like so:
 
 ```javascript
 const fallingUpIntoBlock = (
