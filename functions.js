@@ -261,7 +261,7 @@ function setUpLevels() {
     level3.addBlock(500+150+50, 300+60, 240, 27, "normal", 0, dirtColor);
 
 
-    // Level 4 (First level with spikes)
+    // LEVEL 4 (First level with spikes)
     const level4 = allLevels.find((level) => level.number === 4);
     level4.portalCoord = [500 + 125, cnv.height/2-25];
 
@@ -287,7 +287,7 @@ function setUpLevels() {
     level4.addSpike(510, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
     
 
-    // Level 5 (intro to cave section)
+    // LEVEL 5 (intro to cave section)
     const level5 = allLevels.find((level) => level.number === 5);
     level5.portalCoord = [level5.portalCoord[0] + 5, level5.portalCoord[1]];
 
@@ -339,7 +339,7 @@ function setUpLevels() {
     level5.addBlock(890, 285, 80, 60, "cloud");
 
 
-    // Level 6 (first cave level and first level with phase)
+    // LEVEL 6 (first cave level and first level with phase)
     const level6 = allLevels.find((level) => level.number === 6);
     level6.portalCoord = [120, level6.portalCoord[1]];
 
@@ -407,7 +407,7 @@ function setUpLevels() {
     level6.addSpike(170, 370, 30, "normal", 0, rockColor);
     
 
-    // Level 7
+    // LEVEL 7
     const level7 = allLevels.find((level) => level.number === 7);
 
     // center phase block
@@ -485,6 +485,12 @@ function setUpLevels() {
     // right border blocks
     level7.addBlock(970, 70, 30, 170, "vert-rock");
     level7.addBlock(970, 230, 30, 170, "vert-rock");
+
+    
+    // LEVEL 8
+    const level8 = allLevels.find((level) => level.number === 8);
+    level8.portalCoord = [425, level8.portalCoord[1]];
+    
     
     // LEVEL 9
     const level9 = allLevels.find((level) => level.number === 9);
