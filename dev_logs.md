@@ -203,7 +203,7 @@ I was hoping to finish all of level 6 today, but I got sidetracked by the idea o
 
 
 
-# Day 23 - Wednesday | In class work & At home work#
+# Day 23 - Wednesday | In class work & At home work #
 I completed the rest of level 6, it only neede minor design improvements. While working on level 7, I was forced to pay attention to the collision flaws of the blocks hitboxes. Due to how I set up the conditions for the blocks, the hitboxes of every block would faultly scale with their size, for example:
 ``` javascript
 const movingRightIntoBlock = (
@@ -238,3 +238,5 @@ const fallingUpIntoBlock = (
 ### Things Added:
  - Level 6 and 7
  - More improvements in collision hitboxes with the blocks
+
+# Day 23 - Wednesday | In class work & At home work #
