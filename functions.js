@@ -492,6 +492,8 @@ function setUpLevels() {
     level8.portalCoord = [425, level8.portalCoord[1]];
     
     // borders around the portal
+    // level8.addBlock(325, 155, 150, 150, "phase", 0, "rgba(0, 255, 0, 0.7)");
+    
     level8.addBlock(412.5, 320, 30, 170, "vert-rock");
     level8.addBlock(340, 315, 170, 30, "horiz-rock");
 
@@ -587,7 +589,6 @@ function setUpLevels() {
     level8.addBlock(1000, 230, 100, 20, "phase", 0, phaseColor);
     level8.addSpike(30, 220, 10, "phaseNormal", 0, phaseColor);
     level8.addSpike(970, 180, 10, "normal", Math.PI, rockColor);
-
 
     level8.addBlock(0, 300, 108, 20, "horiz-rock");
     level8.addBlock(-108, 300, 108, 20, "horiz-rock");
