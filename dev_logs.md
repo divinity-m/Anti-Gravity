@@ -239,4 +239,18 @@ const fallingUpIntoBlock = (
  - Level 6 and 7
  - More improvements in collision hitboxes with the blocks
 
-# Day 23 - Wednesday | In class work & At home work #
+
+
+# Day 24 - Thursday | In class work #
+Started working on level 8. I decided to split it into two seperate paths for the sake of variety. I got most of the left path done, but it still needs some work.
+
+### Things Worked On:
+ - Left path of level 8
+
+
+# Day 25 - Friday | In class work #
+I completed the rest of the level 8, both the left and right path. I wanted to make a level 9, but I think it would be incredibly challenging to top the effort I put into level 8, so I'll end it there and just make a "thanks for playing" type of level for level 9. I also want to spend more time on the titlescreen and make a level-selection menu.
+
+### Things Added:
+ - Finished the left and right path of level 8
+
