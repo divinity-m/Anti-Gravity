@@ -3,4 +3,4 @@ A 2D platformer. You play as a ball with the unique ability to invert the direct
 
 ### Limitations:
 - Hitboxes are inherently flawed in their structure. When widths and heights are pushed to the extremes, large or small, obstacles are bound to carry visibly conspicuous bugs. I haven't done enough extensive testing to find these bugs with the current version of my collision system, but I believe it's highly likely that they're there.
-- rotating obstacles doesn't rotate hitboxes, so I can only rotate an obstacle a full 180° to maintain a consistent hitbox, otherwise, the hitboxes would be highly innaccurate.
+- Rotating obstacles doesn't rotate hitboxes, so I can only rotate an obstacle a full 180° to maintain a consistent hitbox, otherwise, the hitboxes would be highly innaccurate.
