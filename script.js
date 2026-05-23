@@ -8,8 +8,8 @@ let gameState = "titleScreen";
 
 // Global Variables //
 let now = Date.now();
-
 const borderHeight = cnv.height/5;
+
 const dirtColor = "rgb(143, 89, 43)";
 const grassColor = "rgb(42, 191, 42)";
 const lightGrassColor = "rgb(82, 213, 82)";
@@ -19,13 +19,14 @@ const rockColor = "rgb(81, 79, 77)";
 const phaseColor = "rgba(81, 79, 77, 0.7)";
 
 let wPressed, aPressed, sPressed, dPressed;
+let buttons = [];
 
 let [gravity, dGravity] = [0, 0.75];
 let [fallingDirection, isMidAir, onObstacle] = ["down", false, false];
 
 let [allLevels, currentLvlNum] = [[], 0];
 
-let mouseX, mouseY;
+let [mouseX, mouseY] = [-10, -10];
 
 // objects
 const player = {
@@ -64,30 +65,74 @@ const portal = {
     timeSinceEntered: Date.now(),
 }
 
-const playBtn = {
-    x: cnv.width/2 - 150/2, y: cnv.height/2 - 75/2,
-
-    w: 150, h: 75,
-
-    bgColor: "rgba(255, 255, 255, 0)",
-
-    effect() {
-        gameState = "levels";
-    }
-}
-
 // classes
 /*
 data types to remember for @param
-{string} - Text like "Hello World"
-{number} - Integers or floats (e.g., 10, 3.14)
-{boolean}  - true or false
+{string}
+{number}
+{boolean}
 {null}
 {undefined}
 {symbol}
-{Object} - A generic object
-{Array} - A generic array
+{Object}
+{Array}
+{function}
 */
+class Button {
+    // Button: A class that makes it easier to create canvas-drawn buttons
+    
+    /**
+    * @param {number} x - The buttons's x coordinate
+    * @param {number} y - The buttons's y coordinate
+    * @param {number} w - The button's width
+    * @param {number} h - The button's height
+    * @param {string} src - The buttons image src
+    * @param {string} location - Which gamestate the button is visible in
+    * @param {function} event - What the button does
+    */
+    
+    constructor(x, y, w, h, src, location, event) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.src = src;
+        this.location = location;
+        this.event = event;
+        this.mouseOver = false; // A boolean which checks various conditions to determine if the mouse is hovering over the button
+    }
+
+    draw() {
+        // Button.draw(): Establishes the buttons `mouseOver` property and draws the buttons using its x, y, w, and h properties
+        this.mouseOver = gameState === this.location &&
+            (mouseX > this.x && mouseX < this.x + this.w &&
+             mouseY > this.y && mouseY < this.y + this.h);
+
+        if (gameState === this.location) {
+            ctx.fillStyle = this.mouseOver ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
+            ctx.strokeStyle = this.mouseOver ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
+            ctx.lineWidth = 4;
+            
+            ctx.drawImage(document.getElementById(this.src), this.x, this.y, this.w, this.h);
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.strokeRect(this.x, this.y, this.w, this.h);
+        }
+    }
+
+    effect() {
+        // Button.draw(): Imposes the effect the button has when it's clicked
+        this.event();
+    }
+}
+
+const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleScreen", () => { gameState = "levels"; });
+const levelsBtn = new Button(cnv.width/2 - 20, 290, 40, 35, "playbtn", "titleScreen", () => { gameState = "levelSelect"; });
+const leaveLevelsBtn = new Button(cnv.width/2 - 20, 330, 40, 35, "playbtn", "levelSelect", () => { gameState = "titleScreen"; });
+const homeBtn = new Button(cnv.width-35, 15, 20, 20, "playbtn", "levels", () => { gameState = "titleScreen"; });
+const restartBtn = new Button(cnv.width-70, 15, 20, 20, "playbtn", "levels", respawnPlayer);
+
+buttons = [playBtn, levelsBtn, leaveLevelsBtn, homeBtn, restartBtn];
+
 
 class Obstacle {
     // Block: A template class for classes involved in level creation
@@ -344,7 +389,7 @@ class Level {
 }
 
 setUpLevels();
-
+setUpLevelButtons();
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
@@ -358,11 +403,9 @@ document.addEventListener("click", clickHandler);
 function draw() {
     // draw(): the main function which is repeated to call other process and draw functions
     now = Date.now();
+
+    // canvas reset
     ctx.clearRect(0, 0, cnv.width, cnv.height);
-    
-    // background
-    ctx.fillStyle = "rgb(200, 200, 200)";
-    ctx.fillRect(0, 0, cnv.width, cnv.height);
 
     // backdrop
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
@@ -374,14 +417,14 @@ function draw() {
         ctx.drawImage(document.getElementById("cave-backdrop"), 0, 0, cnv.width, cnv.height);
     }
 
-    // title screen
-    if (gameState === "titleScreen") drawTitleScreen();
+    
+    playerMovement();
+    
+    if (gameState !== "levels") drawTitleScreen();
     else if (gameState === "levels") {
         // player movement
         let previousX = player.x;
         let previousY = player.y;
-        playerMovement();
-
         
         // gravity
         ImposeNaturalGravity(borderHeight);
@@ -422,9 +465,7 @@ function draw() {
         ctx.fillRect(0, cnv.height-borderHeight, cnv.width, borderHeight);
         // ctx.drawImage(document.getElementById("cave-bar"), 0, cnv.height - borderHeight, cnv.width, borderHeight);
     }
-
-    if (gameState === "titleScreen") drawCursor();
-
+    
     // top bar
     if (currentLevel.terrain === "grassy") {
         ctx.drawImage(document.getElementById("cloud-fluff"), 0, borderHeight-0.5, cnv.width, 10);
@@ -436,22 +477,11 @@ function draw() {
         // ctx.drawImage(document.getElementById("cave-bar"), 0, 0, cnv.width, borderHeight);
     }
     
+    drawButtons();
+    drawCursor();
+    
     // repeat the animation
     requestAnimationFrame(draw);
 }
 
 draw();
-
-
-function warpToLevel(levelNum, spawn) {
-    gameState = "levels";
-
-    const level = allLevels.find((level) => level.number === levelNum);
-    level.playerSpawn = spawn;
-
-    while (currentLvlNum < levelNum) {
-        proceedToNextLevel();
-    }
-}
-warpToLevel(8, [425, 130]);
-// warpToLevel(7, [100, 200]);
