@@ -78,15 +78,15 @@ const playBtn = {
 
 // classes
 /*
-data types for @param
-{string} - Text like "Hello World".
+data types to remember for @param
+{string} - Text like "Hello World"
 {number} - Integers or floats (e.g., 10, 3.14)
-{boolean}  - true or false.
+{boolean}  - true or false
 {null}
 {undefined}
 {symbol}
-{Object} - A generic object.
-{Array} - A generic array.
+{Object} - A generic object
+{Array} - A generic array
 */
 
 class Obstacle {
@@ -123,11 +123,13 @@ class Block extends Obstacle {
     /**
     * @param {number} w - The block's width
     * @param {number} h - The block's height
+    * @param {boolean} collisions - Determines if the block has collision properties
     */
-    constructor(x, y, w, h, variant, rotation = 0, color = "gray") {
+    constructor(x, y, w, h, variant, rotation = 0, collisions = true, color = "gray") {
         super(x, y, variant, rotation, color);
         this.w = w;
         this.h = h;
+        this.collisions = collisions;
         this.type = "block";
         this.playerGrounded = false;
     }
@@ -186,7 +188,7 @@ class Block extends Obstacle {
         // checks if the conditions are right to allow the player to phase through the block
         const notPhasing = this.variant === "phase" && !player.phasing;
 
-        if (this.variant !== "phase" || notPhasing) {
+        if ((this.variant !== "phase" || notPhasing) && this.collisions) {
             this.playerGrounded = fallingUpIntoBlock || fallingDownIntoBlock;
     
             if (fallingUpIntoBlock) player.y = this.y + this.h + player.r - gravity*0.2;
@@ -298,7 +300,10 @@ class Text extends Obstacle {
         ctx.rotate(this.rotation);
         
         if (this.variant === "fill") ctx.fillText(this.content, 0, 0);
-        else if (this.variant === "stroke" ) ctx.strokeText(this.content, 0, 0);
+        else {
+            ctx.lineWidth = this.variant;
+            ctx.strokeText(this.content, 0, 0);
+        }
         
         ctx.restore();
     }
@@ -322,9 +327,9 @@ class Level {
         this.playerSpawn = playerSpawn;
     }
 
-    addBlock(x, y, w, h, variant = "normal", rotation = 0, color = "gray") {
+    addBlock(x, y, w, h, variant = "normal", rotation = 0, collisions = true, color = "gray") {
         // Level.addBlock(): pushes a block object into the level's obstacles array
-        this.obstacles.push(new Block(x, y, w, h, variant, rotation, color));
+        this.obstacles.push(new Block(x, y, w, h, variant, rotation, collisions, color));
     }
     
     addSpike(x, y, size, variant = "normal", rotation = 0, color = "gray") {
@@ -448,5 +453,5 @@ function warpToLevel(levelNum, spawn) {
         proceedToNextLevel();
     }
 }
-warpToLevel(8, [800, 200]);
+warpToLevel(8, [425, 130]);
 // warpToLevel(7, [100, 200]);
