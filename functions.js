@@ -1,4 +1,5 @@
 /// FUNCTIONS.JS ANTI GRAVITY ///
+
 // Handlers //
 function keydownHandler(e) {
     // keydownHandler(): handles the keyboard inputs for the "keydown" event listener
@@ -207,7 +208,7 @@ function setUpLevels() {
 
     const level1 = new Level(1, "grassy", [], level1PortalCoord, level1PlayerSpawn); // Level(number, obstacles, portalCoord, playerSpawn)
 
-    level1.addText(100, 250, 15, "Press A/D or ⇐/⇒ to move around", "left");
+    level1.addText(100, 250, 15, "Press A/D or ⇐/⇒ to move around", "left", "fill", 0, grassColor);
     
     allLevels.push(level1);
 
@@ -239,33 +240,33 @@ function setUpLevels() {
     const level2 = allLevels.find((level) => level.number === 2);
     level2.portalCoord = [300, 185];
 
-    level2.addText(900, 250, 15, "Press W or ⇑ to swap gravity", "right");
+    level2.addText(900, 250, 15, "Press W or ⇑ to swap gravity", "right", "fill", 0, true, grassColor);
     level2.addBlock(200, cnv.height-borderHeight-135, 200, 135, "tallGrass");
 
 
     // LEVEL 3
     const level3 = allLevels.find((level) => level.number === 3);
     
-    level3.addBlock(940, 0, 50, cnv.height, "normal", 0, dirtColor); // border
+    level3.addBlock(940, 0, 50, cnv.height, "normal", 0, true, dirtColor); // border
 
     level3.addBlock(225, cnv.height-borderHeight-150/4, 150, 150/4, "shortGrass");
     level3.addBlock(225+150, cnv.height-borderHeight-80, 120, 80, "tallGrass");
     
     // floating flatform
     level3.addBlock(525, borderHeight+60, 100, 30, "shortGrass", Math.PI);
-    level3.addBlock(525+35, borderHeight+20, 30, 40, "normal", 0, dirtColor);
-    level3.addBlock(525+35+30, borderHeight+20, 350, 20, "normal", 0, dirtColor);
+    level3.addBlock(525+35, borderHeight+20, 30, 40, "normal", 0, true, dirtColor);
+    level3.addBlock(525+35+30, borderHeight+20, 350, 20, "normal", 0, true, dirtColor);
 
     level3.addBlock(500+100, 300, 150, 150/4, "shortGrass");
-    level3.addBlock(500+150, 300+37, 50, 50, "normal", 0, dirtColor);
-    level3.addBlock(500+150+50, 300+60, 240, 27, "normal", 0, dirtColor);
+    level3.addBlock(500+150, 300+37, 50, 50, "normal", 0, true, dirtColor);
+    level3.addBlock(500+150+50, 300+60, 240, 27, "normal", 0, true, dirtColor);
 
 
     // LEVEL 4 (First level with spikes)
     const level4 = allLevels.find((level) => level.number === 4);
     level4.portalCoord = [500 + 125, cnv.height/2-25];
 
-    level4.addBlock(700, 0, 30, cnv.height, "normal", 0, dirtColor); // border
+    level4.addBlock(700, 0, 30, cnv.height, "normal", 0, true, dirtColor); // border
     
     level4.addSpike(900, cnv.height-borderHeight-25, 25, "normal", 0, lightGrassColor);
 
@@ -291,7 +292,7 @@ function setUpLevels() {
     const level5 = allLevels.find((level) => level.number === 5);
     level5.portalCoord = [level5.portalCoord[0] + 5, level5.portalCoord[1]];
 
-    level5.addBlock(700, 0, 30, cnv.height, "normal", 0, rockColor); // border
+    level5.addBlock(700, 0, 30, cnv.height, "normal", 0, true, rockColor); // border
 
     for (let i = 0; i < 5; i++) {
         level5.addBlock(300+i*75, borderHeight, 100, 75, "cloud");
@@ -309,8 +310,8 @@ function setUpLevels() {
     
     level5.addBlock(85, cnv.height-borderHeight-100, 140, 100, "tallGrass");
 
-    level5.addBlock(0, cnv.height-borderHeight-25, 700, 25, "normal", 0, "rgb(133, 82, 39)");
-    level5.addBlock(700, cnv.height-borderHeight-25, 300, 25, "normal", 0, rockColor);
+    level5.addBlock(0, cnv.height-borderHeight-25, 700, 25, "normal", 0, true, "rgb(133, 82, 39)");
+    level5.addBlock(700, cnv.height-borderHeight-25, 300, 25, "normal", 0, true, rockColor);
 
     for (let i = 0; i < 9; i++) {
         level5.addSpike(-14+i*35, cnv.height-borderHeight-51, 35, "wide", 0, "rgb(133, 82, 39)");
@@ -320,15 +321,15 @@ function setUpLevels() {
     level5.addSpike(110, cnv.height-borderHeight-125, 25, "normal", 0, grassColor);
 
     // platforms connecting to the border
-    level5.addBlock(730, borderHeight+20, 270, 30, "normal", 0, rockColor)
-    level5.addBlock(0, borderHeight+20, 100, 30, "normal", 0, rockColor)
-    level5.addBlock(70, borderHeight+50, 30, 20, "normal", 0, rockColor)
+    level5.addBlock(730, borderHeight+20, 270, 30, "normal", 0, true, rockColor)
+    level5.addBlock(0, borderHeight+20, 100, 30, "normal", 0, true, rockColor)
+    level5.addBlock(70, borderHeight+50, 30, 20, "normal", 0, true, rockColor)
 
     // floating platforms
-    level5.addBlock(0, borderHeight+70, 80, 35, "normal", 0, rockColor)
-    level5.addBlock(-80, borderHeight+70, 80, 35, "normal", 0, rockColor)
-    level5.addBlock(80, borderHeight+70, 80, 35, "normal", 0, rockColor)
-    level5.addBlock(950, borderHeight+70, 120, 35, "normal", 0, rockColor)
+    level5.addBlock(0, borderHeight+70, 80, 35, "normal", 0, true, rockColor)
+    level5.addBlock(-80, borderHeight+70, 80, 35, "normal", 0, true, rockColor)
+    level5.addBlock(80, borderHeight+70, 80, 35, "normal", 0, true, rockColor)
+    level5.addBlock(950, borderHeight+70, 120, 35, "normal", 0, true, rockColor)
 
     level5.addSpike(0, borderHeight+41, 35, "wide", Math.PI, rockColor);
     level5.addSpike(35, borderHeight+41, 35, "wide", Math.PI, rockColor);
@@ -352,34 +353,34 @@ function setUpLevels() {
 
     // beginning section //
     level6.addSpike(680, 370, 30, "normal", 0, rockColor);
-    level6.addBlock(650, 250, 30, 150, "vert-rock", 0, rockColor);
+    level6.addBlock(650, 250, 30, 150, "vert-rock", 0, true, rockColor);
     level6.addSpike(650, 228, 22, "normal", 0, rockColor);
     level6.addSpike(665, 235, 15, "normal", 0, rockColor);
 
     level6.addSpike(575, borderHeight, 30, "normal", Math.PI, rockColor);
-    level6.addBlock(545, borderHeight, 30, 180, "vert-rock", 0, rockColor);
+    level6.addBlock(545, borderHeight, 30, 180, "vert-rock", 0, true, rockColor);
     level6.addSpike(545, 280, 10, "normal", Math.PI, rockColor);
     level6.addSpike(548, 280, 27, "normal", Math.PI, rockColor);
 
-    level6.addBlock(575, 250, 75, 30, "phase", 0, phaseColor);
+    level6.addBlock(575, 250, 75, 30, "phase", 0, true, phaseColor);
     level6.addSpike(445, 370, 30, "normal", 0, rockColor);
 
-    level6.addBlock(370, 270, 75, 30, "horiz-rock", 0, rockColor);
-    level6.addBlock(415, 175, 30, 225, "vert-rock", 0, rockColor);
+    level6.addBlock(370, 270, 75, 30, "horiz-rock", 0, true, rockColor);
+    level6.addBlock(415, 175, 30, 225, "vert-rock", 0, true, rockColor);
     level6.addSpike(415, 165, 10, "normal", 0, rockColor);
     level6.addSpike(421, 157, 18, "normal", 0, rockColor);
     level6.addSpike(435, 165, 10, "normal", 0, rockColor);
 
     // middle section //
     // phase spikes
-    level6.addBlock(445, 175, 100, 30, "phase", 0, "rgba(81, 79, 77, 0.7)");
+    level6.addBlock(445, 175, 100, 30, "phase", 0, true, "rgba(81, 79, 77, 0.7)");
     for (let i = 0; i < 3; i++) {
         level6.addSpike(445+i*(100/3), 150, 100/3, "phaseWide", 0, phaseColor);
         level6.addSpike(445+i*(100/3), 196.5, 100/3, "phaseWide", Math.PI, phaseColor);
     }
     
     level6.addBlock(250, 270, 75, 30, "horiz-rock");
-    level6.addBlock(325, 270, 45, 30, "phase", 0, phaseColor);
+    level6.addBlock(325, 270, 45, 30, "phase", 0, true, phaseColor);
     level6.addBlock(250, borderHeight, 30, 200, "vert-rock");
 
     // left top spikes
@@ -411,7 +412,7 @@ function setUpLevels() {
     const level7 = allLevels.find((level) => level.number === 7);
 
     // center phase block
-    level7.addBlock(0, 235, cnv.width, 30, "phase", 0, phaseColor);
+    level7.addBlock(0, 235, cnv.width, 30, "phase", 0, true, phaseColor);
 
     // start //
     // bottom spikes
@@ -444,7 +445,7 @@ function setUpLevels() {
     level7.addBlock(520, 320, 30, 170, "vert-rock");
     level7.addSpike(520, 297.5, 30, "wide", 0, rockColor);
     
-    level7.addBlock(605, 265, 30, 50, "phase", 0, phaseColor);
+    level7.addBlock(605, 265, 30, 50, "phase", 0, true, phaseColor);
     level7.addSpike(605, 307.5, 30, "wide", Math.PI, phaseColor);
     
     level7.addBlock(690, 320, 30, 170, "vert-rock");
@@ -492,13 +493,19 @@ function setUpLevels() {
     level8.portalCoord = [425, level8.portalCoord[1]];
     
     // borders around the portal
-    // level8.addBlock(325, 155, 150, 150, "phase", 0, "rgba(0, 255, 0, 0.7)");
+    level8.addBlock(355, 175, 145, 140, "phase", 0, true, "rgba(0, 255, 0, 0.1)");
+    level8.addBlock(355, 307, 145, 20, "shortGrass");
+    level8.addBlock(425, 307-15, 18, 15, "tallGrass", 0, false);
+    level8.addBlock(410, 307-5, 15, 5, "shortGrass", 0, false);
+    level8.addBlock(370, 275, 25, 15, "cloud", 0, false);
+    level8.addBlock(410, 265, 25, 15, "cloud", 0, false);
+    level8.addBlock(455, 268, 25, 15, "cloud", 0, false);
     
     level8.addBlock(412.5, 320, 30, 170, "vert-rock");
     level8.addBlock(340, 315, 170, 30, "horiz-rock");
 
     level8.addBlock(325, 155, 75, 20, "horiz-rock");
-    level8.addBlock(400, 155, 50, 20, "phase", 0, phaseColor);
+    level8.addBlock(400, 155, 50, 20, "phase", 0, true, "rgba(0, 255, 0, 0.2)");
     level8.addBlock(450, 155, 75, 20, "horiz-rock");
 
     level8.addBlock(325, 155, 30, 190, "vert-rock");
@@ -536,12 +543,14 @@ function setUpLevels() {
     level8.addSpike(680, 380, 20, "normal", 0, rockColor);
     level8.addSpike(590, 380, 20, "normal", 0, rockColor);
 
-    level8.addBlock(590, 250, 20, 120, "phase", 0, phaseColor);
-    level8.addBlock(610, 250, 75, 20, "phase", 0, phaseColor);
-    level8.addBlock(550, 320, 40, 20, "phase", 0, phaseColor);
-    level8.addSpike(535, 320, 20, "phaseWide", 3*Math.PI/2, phaseColor);
+    level8.addBlock(590, 250, 20, 120, "phase", 0, true, phaseColor);
+    level8.addBlock(610, 250, 75, 20, "phase", 0, true, phaseColor);
+    level8.addBlock(550, 320, 40, 20, "phase", 0, true, phaseColor);
     level8.addSpike(610, 270, 15, "phaseNormal", Math.PI, phaseColor);
     level8.addSpike(675, 270, 10, "phaseNormal", Math.PI, phaseColor);
+    level8.addSpike(535, 320, 20, "phaseWide", 3*Math.PI/2, phaseColor);
+    level8.addSpike(524, 310, 20, "wide", Math.PI/2, rockColor);
+    level8.addSpike(524, 330, 20, "wide", Math.PI/2, rockColor);
 
 
     // left path middle
@@ -553,7 +562,7 @@ function setUpLevels() {
 
 
     // left path end
-    level8.addBlock(529, 180, 41, 20, "phase", 0, phaseColor);
+    level8.addBlock(529, 180, 41, 20, "phase", 0, true, phaseColor);
     for (let i = 0; i < 4; i++) {
         level8.addBlock(519+i*43, 137.5, 43, 5, "horiz-rock");
     }
@@ -583,16 +592,16 @@ function setUpLevels() {
     // right path middle
     level8.addBlock(108, 220, 20, 120, "vert-rock");
 
-    level8.addBlock(0, 230, 108, 20, "phase", 0, phaseColor);
-    level8.addBlock(-108, 230, 108, 20, "phase", 0, phaseColor);
-    level8.addBlock(927, 230, 100, 20, "phase", 0, phaseColor);
-    level8.addBlock(1000, 230, 100, 20, "phase", 0, phaseColor);
+    level8.addBlock(0, 230, 108, 20, "phase", 0, true, phaseColor);
+    level8.addBlock(-108, 230, 108, 20, "phase", 0, true, phaseColor);
+    level8.addBlock(927, 230, 100, 20, "phase", 0, true, phaseColor);
+    level8.addBlock(1000, 230, 100, 20, "phase", 0, true, phaseColor);
     level8.addSpike(30, 220, 10, "phaseNormal", 0, phaseColor);
     level8.addSpike(970, 180, 10, "normal", Math.PI, rockColor);
 
     level8.addBlock(0, 300, 108, 20, "horiz-rock");
     level8.addBlock(-108, 300, 108, 20, "horiz-rock");
-    level8.addBlock(927, 300, 43, 20, "phase", 0, phaseColor);
+    level8.addBlock(927, 300, 43, 20, "phase", 0, true, phaseColor);
     level8.addBlock(970, 300, 108, 20, "horiz-rock");
 
     for (let i = 0; i < 9; i++) {
@@ -633,7 +642,7 @@ function setUpLevels() {
     const level9 = allLevels.find((level) => level.number === 9);
     level9.portalCoord = [-500, -500]; // No Portal
 
-    level9.addText(500, 250, 35, "Thanks for playing!", "center");
+    level9.addText(500, 250, 35, "Thanks for playing!", "center", "fill", 0, grassColor);
 }
 
 function checkObstacleCollisions() {
@@ -690,7 +699,7 @@ function drawPlayer(x, y, r, rotation) {
 function drawPortal() {
     // drawPlayer(): draws the portal and handles it's rotation
 
-    // Black Portal
+    // Outer Portal
     ctx.globalAlpha = 0.75;
     ctx.save();
     ctx.translate(portal.x, portal.y)
@@ -699,12 +708,19 @@ function drawPortal() {
     ctx.restore();
 
 
-    // Blue Portal
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    
+    // Inner Portal
     ctx.globalAlpha = 1;
     ctx.save();
     ctx.translate(portal.x, portal.y)
     ctx.rotate(portal.rotation);
-    ctx.drawImage(document.getElementById("blue-portal"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
+    if ((currentLevel.terrain === "rocky" || currentLvlNum === 5) && currentLvlNum !== 8) {
+        ctx.drawImage(document.getElementById("blue-portal"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
+    }
+    else {
+        ctx.drawImage(document.getElementById("geen-portal"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
+    }
     ctx.restore();
 
     portal.rotation += portal.spinSpeed;
