@@ -248,9 +248,12 @@ Started working on level 8. I decided to split it into two seperate paths for th
  - Left path of level 8
 
 
-# Day 25 - Friday | In class work #
+# Day 25 - Friday | In class work & At Home Work #
 I completed the rest of the level 8, both the left and right path. I wanted to make a level 9, but I think it would be incredibly challenging to top the effort I put into level 8, so I'll end it there and just make a "thanks for playing" type of level for level 9. I also want to spend more time on the titlescreen and make a level-selection menu.
 
+### At Home Work
+Made level 8's ending look pretty. I designed the area around the portal to look like a grassy level to signify the end of the cave levels. This required the use of grassy-level type blocks which did have collisions, because of this, I added a `collisions` property to the blocks class so I can freely toggle on and off collisions for every block.
+
 ### Things Added:
- - Finished the left and right path of level 8
+ - Finished the left and right path of level 8 and made it look pretty
 
