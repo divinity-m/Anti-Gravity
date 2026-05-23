@@ -46,13 +46,9 @@ function mouseMoveHandler(e) {
 function clickHandler(e) {
     // clickHandler(): checks if the user clicks any buttons
 
-    const rect = cnv.getBoundingClientRect();
-    if (gameState === "titleScreen") {
-        const mouseInPlayBtn = (
-            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
-            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
-        )
-        if (mouseInPlayBtn) playBtn.effect();
+    for (let i in buttons) {
+        let btn = buttons[i];
+        if (btn.mouseOver) btn.effect();
     }
 }
 
@@ -60,18 +56,17 @@ function clickHandler(e) {
 // Process Functions //
 function playerMovement() {
     // playerMovement(): checks if certain buttons are pressed to move the player
+    const isLevels = gameState === "levels";
+    player.spinSpeed = isLevels ? Math.PI/16 : Math.PI/128;
+    
     if (aPressed) {
-        if (!player.enteringPortal) player.x -= player.speed;
-
-        player.spinSpeed = gameState !== "titleScreen" ? Math.PI/16 : Math.PI/128;
+        if (isLevels && !player.enteringPortal) player.x -= player.speed;
 
         player.rotation -= player.spinSpeed;
     }
     if (dPressed) {
         if (!player.enteringPortal) player.x += player.speed;
-    
-        player.spinSpeed = gameState !== "titleScreen" ? Math.PI/16 : Math.PI/128;
-
+        
         player.rotation += player.spinSpeed;
     }
 }
@@ -240,7 +235,7 @@ function setUpLevels() {
     const level2 = allLevels.find((level) => level.number === 2);
     level2.portalCoord = [300, 185];
 
-    level2.addText(900, 250, 15, "Press W or ⇑ to swap gravity", "right", "fill", 0, true, grassColor);
+    level2.addText(900, 250, 15, "Press W or ⇑ to swap gravity", "right", "fill", 0, grassColor);
     level2.addBlock(200, cnv.height-borderHeight-135, 200, 135, "tallGrass");
 
 
@@ -645,6 +640,42 @@ function setUpLevels() {
     level9.addText(500, 250, 35, "Thanks for playing!", "center", "fill", 0, grassColor);
 }
 
+function warpToLevel(levelNum, spawn) {
+// warpToLevel(): uses the levelNUm and spawn parameters to set the spawn of a level, and turn that into the current level
+    gameState = "levels";
+
+    const level = allLevels.find((level) => level.number === levelNum);
+    level.playerSpawn = spawn;
+    
+    currentLvlNum = 0;
+    while (currentLvlNum < levelNum) {
+        proceedToNextLevel();
+    }
+}
+
+function setUpLevelButtons() {
+// setUpLevelButtons(): creates the buttons in the levelSelect menu which teleport you to a specific level
+    
+    const defaultSpawns = [
+        // player spawn coordinates for levels 1-9 in order
+        [200, 250], [800, 350], [100, 350], [775, 350], [650, 250], [775, 300], [100, 200], [425, 130], [500-17.5/2, 250-17.5/2]
+    ];
+    
+    // buttons to warp to every level
+    for (let i in allLevels) {
+        let levelBtn;
+        
+        if (i < 5) { // top row | first 5 levels
+            levelBtn = new Button(cnv.width/2-15 - (2-i)*40, 220, 30, 30, "playbtn", "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
+        }
+        else {  // bottom row | final 4 levels
+            levelBtn = new Button(cnv.width/2+7.5 - (7-i)*40, 265, 30, 30, "playbtn", "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
+        }
+        
+        buttons.push(levelBtn);
+    }
+}
+
 function checkObstacleCollisions() {
 // drawObstacles(): loops through the current level's obstacles to check their collisions
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
@@ -745,29 +776,6 @@ function drawTitleScreen() {
     ctx.drawImage(document.getElementById("grey-ball"), -player.r * 10, -player.r * 10, player.r * 20, player.r * 20);
     ctx.restore();
 
-    // mouseX and mouseY are undefined by default, so check if they have values before using them
-    let mouseInPlayBtn;
-    if (mouseX && mouseY) {
-        mouseInPlayBtn = (
-            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
-            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
-        )
-    }
-
-    // checks if mouseInPlayBtn isn't undefined before setting the color properties
-    if (mouseInPlayBtn !== undefined) {
-        playBtn.bgColor = mouseInPlayBtn ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
-    }
-
-    // Play Btn
-    ctx.fillStyle = playBtn.bgColor;
-    ctx.strokeStyle = playBtn.bgColor;
-    ctx.lineWidth = 4;
-
-    ctx.drawImage(document.getElementById("playbtn"), playBtn.x, playBtn.y, playBtn.w, playBtn.h);
-    ctx.fillRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
-    ctx.strokeRect(playBtn.x, playBtn.y, playBtn.w, playBtn.h);
-
     // Credits
     ctx.fillStyle = "rgb(110, 110, 110)";
     ctx.font = "20px Outfit";
@@ -780,13 +788,28 @@ function drawCursor() {
     // drawCursor(): draws a circle at the cursors coordinates
     
     // Cursor
-    if (mouseX && mouseY) {
-        mouseInPlayBtn = (
-            mouseX > playBtn.x && mouseX < playBtn.x + playBtn.w &&
-            mouseY > playBtn.y && mouseY < playBtn.y + playBtn.h
-        )
+    if (mouseX !== undefined && mouseY !== undefined) {
+        hoveringOverAButton = false;
+        for (let i in buttons) {
+            if (buttons[i].mouseOver) hoveringOverAButton = true;
+        }
         
-        ctx.fillStyle = mouseInPlayBtn ? "rgb(171, 249, 255)" : "rgb(27, 240, 255)";
+        
+        const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+
+        if (currentLevel.terrain === "grassy") {
+            ctx.fillStyle = hoveringOverAButton ? "rgb(171, 249, 255)" : "rgb(27, 240, 255)";
+        } else {
+            ctx.fillStyle = hoveringOverAButton ? "rgb(75, 75, 75)" : "rgb(50, 50, 50)";
+        }
+        
         drawCircle(mouseX, mouseY, 5);
+    }
+}
+
+function drawButtons() {
+    for (let i in buttons) {
+        const btn = buttons[i];
+        btn.draw();
     }
 }
