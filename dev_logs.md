@@ -248,7 +248,7 @@ Started working on level 8. I decided to split it into two seperate paths for th
  - Left path of level 8
 
 
-# Day 25 - Friday | In class work & At Home Work #
+# Day 25 - Friday | In class work & At home work #
 I completed the rest of the level 8, both the left and right path. I wanted to make a level 9, but I think it would be incredibly challenging to top the effort I put into level 8, so I'll end it there and just make a "thanks for playing" type of level for level 9. I also want to spend more time on the titlescreen and make a level-selection menu.
 
 ### At Home Work
@@ -257,3 +257,39 @@ Made level 8's ending look pretty. I designed the area around the portal to look
 ### Things Added:
  - Finished the left and right path of level 8 and made it look pretty
 
+
+
+# Day 26 - Saturday | At Home Work #
+Added navigation. There's now a level select screen with 10 buttons, one per level + a button to go back to the title screen. In game, there's two button in the top right, one for respawning the player and one for going back to the title screen. Currently, every button has the play-button image because I haven't made unique designs for all of them yet. To blueprint these buttons, rather than making completely unique objects for each and every one of them, I made a `Button` class, then made objects out of that class. All of these objects are stored in an array called `buttons`.
+``` javascript
+// The constructor for the Button class
+constructor(x, y, w, h, src, location, event) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.src = src;
+    this.location = location;
+    this.event = event;
+    this.mouseOver = false; // A boolean which checks various conditions to determine if the mouse is hovering over the button
+}
+
+// initial playbtn
+const playBtn = {
+    x: cnv.width/2 - 150/2, y: cnv.height/2 - 75/2,
+
+    w: 150, h: 75,
+
+    bgColor: "rgba(255, 255, 255, 0)",
+
+    effect() {
+        gameState = "levels";
+    }
+}
+
+// current playbtn
+const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleScreen", () => { gameState = "levels"; });
+```
+
+### Things Added:
+ - Navigational buttons using a `Button` class
