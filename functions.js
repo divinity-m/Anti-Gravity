@@ -666,10 +666,10 @@ function setUpLevelButtons() {
         let levelBtn;
         
         if (i < 5) { // top row | first 5 levels
-            levelBtn = new Button(cnv.width/2-15 - (2-i)*40, 220, 30, 30, "playbtn", "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
+            levelBtn = new Button(cnv.width/2-15 - (2-i)*40, 200, 30, 30, "Select Level 1", `${Number(i)+1} 20px`, "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
         }
         else {  // bottom row | final 4 levels
-            levelBtn = new Button(cnv.width/2+7.5 - (7-i)*40, 265, 30, 30, "playbtn", "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
+            levelBtn = new Button(cnv.width/2+7.5 - (7-i)*40, 245, 30, 30, "Select Level 1", `${Number(i)+1} 20px`, "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
         }
         
         buttons.push(levelBtn);
