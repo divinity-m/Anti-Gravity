@@ -86,17 +86,19 @@ class Button {
     * @param {number} y - The buttons's y coordinate
     * @param {number} w - The button's width
     * @param {number} h - The button's height
-    * @param {string} src - The buttons image src
+    * @param {string} name - The buttons id
+    * @param {string} content - The stuff inside the button (text or image)
     * @param {string} location - Which gamestate the button is visible in
     * @param {function} event - What the button does
     */
     
-    constructor(x, y, w, h, src, location, event) {
+    constructor(x, y, w, h, name, content, location, event) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.src = src;
+        this.name = name;
+        this.content = content;
         this.location = location;
         this.event = event;
         this.mouseOver = false; // A boolean which checks various conditions to determine if the mouse is hovering over the button
@@ -109,11 +111,49 @@ class Button {
              mouseY > this.y && mouseY < this.y + this.h);
 
         if (gameState === this.location) {
+            // button background
+            const cyanGradient = ctx.createLinearGradient(this.x, this.y, this.x+this.w, this.y+this.h);
+            cyanGradient.addColorStop(0, "rgb(122, 255, 255)");
+            cyanGradient.addColorStop(1, "rgb(255, 255, 255)");
+
+            const greyGradient = ctx.createLinearGradient(this.x, this.y, this.x+this.w, this.y+this.h);
+            greyGradient.addColorStop(0, "rgb(60, 61, 64)");
+            greyGradient.addColorStop(1, "rgb(167, 167, 167)");
+
+            const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+
+
+            if (currentLevel.terrain === "grassy") {
+                ctx.fillStyle = cyanGradient;
+            }
+            else if (currentLevel.terrain === "rocky") {
+                ctx.fillStyle = greyGradient;
+            }
+
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            
+            // button content
+            if (this.content.includes(".svg")) {
+
+            }
+            else if (this.content.includes("px")) {
+                const splitInfo = this.content.split(" ");
+
+                ctx.fillStyle = "white";
+                ctx.font = `${splitInfo[1]} Outfit`;
+                ctx.textAlign = "center";
+
+                ctx.strokeStyle = currentLevel.terrain === "grassy" ? "rgb(0, 255, 255)" : "black";
+                ctx.lineWidth = 2;
+                ctx.strokeText(splitInfo[0], this.x + this.w*0.5, this.y + this.h*0.75);
+
+                ctx.fillText(splitInfo[0], this.x + this.w*0.5, this.y + this.h*0.75);                
+            }
+
+            // overlay for mouse hovers
             ctx.fillStyle = this.mouseOver ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
             ctx.strokeStyle = this.mouseOver ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
             ctx.lineWidth = 4;
-            
-            ctx.drawImage(document.getElementById(this.src), this.x, this.y, this.w, this.h);
             ctx.fillRect(this.x, this.y, this.w, this.h);
             ctx.strokeRect(this.x, this.y, this.w, this.h);
         }
@@ -125,11 +165,11 @@ class Button {
     }
 }
 
-const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleScreen", () => { gameState = "levels"; });
-const levelsBtn = new Button(cnv.width/2 - 20, 290, 40, 35, "playbtn", "titleScreen", () => { gameState = "levelSelect"; });
-const leaveLevelsBtn = new Button(cnv.width/2 - 20, 330, 40, 35, "playbtn", "levelSelect", () => { gameState = "titleScreen"; });
-const homeBtn = new Button(cnv.width-35, 15, 20, 20, "playbtn", "levels", () => { gameState = "titleScreen"; });
-const restartBtn = new Button(cnv.width-70, 15, 20, 20, "playbtn", "levels", respawnPlayer);
+const playBtn = new Button(cnv.width/2 - 75, 200, 150, 75, "Play", "Play 60px", "titleScreen", () => { gameState = "levels"; });
+const levelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Level Select", "Levels 22px", "titleScreen", () => { gameState = "levelSelect"; });
+const leaveLevelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Leave Level Select", "Menu 22px", "levelSelect", () => { gameState = "titleScreen"; });
+const homeBtn = new Button(cnv.width-40, 15, 25, 25, "Home", "Home 8px", "levels", () => { gameState = "titleScreen"; });
+const restartBtn = new Button(cnv.width-80, 15, 25, 25, "Restart", "Restart 8px", "levels", respawnPlayer);
 
 buttons = [playBtn, levelsBtn, leaveLevelsBtn, homeBtn, restartBtn];
 
