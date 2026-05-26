@@ -293,3 +293,12 @@ const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleS
 
 ### Things Added:
  - Navigational buttons using a `Button` class
+ - Level select page
+
+
+
+# Day 28 - Monday | In class work #
+I tweaked with the designs of the buttons most of them now no longer rely on images, but rather canvas text.
+
+### Things Added:
+ - Title screen design improvements
