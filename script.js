@@ -533,7 +533,7 @@ function determineFrameRate() {
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime
 
-    if (timePassed < 16.666666) draw();
+    if (timePassed > msPerFrame) draw();
 
     lastTime = currentTime;
 
