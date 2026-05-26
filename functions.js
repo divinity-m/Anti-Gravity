@@ -333,6 +333,7 @@ function setUpLevels() {
     }
 
     level5.addBlock(890, 285, 80, 60, "cloud");
+    level5.addBlock(830, 305, 60, 40, "cloud");
 
 
     // LEVEL 6 (first cave level and first level with phase)
@@ -658,7 +659,7 @@ function setUpLevelButtons() {
     
     const defaultSpawns = [
         // player spawn coordinates for levels 1-9 in order
-        [200, 250], [800, 350], [100, 350], [775, 350], [650, 250], [775, 300], [100, 200], [425, 130], [500-17.5/2, 250-17.5/2]
+        [200, 250], [800, 350], [100, 350], [775, 350], [650, 250], [775, 300], [100, 200], [800, 200], [500-17.5/2, 250-17.5/2]
     ];
     
     // buttons to warp to every level
