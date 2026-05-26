@@ -531,7 +531,7 @@ const msPerFrame = 1000 / fps;
 function update() {
     // calculate delta time
     const currentTime = window.performance.now();
-    const timePassed = currentTime - lastTime
+    const timePassed = currentTime - lastTime;
 
     if (timePassed > msPerFrame) {
         draw();
