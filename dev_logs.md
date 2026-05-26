@@ -297,8 +297,11 @@ const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleS
 
 
 
-# Day 28 - Monday | In class work #
+# Day 28 - Monday | In class work & At home work #
 I tweaked with the designs of the buttons most of them now no longer rely on images, but rather canvas text.
 
+### At Home Work
+I gave some buttons images instead of text because they look nicer that way.
+
 ### Things Added:
- - Title screen design improvements
+ - Button design improvements
