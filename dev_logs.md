@@ -305,3 +305,38 @@ I gave some buttons images instead of text because they look nicer that way.
 
 ### Things Added:
  - Button design improvements
+
+
+
+# Day 29 - Tuesday | In class work #
+Had little to add to the game, but I noticed there were some issues when I tested it. In level 5, entering the portal could kill the player because the portal was positioned close to an array of spikes, so the player would be flung into those spikes if they rolled directly into the portal. I didn't want to change the code up much, so I fixed this by placing a block platform directly below the portal, not allowing the player to fall too far and hit the spikes.
+
+When Gavin tested the game on his laptop, we noticed that the game ran way too fast. The player moved incredibly quickly, and the portals span way faster than they should've, after some resreached, we noticed that it was because the refresh rate (Hertz) on Gavin's laptop was double that of most devices (the base is usually 60Hz), which is also why I only just discovered this bug. His high refresh rate caused the game to animate at double the speed. I try and solve this, I attempted to limit the canvas refresh speed with `window.performance.now();`, like so:
+
+```javascript
+// Framerate related variables
+let lastTime = window.performance.now();
+const fps = 60;
+const msPerFrame = 1000 / fps;
+
+function determineFrameRate() {
+    // calculate delta time
+    const currentTime = window.performance.now();
+    const timePassed = currentTime - lastTime
+
+    if (timePassed < msPerFrame) draw(); // Lock fps to 60
+
+    lastTime = currentTime;
+
+    // repeat the animation
+    requestAnimationFrame(determineFrameRate);
+}
+
+requestAnimationFrame(determineFrameRate);
+```
+
+But all this did was slow the game down a ton. I did try tweaking with the `fps` variable, and from what I've seen so far, lower `fps` increases the game speed, and higher `fps` decreases it. So clearly something is inverted in the code.
+
+### Things Worked On:
+ - Fixed a bug on level 5
+ - Locking the framerate of the game to prevent the game from speeding up past it's inteded refresh rate.
