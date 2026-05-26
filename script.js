@@ -528,7 +528,7 @@ const fps = 60;
 const msPerFrame = 1000 / fps;
 
 // Locks fps to 60
-function determineFrameRate() {
+function update() {
     // calculate delta time
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime
@@ -539,7 +539,7 @@ function determineFrameRate() {
     }
 
     // repeat the function
-    requestAnimationFrame(determineFrameRate);
+    requestAnimationFrame(update);
 }
 
-requestAnimationFrame(determineFrameRate);
+requestAnimationFrame(update);
