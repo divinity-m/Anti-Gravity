@@ -532,6 +532,7 @@ function update() {
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime;
 
+    // only draws after enough time has passed since the last frame
     if (timePassed > msPerFrame) {
         draw();
         lastTime = currentTime;
