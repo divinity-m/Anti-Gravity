@@ -324,7 +324,7 @@ function determineFrameRate() {
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime
 
-    if (timePassed < msPerFrame) draw(); // Lock the canvas animation refresh rate to 60
+    if (timePassed < msPerFrame) draw(); // Cap the canvas animation refresh rate to 60
 
     lastTime = currentTime;
 
@@ -339,4 +339,4 @@ But all this did was slow the game down a ton. I did try tweaking with the `fps`
 
 ### Things Worked On:
  - Fixed a bug on level 5
- - Locking the framerate of the game to prevent the game from speeding up past it's inteded refresh rate.
+ - Capping the framerate of the game to prevent the game from speeding up past it's inteded refresh rate.
