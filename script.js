@@ -438,7 +438,6 @@ document.addEventListener("keyup", keyupHandler);
 document.addEventListener("mousemove", mouseMoveHandler);
 document.addEventListener("click", clickHandler);
 
-
 // Draw Function //
 function draw() {
     // draw(): the main function which is repeated to call other process and draw functions
@@ -520,8 +519,26 @@ function draw() {
     drawButtons();
     drawCursor();
     
-    // repeat the animation
-    requestAnimationFrame(draw);
 }
 
-draw();
+
+// Framerate related variables
+let lastTime = window.performance.now();
+const fps = 40;
+const msPerFrame = 1000 / fps;
+
+// Locks fps to 60
+function determineFrameRate() {
+    // calculate delta time
+    const currentTime = window.performance.now();
+    const timePassed = currentTime - lastTime
+
+    if (timePassed < 16.666666) draw();
+
+    lastTime = currentTime;
+
+    // repeat the animation
+    requestAnimationFrame(determineFrameRate);
+}
+
+requestAnimationFrame(determineFrameRate);
