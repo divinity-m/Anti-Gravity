@@ -538,7 +538,7 @@ function determineFrameRate() {
         lastTime = currentTime;
     }
 
-    // repeat the animation
+    // repeat the function
     requestAnimationFrame(determineFrameRate);
 }
 
