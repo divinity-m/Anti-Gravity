@@ -524,7 +524,7 @@ function draw() {
 
 // Framerate related variables
 let lastTime = window.performance.now();
-const fps = 40;
+const fps = 60;
 const msPerFrame = 1000 / fps;
 
 // Locks fps to 60
