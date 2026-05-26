@@ -533,9 +533,10 @@ function determineFrameRate() {
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime
 
-    if (timePassed > msPerFrame) draw();
-
-    lastTime = currentTime;
+    if (timePassed > msPerFrame) {
+        draw();
+        lastTime = currentTime;
+    }
 
     // repeat the animation
     requestAnimationFrame(determineFrameRate);
