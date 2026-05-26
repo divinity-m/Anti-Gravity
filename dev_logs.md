@@ -324,7 +324,7 @@ function determineFrameRate() {
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime
 
-    if (timePassed < msPerFrame) draw(); // Lock fps to 60
+    if (timePassed < msPerFrame) draw(); // Lock the canvas animation refresh rate to 60
 
     lastTime = currentTime;
 
