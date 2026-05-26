@@ -518,7 +518,6 @@ function draw() {
     
     drawButtons();
     drawCursor();
-    
 }
 
 
