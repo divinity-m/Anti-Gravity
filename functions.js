@@ -592,7 +592,7 @@ function setUpLevels() {
     level8.addBlock(-108, 230, 108, 20, "phase", 0, true, phaseColor);
     level8.addBlock(927, 230, 100, 20, "phase", 0, true, phaseColor);
     level8.addBlock(1000, 230, 100, 20, "phase", 0, true, phaseColor);
-    level8.addSpike(30, 220, 10, "phaseNormal", 0, phaseColor);
+    level8.addSpike(20, 220, 10, "phaseNormal", 0, phaseColor);
     level8.addSpike(970, 180, 10, "normal", Math.PI, rockColor);
 
     level8.addBlock(0, 300, 108, 20, "horiz-rock");
@@ -627,7 +627,7 @@ function setUpLevels() {
         level8.addSpike(162, 376-i*24, 24, "wide", 3*Math.PI/2, rockColor);
         level8.addSpike(194, 160+i*24, 24, "wide", Math.PI/2, rockColor);
     }
-    level8.addSpike(190-7/2, borderHeight, 7, "normal", Math.PI, rockColor);
+    level8.addSpike(245, borderHeight, 7, "normal", Math.PI, rockColor);
 
     level8.addSpike(252, 335, 20, "wide", Math.PI, rockColor);
     level8.addSpike(390, borderHeight, 10, "normal", Math.PI, rockColor);
