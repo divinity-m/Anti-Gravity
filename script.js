@@ -133,12 +133,12 @@ class Button {
             ctx.fillRect(this.x, this.y, this.w, this.h);
             
             // button content
-            if (this.content.includes(".svg")) {
-
+            const splitInfo = this.content.split(" ");
+            
+            if (this.content.includes("img")) {
+                ctx.drawImage(document.getElementById(splitInfo[0]), this.x+2, this.y+2, this.w-4, this.h-4);
             }
             else if (this.content.includes("px")) {
-                const splitInfo = this.content.split(" ");
-
                 ctx.fillStyle = "white";
                 ctx.font = `${splitInfo[1]} Outfit`;
                 ctx.textAlign = "center";
@@ -147,7 +147,7 @@ class Button {
                 ctx.lineWidth = 2;
                 ctx.strokeText(splitInfo[0], this.x + this.w*0.5, this.y + this.h*0.75);
 
-                ctx.fillText(splitInfo[0], this.x + this.w*0.5, this.y + this.h*0.75);                
+                ctx.fillText(splitInfo[0], this.x + this.w*0.5, this.y + this.h*0.75);         
             }
 
             // overlay for mouse hovers
@@ -168,8 +168,8 @@ class Button {
 const playBtn = new Button(cnv.width/2 - 75, 200, 150, 75, "Play", "Play 60px", "titleScreen", () => { gameState = "levels"; });
 const levelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Level Select", "Levels 22px", "titleScreen", () => { gameState = "levelSelect"; });
 const leaveLevelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Leave Level Select", "Menu 22px", "levelSelect", () => { gameState = "titleScreen"; });
-const homeBtn = new Button(cnv.width-40, 15, 25, 25, "Home", "Home 8px", "levels", () => { gameState = "titleScreen"; });
-const restartBtn = new Button(cnv.width-80, 15, 25, 25, "Restart", "Restart 8px", "levels", respawnPlayer);
+const homeBtn = new Button(cnv.width-40, 15, 25, 25, "Home", "home-btn img", "levels", () => { gameState = "titleScreen"; });
+const restartBtn = new Button(cnv.width-80, 15, 25, 25, "Restart", "restart-btn img", "levels", respawnPlayer);
 
 buttons = [playBtn, levelsBtn, leaveLevelsBtn, homeBtn, restartBtn];
 
