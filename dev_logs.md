@@ -344,7 +344,7 @@ But all this did was slow the game down a ton. I did try tweaking with the `fps`
 
 
 # Day 30 - Wednesday (5-day break) | At home work #
-I fixed the inverted framerate by changing the if-statement from `timePassed < msPerFrame` to `timePassed > msPerFrame`. Then increases the fps constant to 65, this provided me (or my device specifically) with a consistent, capped performance.
+I fixed the inverted framerate by changing the if-statement from `timePassed < msPerFrame` to `timePassed > msPerFrame`. I then increased the `fps` constant to 70, this gave me (or my device specifically) a consistent, capped performance.
 ``` javascript
 // only draws after enough time has passed since the last frame
 if (timePassed > msPerFrame) {
