@@ -515,9 +515,9 @@ function draw() {
         ctx.fillRect(0, 0, cnv.width, borderHeight);
         // ctx.drawImage(document.getElementById("cave-bar"), 0, 0, cnv.width, borderHeight);
     }
-    
-    drawButtons();
-    drawCursor();
+
+    drawButtons(); // buttons only draw in specific gamestates, as coded into their classes
+    drawCursor(); // the cursor is everywhere
 }
 
 
@@ -526,13 +526,14 @@ let lastTime = window.performance.now();
 const fps = 65;
 const msPerFrame = 1000 / fps;
 
-// Locks fps to 65
 function update() {
+    // update(): Locks fps to 65 so the game speed doesn't increase with higher performance devices
+    
     // calculate delta time
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime;
 
-    // only draws after enough time has passed since the last frame
+    // only draw after enough time has passed since the last frame
     if (timePassed > msPerFrame) {
         draw();
         lastTime = currentTime;
