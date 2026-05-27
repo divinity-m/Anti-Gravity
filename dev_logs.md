@@ -368,7 +368,7 @@ if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteri
     player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
 }
 ```
-Then I decided that I needed to completely revamp it.
+Then I decided that I needed to completely revamp it. \
 <br>
 
 I chose to look at one of my CS-20 level projects for help, as I had a really good method for finding angles for WASD/Arrow keys type of movement. Then I used that code as a template to tamper with for Anti-Gravity. Thankfully, this solution worked incredibly well.
