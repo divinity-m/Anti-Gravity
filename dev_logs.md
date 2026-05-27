@@ -1,5 +1,5 @@
 Starting Date: April 28, 2026. \
-\Days are just days-since-started, so there may be a large skip in days at some parts (like Day 4 - Day 7).
+Days are just days-since-started, so there may be a large skip in days at some parts (like Day 4 - Day 7).
 
 # Day 1 - Tuesday | In class work #
 No functionality added yet, I started this midway through class so the goal for today has just been to set up the HTML and JS files.
