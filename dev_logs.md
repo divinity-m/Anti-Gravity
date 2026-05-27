@@ -4,8 +4,8 @@ Starting Date: April 28, 2026
 No functionality added yet, I started this midway through class so the goal for today has just been to set up the HTML and JS files.
 
 ### Things Added:
- - Fundamental code and files to make the website run
-\
+ - Fundamental code and files to make the website run\
+
 
 
 # Day 2 - Wednesday | In class work #
