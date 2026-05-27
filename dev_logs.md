@@ -397,8 +397,8 @@ if (!player.enteringPortal) {
 ```
  
 Surprisingly enough, fixing the facing angle also stopped the collision issues caused by portal gravity. I'm assuming it's because the portal would pull the player, who's already grounded on a block, further into the block at an unexpected angle—clipping the player just past the maximum distance of which a collision would be detected. This is only a theory so I'm not completely certain on why the bug is fixed. 
-
-
+ 
+ 
 ### Things Added:
  - A performance limit.
  - Fixed bugs caused by poor calculations for `player.facingAngle`
