@@ -352,7 +352,7 @@ if (timePassed > msPerFrame) {
     lastTime = currentTime;
 }
 ```
-
+ 
 While solving this issue, I encountered another bug. The player would clip into obstacles sometimes if they were entering a portal while on top of it, this happened very often on level 2. I assumed this was either another collision function issue or the portal gravity somehow increased the player velocity higher than the collision conditions could register. I didn't immedietly try tampering with the conditions in the block's `checkCollisions` method because, frankly, I don't ever want to come close to that ever again. Instead, I did further testing and looked into the `ImposePortalGravity` and `ImposeNaturalGravity` functions to see if either function had any significant influence on the player's velocity. After testing many variables, especially with the angular movement in `ImposePortalGravity`, I didn't find anything unusual.
 I played the game for a couple minutes to test the portals mechanics and made a useful discovery; when the player is initually pulled into the portal, they enter at an odd angle, nearly perpendicular to the direction they're actually facing. Because of this, I repeatedly logged the `player.facingAngle` property and found out that it only ever returned either π/2 or -π/2, meaning it was calculating the Y-angle while ignoring movement on the X-axis. So I took a look at how I initially calculated the players facing-angle...
 ```javascript
@@ -361,7 +361,7 @@ if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteri
     player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
 }
 ```
-
+ 
 Then I decided that I needed to completely revamp it.
 I chose to look at one of my CS-20 level projects for help, as I had a really good method for finding angles for WASD/Arrow keys type of movement. Then I used that code as a template to tamper with for Anti-Gravity. Thankfully, this solution worked incredibly well.
 ```javascript
@@ -395,7 +395,7 @@ if (!player.enteringPortal) {
     player.facingAngle = Math.atan2(dy, dx);
 }
 ```
-
+ 
 Surprisingly enough, fixing the facing angle also stopped the collision issues caused by portal gravity. I'm assuming it's because the portal would pull the player, who's already grounded on a block, further into the block at an unexpected angle—clipping the player just past the maximum distance of which a collision would be detected. This is only a theory so I'm not completely certain on why the bug is fixed. 
 
 
