@@ -523,11 +523,11 @@ function draw() {
 
 // Framerate related variables
 let lastTime = window.performance.now();
-const fps = 65;
+const fps = 70;
 const msPerFrame = 1000 / fps;
 
 function update() {
-    // update(): Locks fps to 65 so the game speed doesn't increase with higher performance devices
+    // update(): Caps fps so the game speed doesn't increase with higher performance devices
     
     // calculate delta time
     const currentTime = window.performance.now();
