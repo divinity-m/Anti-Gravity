@@ -459,7 +459,7 @@ function draw() {
     
     playerMovement();
     
-    if (gameState !== "levels") drawTitleScreen();
+    if (gameState !== "levels") drawTitleScreen(); // draws elements specific to only the titleScreen gamestate (excluding buttons)
     else if (gameState === "levels") {
         // player movement
         let previousX = player.x;
@@ -475,7 +475,7 @@ function draw() {
         }
 
         
-        // map restrictions
+        // map restrictions which loop the player when they move too far offscreen
         if (player.x - player.r < -70) player.x = cnv.width + 70 - player.r;
         if (player.x + player.r > cnv.width + 70) player.x = -70 + player.r;
 
