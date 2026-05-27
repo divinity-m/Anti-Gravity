@@ -523,10 +523,10 @@ function draw() {
 
 // Framerate related variables
 let lastTime = window.performance.now();
-const fps = 60;
+const fps = 65;
 const msPerFrame = 1000 / fps;
 
-// Locks fps to 60
+// Locks fps to 65
 function update() {
     // calculate delta time
     const currentTime = window.performance.now();
