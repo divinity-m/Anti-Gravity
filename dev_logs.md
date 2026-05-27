@@ -10,7 +10,8 @@ No functionality added yet, I started this midway through class so the goal for 
 <br>
 
 # Day 2 - Wednesday | In class work #
-Got the full-screen canvas fully set up. For now the player's template is just a basic circle, I plan to replace it with a better design later. The movement has also been added, the "A", "D" and left/right arrow keys can be used to move the player left and right, while the "W" key and up arrow key inverts the gravity. I have an idea for what the "S" key and down arrow key should do, but it requires features that don't exist yet before it can be implemented.
+Got the full-screen canvas fully set up. For now, the player's design is just a basic circle, I plan to replace it with something else later. \
+The movement has also been added, the "A", "D" and left/right arrow-keys can be used to move the player left & right, while the "W" key & up arrow-key inverts the direction of gravity. I have an idea for what the "S" key & down arrow-key should do, but it requires features that don't exist yet to be useful and I dont feel like programming it right now.
 
 ### Things Added:
  - Canvas
@@ -19,7 +20,8 @@ Got the full-screen canvas fully set up. For now the player's template is just a
 <br>
 
 # Day 3 - Thursday | In class work #
-I refined some aspects of the game, such as making the gravity accelerate and making the player spin when it moves left and right. My friend, Gavin Diep, helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin.
+Gavin Diep helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin. \
+I refined some aspects of the game, such acceleration due to gravity and making the player spin when it moves left and right. 
 
 ### Things Added:
  - Player movement refinement
@@ -36,17 +38,18 @@ I started working on the mechanics for the portal, which marks the checkpoint fo
 <br>
 
 # Day 7 - Monday | In class work #
-Continued working on the gravity for the portal, it was initially very rigid and jarring, so I smoothened it out. This was done by finding the angle from the player to the portal, getting the difference in that angle and the angle the player is facing, gradually incrementing the players angle by portions of that difference, then incrementing the players coordinates based off that angle. The following code is a summarized rundown of my solution:
+I continued working on the gravity for the portal, it was initially very rigid and jarring, so I smoothened it out. This was done by finding the angle from the player to the portal, getting the difference in that angle and the angle the player is currently facing, gradually incrementing the players angle by small portions of that difference, then finally incrementing the players coordinates based off that angle. The following code is a summarized rundown of my solution:
 ``` javascript
+// get the difference in the coordinates of the portal and player
 const portalDx = portal.x - player.x;
 const portalDy = portal.y - player.y;
 
-// the angle from the player to the portal
+// get angle from the player to the portal
 const angleToPortal = Math.atan2(portalDy, portalDx);
 
-// gets the angular difference then normalizes it
+// get the difference of the angleToPortal and the angle the player is currently facing
 let dAngle = angleToPortal - player.facingAngle;
-dAngle = Math.atan2(Math.sin(dAngle), Math.cos(dAngle));
+dAngle = Math.atan2(Math.sin(dAngle), Math.cos(dAngle)); // normalize it
 
 // get a turn speed proportional to the distance from the player to the portal
 const turnSpeed = 0.1;
@@ -54,9 +57,7 @@ const turnSpeed = 0.1;
 // add either the dAngle or the turnSpeed to the players angle
 player.facingAngle += Math.sign(dAngle) * Math.min(Math.abs(dAngle), turnSpeed);
 
-// player.facingAngle is recalculated outside of this section of the script
-
-// increment the coordinates
+// increment the players coordinates
 player.x += Math.cos(player.facingAngle);
 player.y += Math.sin(player.facingAngle);
 ```
@@ -67,7 +68,7 @@ player.y += Math.sin(player.facingAngle);
 <br>
 
 # Day 8 - Tuesday | In class work #
-Began shifting my focus away from player/portal design & funcitionality, and towards the games core concepts, which included the use of classes. I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen. The play button on the title screen required me to add a `mousemove` and `click` event listener to the document to check for hover and click inputs. Because of all of these new goals, I wasn't able to complete anything specific this class.
+I mostly worked on implementing levels and obstacles (both of which use classes), but took a slight detour to give the game a title screen. The play button for the title screen required me to add a `mousemove` and `click` event listener to the document to check for hover and click inputs. Nothing was fully completed this class.
 
 ### Things Worked On:
  - `Level` class and `Block` class
@@ -76,7 +77,7 @@ Began shifting my focus away from player/portal design & funcitionality, and tow
 <br>
 
 # Day 9 - Wednesday | In class work #
-Gavin created a lot of new designs for the game, such as a background, a grassy floor, and a cloudy roof. I finalized the title screen and got the play button working. I had issues detecting the cursors coordinates accurately for a while, I eventually found out that the problems stems from how the coordinates on the canvas differ from that of the clients screen, so to make them accurate, I needed to scale the cursors coordinates to match the canvas:
+Gavin created a lot of new designs for the game, such as a background, a grassy floor, and a cloudy roof. I completed the title screen's layout and got the play button working. I had issues detecting the cursors coordinates accurately for a while, then I eventually found out that the problems stems from how the coordinates on the canvas differ from that of the clients screen, so to make them accurate, I needed to scale the cursors coordinates to match the canvas:
 ```javascript
 function mouseMoveHandler(e) {
     const rect = cnv.getBoundingClientRect();
@@ -87,7 +88,7 @@ function mouseMoveHandler(e) {
     
     // save the coordinates in global variables
     mouseX = (e.clientX - rect.left) * scaleX;
-    mouseY = (e.clientY - rect.top) * scaleX * 1.05; // slightly increase mouseY due to slight differences which the scale fails to account for
+    mouseY = (e.clientY - rect.top) * scaleX * 1.05; // notice this bug here? it took me a week to find out about it.
 }
 ```
 
@@ -98,7 +99,7 @@ function mouseMoveHandler(e) {
 <br>
 
 # Day 10 - Thursday | In class work #
-I've done a lot of work on the levels. It took me a while to decide on where to place all of the code and I decided to put it all inside a function called `setUpLevels` rather than making a seprarate JS file for it. Inside the function, I've set up 10 level objects from the `Level` class, 9 of which were made inside a for-loop so they all have the same properties right now. Tommorrow, I'll make each level unique by giving them their obstacles. I plan to make level one void of obstacles and have a very simple guide on the games controls.
+I've done a lot of work on the blueprint and foundation for levels and I've decided that I'll code all the levels/obstacles themselves inside a function called `setUpLevels`. Right now the function has set up 10 `Level` objects. From tommorrow and onward, I'll be designing the layout for each level. I plan to make level one void of obstacles and have a very simple guide on the games controls.
 
 ### Things Added:
  - Levels (no obstacles yet)
@@ -106,7 +107,7 @@ I've done a lot of work on the levels. It took me a while to decide on where to 
 <br>
 
 # Day 11 - Friday | In class work & At home work #
-I've been struggling to get the player collisions with obstacles working properly, specifically, the collisions that happens when the player comes into contact with the side of a block. These collisions cause the player to teleport to the top of the block instead of simply keeping it's x coordinate. I'm aware that this is due to how the conditions which check for collisions overlap one another.
+I've been struggling to get the player collisions with obstacles working properly, specifically, the collisions that happens when the player comes into contact with either the left or right side of a block. These collisions cause the player to teleport to the top of the block instead of restricting the player's x coordinate. I'm aware that this is due to how collision conditionals overlap one another.
 ``` javascript
 const fallingUpIntoBlock = (
     player.y + player.r > this.y + this.h*0.5 && player.y - player.r + gravity < this.y + this.h &&
@@ -114,7 +115,7 @@ const fallingUpIntoBlock = (
 );
 // vs
 const movingRightIntoBlock = (
-    player.x + player.r + player.speed > this.x && player.x - player.r < this.x + this.w && // extremely similar conditions to the above variable
+    player.x + player.r + player.speed > this.x && player.x - player.r < this.x + this.w && // extremely similar conditions to the above constant
     player.y + player.r > this.y && player.y - player.r < this.y + this.h
 );
 ```
@@ -129,7 +130,7 @@ const movingRightIntoBlock = (
     player.y + player.r > this.y && player.y - player.r < this.y + this.h
 );
 ```
-Due to the `this.x - player.speed*0.1` the player doesn't need to directly go past the block's x coordinate for a collision to be detected. This creates some leeway in comparison to the collisions for falling up and down into the block, which are far stricter.
+Due to the `this.x - player.speed*0.1` the player doesn't need to directly go past the block's x coordinate for a collision to be detected. In comparison to the collisions for falling up and down into the block, this creates some leeway.
 
 ### Things Added:
  - Obstacle Collisions
@@ -137,7 +138,7 @@ Due to the `this.x - player.speed*0.1` the player doesn't need to directly go pa
 <br>
 
 # Day 13 - Sunday | At home work #
-I wanted to add a bit of a tutorial to the game for explaining the controls so I created a text class. I realized that there were some similarities between the `Text` and `Block` classes, and the obstacles I plan to add will likley have the same similarities, so I made an `Obstacle` class with properties and methods that every type of obstacle in the game should have. It's only a template so the class itself won't ever be used, just inherited.
+I wanted to add a bit of a tutorial to the game for explaining the controls so I created a text class. I realized that there were some similarities between the `Text` and `Block` classes, as well as the obstacles I plan to add, so I made an `Obstacle` class with properties and methods that every type of obstacle in the game should have. It's only a template so the class itself won't ever be used, just inherited.
 Level one and two are pretty much complete, they don't have much content at all, but thats intentional because they only exist to explain the controls.
 
 ### Things Added:
@@ -147,21 +148,21 @@ Level one and two are pretty much complete, they don't have much content at all,
 <br>
 
 # Day 14 - Monday | In class work #
-While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on improving the conditions in the block class's `checkCollisions()` method. Gavin helped me design a gradient play button for the game as well.
+While working on level 3, I noticed that there were still many issues with the collisions for blocks, so I spent a lot of time on improving the `checkCollisions()` method for the `Block` class. Gavin helped me design a gradient play button for the game as well.
 
 ### Things Worked On:
  - Improved block collision detection
  - Some of level 3
- - Title screen design
+ - Title screen
 
 <br>
 
 # Day 15 - Tuesday | In class work & At home work #
-I completed level 3. I also updated the `Block` and `Text` by giving them a rotation property, allowing me to freely rotate them with a single parameter. 
+I completed level 3 and updated the `Block` and `Text` class's by giving them a rotation property, allowing me to freely rotate them with a single arguement. Only issue is that it doesn't rotate their hitboxes.
 <br>
 
 ### At Home Work
-I began working on a `Spike` class and created a `respawnPlayer()` function to account for deaths.
+I began working on a `Spike` class and created a `respawnPlayer()` function.
 
 ### Things Added:
  - All of level 3 and small bits of level 4
@@ -172,7 +173,7 @@ I began working on a `Spike` class and created a `respawnPlayer()` function to a
 <br>
 
 # Day 16 - Wednesday | In class work #
-I finished creating the `Spike` class while working on level 4, the first level to use spikes. Player death and respawning has also been fully accounted for.
+I finished creating the `Spike` class while working on level 4. Player death and respawning has also been fully accounted for.
 
 ### Things Added:
  - All of level 4
@@ -181,7 +182,7 @@ I finished creating the `Spike` class while working on level 4, the first level 
 <br>
 
 # Day 17 - Thursday | In class work #
-I spent the entire class designing level 5 and I didn't encounter any issues/bugs while making it. I plan for level 6 and above to have a cave-like design, thankfully, gavin has already designed a backdrop for the cave, the platforms however are just going to be blank grey slates.
+I spent the entire class designing level 5 and I didn't encounter any issues/bugs while making it. I plan for level 6 and above to have a cave-like aesthetic, mainly because Gavin designed a backdrop for cave levels and I thought it looked cool.
 
 ### Things Added:
  - All of level 5
@@ -189,7 +190,7 @@ I spent the entire class designing level 5 and I didn't encounter any issues/bug
 <br>
 
 # Day 18 - Friday | In class work #
-I started working on the players second ability, something I've been wanting to add since the beginning of the project. By pressing `S` or the down arrow key, the player can phase through certain blocks, this ability only reqiured a new `phasing` property for the player object along with two very small methods. I allowed for a `phase` variant for the `Block` class's `variant` property, this lets me identify which blocks can and cannot be phased through. Phase blocks will only be used in the cave-type levels.
+I started working on the players second ability. By pressing `S` or the down arrow-key, the player can phase through certain blocks. To get working, this ability only reqiured a new `phasing` property for the player object along with two very short methods. I updated the `Block` class to accept `"phase"` as an argument for its `variant` property, this lets me identify which blocks can and cannot be phased through. Phase blocks will only be used in the cave-type levels.
 
 ### Things Added:
  - Phasing ability and phase-variant blocks
@@ -197,25 +198,27 @@ I started working on the players second ability, something I've been wanting to 
 <br>
 
 # Day 22 - Tuesday | In class work #
-I was hoping to finish all of level 6 today, but I got sidetracked by the idea of "phaseable spikes". Said spikes weren't necessarily challenging to code, but finding a unique way to use them took up a lot of my time, hence I couldn't complete all of level 6, but about 90% of it is done. Gavin also worked on a cave-like design for the blocks in cave levels and I did a lot of recoloring of other parts of the level to make everything look good.
+I was hoping to finish all of level 6 today, but I got sidetracked by the idea of "phaseable spikes". These type of spikes weren't necessarily challenging to code, but thinking of unique ways to use them took up a lot of my time, so I didn't complete all of level 6, but about 90% of it is done. Gavin also worked on a cave-like design for the blocks in cave levels and I did a lot of recoloring of other parts of the level to make everything look good.
 
 ### Things Added:
  - Most of level 6 and phase-variant spikes
- - Designs for cave levels
+ - Cave designs for blocks
 
 <br>
 
 # Day 23 - Wednesday | In class work & At home work #
-I completed the rest of level 6, it only neede minor design improvements. While working on level 7, I was forced to pay attention to the collision flaws of the blocks hitboxes. Due to how I set up the conditions for the blocks, the hitboxes of every block would faultly scale with their size, for example:
+I completed the rest of level 6. It only needed minor design improvements. \
+While working on level 7, I was once again forced to pay attention to the collision flaws of the blocks hitboxes. Due to how I set up the conditions for blocks, the hitboxes of every block would scale with their size, for example:
 ``` javascript
+// checks if the player is moving right and hitting the block
 const movingRightIntoBlock = (
-    player.x + player.r > this.x - player.speed*0.4 && player.x + player.r < this.x + this.w*0.1 &&
+    player.x + player.r > this.x - player.speed*0.4 && player.x + player.r < this.x + this.w*0.1 && // `+ this.w*0.1` scales with the block's width
     player.y + player.r > this.y && player.y - player.r < this.y + this.h
 
 if (movingRightIntoBlock) player.x = this.x - player.r - player.speed*0.41;
 );
 ```
-The section `player.x + player.r < this.x + this.w*0.1` may initially seem harmless, it simply checks if the players x coordinate is slightly inside the block's x coordinate by adding in 10% of it's width, then in the if statement, it forces the player behind the block so it doesn't enter it. However, when blocks are scaled up to widths of over 200 (and even with ones that are smaller), the player may be resting on top of the block, far past it's x-coordinate, then get forcibly shoved backwards despite not ever colliding with the right side of the block. I was already noticing this issue earlier in the project, but chose to ignore it because it had minor impact with small blocks and I havent yet used any greatly wide or greatly tall blocks.
+The section `player.x + player.r < this.x + this.w*0.1` may initially seem harmless. It simply checks if the players x coordinate is slightly inside the block's x coordinate by checking the first 10% of the block's width, then if the if-statement is true, the player's x coordinate is pushed to the left of the block. What I willingly overlooked was that when a block is scaled up to widths of over 200, the `movingRightIntoBlock` condition can return true if the player touches a point on top of the block thats seemingly far past it's x-coordinate. I was already noticing this issue earlier in the project, but I chose to ignore it because it had minor impacts with the small blocks I was using.
 To fix this, I chose to use a relatively constant, independent number, which may still have its flaws. The players speed.
 ``` javascript
 const movingRightIntoBlock = (
@@ -225,7 +228,7 @@ const movingRightIntoBlock = (
 ```
 By replacing the blocks width with the players speed, the hitbox of every block scales similarly and prevents odd collision issues at large scales. At incredibly small scales, this solution may reveal bugs, but I'm willing to allow that.
 
-Level 7 was fully completed in class despite the time I spent solving this issue.
+Level 7 was fully completed in class despite the large amount of time I spent solving this issue.
 <br>
 
 ### At Home Work
@@ -253,11 +256,11 @@ Started working on level 8. I decided to split it into two seperate paths for th
 <br>
 
 # Day 25 - Friday | In class work & At home work #
-I completed the rest of the level 8, both the left and right path. I wanted to make a level 9, but I think it would be incredibly challenging to top the effort I put into level 8, so I'll end it there and just make a "thanks for playing" type of level for level 9. I also want to spend more time on the titlescreen and make a level-selection menu.
+I completed the rest of the level 8, both the left and right path. I wanted to make a level 9, but I think it would be incredibly challenging to top the effort I put into level 8 without making a nigh-impossible level, so ended it there and just made a "thanks for playing" type of level for level 9. I do want to spend more time on the titlescreen and make a level-selection menu.
 <br>
 
 ### At Home Work
-Made level 8's ending look pretty. I designed the area around the portal to look like a grassy level to signify the end of the cave levels. This required the use of grassy-level type blocks which did have collisions, because of this, I added a `collisions` property to the blocks class so I can freely toggle on and off collisions for every block.
+Made level 8's ending look nicer. I designed the area around the portal to look like a grassy level to signify the end of the cave levels. This required the use of grassy-level type blocks without collisions, which didn't exist. Because of this, I added a `collisions` property to the `Blocks` class so I can freely toggle on and off collisions for every block.
 
 ### Things Added:
  - Finished the left and right path of level 8 and made it look pretty
@@ -265,7 +268,7 @@ Made level 8's ending look pretty. I designed the area around the portal to look
 <br>
 
 # Day 26 - Saturday | At Home Work #
-Added navigation. There's now a level select screen with 10 buttons, one per level + a button to go back to the title screen. In game, there's two button in the top right, one for respawning the player and one for going back to the title screen. Currently, every button has the play-button image because I haven't made unique designs for all of them yet. To blueprint these buttons, rather than making completely unique objects for each and every one of them, I made a `Button` class, then made objects out of that class. All of these objects are stored in an array called `buttons`.
+Added navigation. There's now a level select screen with 10 buttons—one per level + a button to go back to the title screen. When you're in a level, there's two buttons in the top right, one for respawning the player and one for going back to the title screen. Currently, every button has the play-button image because I haven't made unique designs for all of them yet. I didn't want to make completely unique objects for every level so I made a `Button` class as a blueprint. I then made objects out of that class. All of these objects are stored in an array called `buttons`.
 ``` javascript
 // The constructor for the Button class
 constructor(x, y, w, h, src, location, event) {
@@ -279,7 +282,7 @@ constructor(x, y, w, h, src, location, event) {
     this.mouseOver = false; // A boolean which checks various conditions to determine if the mouse is hovering over the button
 }
 
-// initial playbtn
+// the object I initially had for the play button
 const playBtn = {
     x: cnv.width/2 - 150/2, y: cnv.height/2 - 75/2,
 
@@ -292,7 +295,7 @@ const playBtn = {
     }
 }
 
-// current playbtn
+// the new object for the play button
 const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleScreen", () => { gameState = "levels"; });
 ```
 
@@ -303,7 +306,7 @@ const playBtn = new Button(cnv.width/2 - 150/2, 200, 150, 75, "playbtn", "titleS
 <br>
 
 # Day 28 - Monday | In class work & At home work #
-I tweaked with the designs of the buttons most of them now no longer rely on images, but rather canvas text.
+I tweaked with the designs of the buttons and most of them now use canvas text instead of images.
 <br>
 
 ### At Home Work
@@ -315,10 +318,9 @@ I gave some buttons images instead of text because they look nicer that way.
 <br>
 
 # Day 29 - Tuesday | In class work #
-Had little to add to the game, but I noticed there were some issues when I tested it. In level 5, entering the portal could kill the player because the portal was positioned close to an array of spikes, so the player would be flung into those spikes if they rolled directly into the portal. I didn't want to change the code up much, so I fixed this by placing a block platform directly below the portal, not allowing the player to fall too far and hit the spikes.
+I had little to add to the game, but I noticed there were some issues when I tested it. In level 5, entering the portal could kill the player because the portal was positioned close to an array of spikes, so the player would be flung into those spikes if they rolled directly into the portal. I didn't want to change the code up much, so I fixed this by placing a block platform directly below the portal, blocking the player from falling too far and hitting the spikes.
 
-When Gavin tested the game on his laptop, we noticed that the game ran way too fast. The player moved incredibly quickly, and the portals span way faster than they should've, after some resreached, we noticed that it was because the refresh rate (Hertz) on Gavin's laptop was double that of most devices (the base is usually 60Hz), which is also why I only just discovered this bug. His high refresh rate caused the game to animate at double the speed. I try and solve this, I attempted to limit the canvas refresh speed with `window.performance.now();`, like so:
-
+When Gavin tested the game on his laptop, we noticed that the game ran way too fast. The player moved incredibly quickly, and the portals span way faster than they should've. After some research, we noticed that it was because the refresh rate (Hertz) on Gavin's laptop was 120Hz—double that of most devices. His high refresh rate caused the game to animate at double the speed. To try and solve this, I attempted to limit the canvas refresh rate:
 ```javascript
 // Framerate related variables
 let lastTime = window.performance.now();
@@ -340,8 +342,7 @@ function determineFrameRate() {
 
 requestAnimationFrame(determineFrameRate);
 ```
-
-But all this did was slow the game down a ton. I did try tweaking with the `fps` variable, and from what I've seen so far, lower `fps` increases the game speed, and higher `fps` decreases it. So clearly something is inverted in the code.
+But all this did was slow the game down a ton. I did try tweaking with the `fps` constant, and from what I've seen so far, decreasing the `fps` increases the game speed, and increasing `fps` decreases it. So clearly, something is inverted in the code.
 
 ### Things Worked On:
  - Fixed a bug on level 5
@@ -350,7 +351,7 @@ But all this did was slow the game down a ton. I did try tweaking with the `fps`
 <br>
 
 # Day 30 - Wednesday (5-day break) | At home work #
-I fixed the inverted framerate by changing the if-statement from `timePassed < msPerFrame` to `timePassed > msPerFrame`. I then increased the `fps` constant to 80 (60 was kinda laggy), this gave me (or my device specifically) a consistent, capped performance.
+I fixed the inverted framerate by changing the if-statement from `timePassed < msPerFrame` to `timePassed > msPerFrame`. I then increased the `fps` constant to 80 (60 was kinda laggy). This gave me a consistent, capped performance, while limiting the refresh rate on Gavin's laptop, meaning the solution worked perfectly.
 ```javascript
 // only draws after enough time has passed since the last frame
 if (timePassed > msPerFrame) {
@@ -360,8 +361,8 @@ if (timePassed > msPerFrame) {
 ```
 <br>
 
-While solving this issue, I encountered another bug. The player would clip into obstacles sometimes if they were entering a portal while on top of it, this happened very often on level 2. I assumed this was either another collision function issue or the portal gravity somehow increased the player velocity higher than the collision conditions could register. I didn't immedietly try tampering with the conditions in the block's `checkCollisions` method because, frankly, I don't ever want to come close to that ever again. Instead, I did further testing and looked into the `ImposePortalGravity` and `ImposeNaturalGravity` functions to see if either function had any significant influence on the player's velocity. After testing many variables, especially with the angular movement in `ImposePortalGravity`, I didn't find anything unusual.
-I played the game for a couple minutes to test the portals mechanics and made a useful discovery; when the player is initually pulled into the portal, they enter at an odd angle, nearly perpendicular to the direction they're actually facing. Because of this, I repeatedly logged the `player.facingAngle` property and found out that it only ever returned either π/2 or -π/2, meaning it was calculating the Y-angle while ignoring movement on the X-axis. So I took a look at how I initially calculated the players facing-angle...
+While solving this issue, I encountered another bug. The player would clip into obstacles sometimes if they were entering a portal while on top of one. This occurred very often on level 2. I assumed this was either another poor collision-conditionals related issue or the portal gravity somehow increased the player velocity higher than the collision conditionals could register. I didn't immedietly try tampering with the conditionals in the block's `checkCollisions` method because, frankly, I don't ever want to come close to that ever again. Instead, I did further testing and looked into the `ImposePortalGravity` and `ImposeNaturalGravity` functions to see if they had any significant influence on the player's velocity. After testing, I didn't find anything unusual.
+I played the game for a couple minutes to test the portals mechanics and made a useful discovery; when the player is initually pulled into the portal, they enter at an odd angle, nearly perpendicular to the angle they're actually facing. Because of this, I repeatedly logged the `player.facingAngle` property and found out that it only ever returned either π/2 or -π/2, meaning it was only calculating the Y-angle while ignoring movement on the X-axis. So I took a look at how I initially calculated the players facing-angle...
 ```javascript
  // update the player's angle when the player is moving
 if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteringPortal) {
@@ -371,7 +372,7 @@ if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteri
 Then I decided that I needed to completely revamp it. \
 <br>
 
-I chose to look at one of my CS-20 level projects for help, as I had a really good method for finding angles for WASD/Arrow keys type of movement. Then I used that code as a template to tamper with for Anti-Gravity. Thankfully, this solution worked incredibly well.
+I chose to look at one of my CS-20 level projects for help because I remembered finding a really good method for finding angles for WASD/Arrow-keys type of movement. I then used it's code as a template to tamper with for Anti-Gravity's movement. Thankfully, this solution worked incredibly well.
 ```javascript
 // TEMPLATE CODE
 let [dxKB, dyKB] = [0, 0];
@@ -404,7 +405,7 @@ if (!player.enteringPortal) {
 }
 ```
 <br>
-Surprisingly enough, fixing the facing angle also stopped the collision issues caused by portal gravity. I'm assuming it's because the portal would pull the player, who's already grounded on a block, further into the block at an unexpected angle—clipping the player just past the maximum distance of which a collision would be detected. This is only a theory so I'm not completely certain on why the bug is fixed. 
+Surprisingly enough, fixing the facing angle also stopped the collision issues caused by entering portals. I'm assuming it's because the portal would pull the player, who's already grounded on a block, further into the block at an unexpected angle—clipping the player just past the maximum distance of which a collision would be detected. This is only a theory so I'm not completely certain on why the bug is fixed. 
 
 ### Things Added:
  - A performance limit.
