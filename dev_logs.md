@@ -1,4 +1,4 @@
-Starting Date: April 28, 2026. \
+Starting Date: April 28, 2026. \\
 Days are just days-since-started, so there may be a large skip in days at some parts (like Day 4 - Day 7).
 
 # Day 1 - Tuesday | In class work #
