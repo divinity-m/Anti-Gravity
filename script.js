@@ -459,23 +459,13 @@ function draw() {
     
     playerMovement();
     
-    if (gameState !== "levels") drawTitleScreen(); // draws elements specific to only the titleScreen gamestate (excluding buttons)
+    if (gameState !== "levels") drawTitleScreen();
     else if (gameState === "levels") {
-        // player movement
-        let previousX = player.x;
-        let previousY = player.y;
-        
         // gravity
         ImposeNaturalGravity(borderHeight);
 
         
-        // update the player's angle when the player is moving
-        if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteringPortal) {
-            player.facingAngle = Math.atan2(player.y - previousY, player.x - previousX);
-        }
-
-        
-        // map restrictions which loop the player when they move too far offscreen
+        // map restrictions
         if (player.x - player.r < -70) player.x = cnv.width + 70 - player.r;
         if (player.x + player.r > cnv.width + 70) player.x = -70 + player.r;
 
@@ -515,9 +505,9 @@ function draw() {
         ctx.fillRect(0, 0, cnv.width, borderHeight);
         // ctx.drawImage(document.getElementById("cave-bar"), 0, 0, cnv.width, borderHeight);
     }
-
-    drawButtons(); // buttons only draw in specific gamestates, as coded into their classes
-    drawCursor(); // the cursor is everywhere
+    
+    drawButtons();
+    drawCursor();
 }
 
 
@@ -532,7 +522,7 @@ function update() {
     // calculate delta time
     const currentTime = window.performance.now();
     const timePassed = currentTime - lastTime;
-
+    
     // only draw after enough time has passed since the last frame
     if (timePassed > msPerFrame) {
         draw();
