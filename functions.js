@@ -8,11 +8,11 @@ function keydownHandler(e) {
 
     if (key === "KeyW" || key === "ArrowUp") {
         wPressed = true;
-        if (gameState !== "titleScreen" && currentLvlNum !== 1) swapGravity();
+        if (gameState !== "titleScreen") swapGravity();
     }
     if (key === "KeyS" || key === "ArrowDown") {
         sPressed = true;
-        if (gameState !== "titleScreen" && currentLvlNum !== 1) player.phase();
+        if (gameState !== "titleScreen") player.phase();
     }
     if (key === "KeyA" || key === "ArrowLeft") aPressed = true;
     if (key === "KeyD" || key === "ArrowRight") dPressed = true;
@@ -69,6 +69,19 @@ function playerMovement() {
         
         player.rotation += player.spinSpeed;
     }
+    
+    
+    // update the player's angle when the player is moving
+    let [dx, dy] = [0, 0];
+    const isFalling = isMidAir && !player.enteringPortal && !onObstacle;
+
+    if (aPressed) dx -= player.speed;
+    if (dPressed) dx += player.speed;
+    if (isFalling) dy += gravity;
+    
+    if (!player.enteringPortal) {
+        player.facingAngle = Math.atan2(dy, dx);
+    }
 }
 
 function resetGravity() {
@@ -84,7 +97,7 @@ function resetGravity() {
 function swapGravity() {
     // Determines the falling direciton and changes the values of gravity and dGravity acoordingly
     if (!isMidAir || onObstacle) {
-        fallingDirection = fallingDirection === "down" ? "up" : "down";
+        fallingDirection = (fallingDirection === "down") ? "up" : "down";
         resetGravity();
     }
 }
@@ -98,14 +111,15 @@ function ImposeNaturalGravity(borderHeight) {
 
     isMidAir = fallingDirection === "down" ? midAirDown : midAirUp;
 
+    
     // checks if the player is mounted on a block by checking if any existing obstacle has a true `playerGrounded` property
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     
-    blockExists = currentLevel.obstacles.find((block) => block.playerGrounded);
-    
-    onObstacle = blockExists ? true : false;
+    onObstacle = currentLevel.obstacles.find((block) => block.playerGrounded);
     if (onObstacle) resetGravity();
+    player.checkPhase();
 
+    
     // imposes gravity based on the direction the player is falling (if the player isn't influenced by something else)
     if (isMidAir && !player.enteringPortal && !onObstacle) {
         if (fallingDirection === "down") gravity = Math.min(gravity + dGravity, 10);
@@ -114,7 +128,8 @@ function ImposeNaturalGravity(borderHeight) {
         player.y += gravity;
     }
 
-    player.checkPhase();
+    
+    // prevents the player from falling through the top and bottom bars 
     const notInfluenced = !isMidAir && !player.enteringPortal && !onObstacle;
 
     if (fallingDirection === "down" && notInfluenced) player.y = cnv.height-borderHeight - player.r;
@@ -131,13 +146,12 @@ function ImposePortalGravity() {
     
     const portalRange = portal.r + 45;
 
-    // a visual of the portals range
+    // a visual of the portals range for testing
     // ctx.strokeStyle = "blue"
     // drawCircle(portal.x, portal.y, portalRange, 2);
-
     if (portalDist < portalRange) {
         player.enteringPortal = true;
-        player.spinSpeed =  Math.PI/32;
+        player.spinSpeed = Math.PI/32;
         resetGravity();
         player.checkPhase();
 
@@ -149,12 +163,12 @@ function ImposePortalGravity() {
         dAngle = Math.atan2(Math.sin(dAngle), Math.cos(dAngle));
 
         // get a turn speed proportional to the distance from the player to the portal
-        const turnSpeed = 0.1;
+        const turnSpeed = 0.085;
 
         // add either the dAngle or the turnSpeed to the players angle
         player.facingAngle += Math.sign(dAngle) * Math.min(Math.abs(dAngle), turnSpeed);
         
-        const clampSpeed = Math.max(portalDist / portalRange, 0.2);
+        const clampSpeed = Math.max(portalDist / portalRange, 0.1);
 
         // move the player in the direciton of the angle
         player.x += Math.cos(player.facingAngle) * player.speed * clampSpeed;
