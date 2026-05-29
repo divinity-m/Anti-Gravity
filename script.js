@@ -4,20 +4,14 @@
 const cnv = document.getElementById("game-canvas");
 const ctx = cnv.getContext("2d");
 let gameState = "titleScreen";
-
+let interaction = false;
 
 // Global Variables //
 let now = Date.now();
+
 const borderHeight = cnv.height/5;
 
-const dirtColor = "rgb(143, 89, 43)";
-const grassColor = "rgb(42, 191, 42)";
-const lightGrassColor = "rgb(82, 213, 82)";
-const cloudColor = "rgba(237, 253, 255, 0.8)";
-const cloudColor2 = "rgba(218, 251, 255, 0.8)";
-const rockColor = "rgb(81, 79, 77)";
-const phaseColor = "rgba(81, 79, 77, 0.7)";
-
+let [mouseX, mouseY] = [-10, -10];
 let wPressed, aPressed, sPressed, dPressed;
 let buttons = [];
 
@@ -26,7 +20,13 @@ let [fallingDirection, isMidAir, onObstacle] = ["down", false, false];
 
 let [allLevels, currentLvlNum] = [[], 0];
 
-let [mouseX, mouseY] = [-10, -10];
+const dirtColor = "rgb(143, 89, 43)";
+const grassColor = "rgb(42, 191, 42)";
+const lightGrassColor = "rgb(82, 213, 82)";
+const cloudColor = "rgba(237, 253, 255, 0.8)";
+const cloudColor2 = "rgba(218, 251, 255, 0.8)";
+const rockColor = "rgb(81, 79, 77)";
+const phaseColor = "rgba(81, 79, 77, 0.7)";
 
 // objects
 const player = {
@@ -441,10 +441,13 @@ document.addEventListener("click", clickHandler);
 // Draw Function //
 function draw() {
     // draw(): the main function which is repeated to call other process and draw functions
+    
     now = Date.now();
-
+    playMusic();
+    
     // canvas reset
     ctx.clearRect(0, 0, cnv.width, cnv.height);
+    
 
     // backdrop
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
@@ -455,14 +458,14 @@ function draw() {
     else if (currentLevel.terrain === "rocky") {
         ctx.drawImage(document.getElementById("cave-backdrop"), 0, 0, cnv.width, cnv.height);
     }
-
     
-    playerMovement();
+    
+    playerMovement(); // used for rotating the titlescreen ball and drawing the player in the levels
     
     if (gameState !== "levels") drawTitleScreen();
     else if (gameState === "levels") {
         // gravity
-        ImposeNaturalGravity(borderHeight);
+        imposeNaturalGravity(borderHeight);
 
         
         // map restrictions
@@ -471,7 +474,7 @@ function draw() {
 
         
         // portal mechanics, levels, and obstacles
-        ImposePortalGravity();
+        imposePortalGravity();
         
         if (player.enteringPortal && now - portal.timeSinceEntered > 2500) proceedToNextLevel(); // waits for 2.5s before moving on
 
