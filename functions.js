@@ -1,6 +1,7 @@
 /// FUNCTIONS.JS ANTI GRAVITY ///
 
-// Handlers //
+//* Handlers *//
+
 function keydownHandler(e) {
     // keydownHandler(): handles the keyboard inputs for the "keydown" event listener
 
@@ -45,6 +46,8 @@ function mouseMoveHandler(e) {
 
 function clickHandler(e) {
     // clickHandler(): checks if the user clicks any buttons
+    
+    interaction = true;
 
     for (let i in buttons) {
         let btn = buttons[i];
@@ -53,9 +56,11 @@ function clickHandler(e) {
 }
 
 
-// Process Functions //
+//* Processes (Continuous) *//
+
 function playerMovement() {
     // playerMovement(): checks if certain buttons are pressed to move the player
+    
     const isLevels = gameState === "levels";
     player.spinSpeed = isLevels ? Math.PI/16 : Math.PI/128;
     
@@ -85,6 +90,8 @@ function playerMovement() {
 }
 
 function resetGravity() {
+    // resetGravity(): returns gravity and dGravity to it's base values
+    
     if (!player.phasing) {
         gravity = fallingDirection === "down" ? 3 : -3;
         dGravity = fallingDirection === "down" ? 0.25 : -0.25;
@@ -95,15 +102,16 @@ function resetGravity() {
 }
 
 function swapGravity() {
-    // Determines the falling direciton and changes the values of gravity and dGravity acoordingly
+    // swapGravity(): determines the falling direciton and changes the values of gravity and dGravity acoordingly
+    
     if (!isMidAir || onObstacle) {
         fallingDirection = (fallingDirection === "down") ? "up" : "down";
         resetGravity();
     }
 }
 
-function ImposeNaturalGravity(borderHeight) {
-    // ImposeNaturalGravity(): checks if the player is falling to apply the gravity mechanic
+function imposeNaturalGravity(borderHeight) {
+    // imposeNaturalGravity(): checks if the player is falling to apply the gravity mechanic
 
     // checks if the player is not mounted on the bottom or top bar
     const midAirDown = player.y + player.r + gravity < cnv.height-borderHeight;
@@ -136,8 +144,8 @@ function ImposeNaturalGravity(borderHeight) {
     if (fallingDirection === "up" && notInfluenced) player.y = borderHeight + player.r;
 }
 
-function ImposePortalGravity() {
-    // ImposePortalGravity(): imposes the portals 'pull' effect on the player when they get close enough
+function imposePortalGravity() {
+    // imposePortalGravity(): imposes the portals 'pull' effect on the player when they get close enough
 
     // calculate the distance of the player from the portal
     const portalDx = portal.x - player.x;
@@ -149,10 +157,13 @@ function ImposePortalGravity() {
     // a visual of the portals range for testing
     // ctx.strokeStyle = "blue"
     // drawCircle(portal.x, portal.y, portalRange, 2);
+    
     if (portalDist < portalRange) {
         player.enteringPortal = true;
         player.spinSpeed = Math.PI/32;
-        resetGravity();
+
+        // prevent accelertion due to gravity and activate the players phase state
+        resetGravity(); 
         player.checkPhase();
 
         // the angle from the player to the portal
@@ -177,12 +188,16 @@ function ImposePortalGravity() {
     else {
         player.enteringPortal = false;
         player.spinSpeed = Math.PI/16;
+
+        // constantly reset so the script can track when the player enters the portal
         portal.timeSinceEntered = now;
     }
 }
 
 function proceedToNextLevel() {
-    // proceedToNextLevel(): finds the next level then sets the player's & the portal's coordinates to that of the level's
+    // proceedToNextLevel(): finds the next level based off `currentLvlNum` then adjusts the player's & the portal's coordinates...
+    // ...based off the levels properties
+    
     portal.timeSinceEntered = now;
     
     // increment the currentLvlNum
@@ -207,6 +222,84 @@ function proceedToNextLevel() {
     resetGravity();
     player.phasing = false;
 }
+
+function warpToLevel(levelNum, spawn) {
+    // warpToLevel(): sets the spawn of a level, then relocates to that level
+    // used primarily for testing
+    
+    gameState = "levels";
+
+    // adjust the level's spawn
+    const level = allLevels.find((level) => level.number === levelNum);
+    level.playerSpawn = spawn;
+
+    // Relocate to the next level by adjusting `currentLvlNum` then incrementing it with proceedToNextLevel()
+    currentLvlNum = levelNum-1;
+    proceedToNextLevel();
+}
+
+function checkObstacleCollisions() {
+    // drawObstacles(): loops through the current level's obstacles to check their collisions
+    
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    
+    for (let i in currentLevel.obstacles) {
+        currentLevel.obstacles[i].checkCollisions();
+    }
+}
+
+function respawnPlayer() {
+    // respawnPlayer(): resets the players coordinates to the start of the level
+    
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
+    
+    player.x = currentLevel.playerSpawn[0];
+    player.y = currentLevel.playerSpawn[1];
+    player.phasing = false;
+
+    fallingDirection = "down";
+    resetGravity();
+}
+
+
+function playMusic() {
+    // playMusic(): plays a song based off the current level's terrain
+    
+    // waits for user interaction with the page before playing anything
+    if (interaction) {
+        // get the audio elements
+        const aNewStart = document.getElementById("a-new-start");
+        const leftInDesire = document.getElementById("left-in-desire");
+
+        const grassyTerrain = currentLvlNum < 6 || currentLvlNum === 9;
+
+        // A New Start will play for the grassy levels
+        if (grassyTerrain && aNewStart.paused) {
+            if (!leftInDesire.paused) leftInDesire.pause();
+            
+            aNewStart.currentTime = 0;
+            aNewStart.volume = 0.2;
+            aNewStart.play();
+        }
+
+        // Interstellar will play for the rocky levels
+        if (!grassyTerrain && leftInDesire.paused) {
+            if (!aNewStart.paused) aNewStart.pause();
+            
+            leftInDesire.currentTime = 0;
+            leftInDesire.volume = 0.2;
+            leftInDesire.play();
+        }
+    }
+}
+
+function slideInCreditsAnimation() {
+    // slideInCreditsAnimation(): when a song begins playing, the song name and artist slide in from the bottom left of the screen
+    
+}
+
+
+// Processes (Seldom) *//
 
 function setUpLevels() {
     // setUpLevels(): creates every single level in the game
@@ -655,19 +748,6 @@ function setUpLevels() {
     level9.addText(500, 250, 35, "Thanks for playing!", "center", "fill", 0, grassColor);
 }
 
-function warpToLevel(levelNum, spawn) {
-// warpToLevel(): uses the levelNUm and spawn parameters to set the spawn of a level, and turn that into the current level
-    gameState = "levels";
-
-    const level = allLevels.find((level) => level.number === levelNum);
-    level.playerSpawn = spawn;
-    
-    currentLvlNum = 0;
-    while (currentLvlNum < levelNum) {
-        proceedToNextLevel();
-    }
-}
-
 function setUpLevelButtons() {
 // setUpLevelButtons(): creates the buttons in the levelSelect menu which teleport you to a specific level
     
@@ -691,34 +771,15 @@ function setUpLevelButtons() {
     }
 }
 
-function checkObstacleCollisions() {
-// drawObstacles(): loops through the current level's obstacles to check their collisions
-    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
-    
-    for (let i in currentLevel.obstacles) {
-        currentLevel.obstacles[i].checkCollisions();
-    }
-}
+//* Draw Functions *//
 
-function respawnPlayer() {
-// respawnPlayer(): resets the players coordinates to the start of the level
-    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
-    
-    player.x = currentLevel.playerSpawn[0];
-    player.y = currentLevel.playerSpawn[1];
-    player.phasing = false;
-
-    fallingDirection = "down";
-    resetGravity();
-}
-
-
-// Draw Functions //
 function drawCircle(x, y, r, lw = 0) {
-    // drawCircle(): takes in the 'x' and 'y' parameters for location and the 'r' and 'fill' parameters for design
+    // drawCircle(): takes in the 'x' and 'y' parameters for location and the 'r' and 'lw' parameters for design
 
     ctx.beginPath();
     ctx.arc(x, y, r, Math.PI*2, 0);
+
+    // if there isn't a linewidth value, then fill by default
     if (lw === 0) ctx.fill();
     else {
         ctx.lineWidth = lw;
@@ -727,19 +788,23 @@ function drawCircle(x, y, r, lw = 0) {
 }
 
 function drawPlayer(x, y, r, rotation) {
-    // drawPlayer(): draws the player
+    // drawPlayer(): draws the player while accounting for rotation and phasing
 
     ctx.save();
     ctx.translate(player.x, player.y);
-    ctx.rotate(player.rotation);
+    ctx.rotate(player.rotation); // checks rotation (in radians)
 
-    if (player.phasing) ctx.globalAlpha = 0.5;
+    if (fallingDirection === "up") ctx.filter = "invert(1)"; // the player's colors are inverted when it swaps gravity
+
+    if (player.phasing) ctx.globalAlpha = 0.5; // the player becomes transparent when its phasing
     
     ctx.drawImage(document.getElementById("grey-ball"), -player.r * 1.5, -player.r * 1.5, player.r * 3, player.r * 3);
 
-    ctx.globalAlpha = 1;
-
     ctx.restore();
+
+    // reset the filter and global alpha
+    ctx.filter = "none";
+    ctx.globalAlpha = 1;
 }
 
 function drawPortal() {
@@ -750,7 +815,9 @@ function drawPortal() {
     ctx.save();
     ctx.translate(portal.x, portal.y)
     ctx.rotate(-portal.rotation);
+    
     ctx.drawImage(document.getElementById("black-portal"), -portal.r * 2, -portal.r * 2, portal.r * 4, portal.r * 4);
+    
     ctx.restore();
 
 
@@ -761,19 +828,21 @@ function drawPortal() {
     ctx.save();
     ctx.translate(portal.x, portal.y)
     ctx.rotate(portal.rotation);
+    
     if ((currentLevel.terrain === "rocky" || currentLvlNum === 5) && currentLvlNum !== 8) {
         ctx.drawImage(document.getElementById("blue-portal"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
     }
     else {
         ctx.drawImage(document.getElementById("geen-portal"), -portal.r * 1.5, -portal.r * 1.5, portal.r * 3, portal.r * 3);
     }
+    
     ctx.restore();
 
     portal.rotation += portal.spinSpeed;
 }
 
 function drawObstacles() {
-    // drawObstacles(): loops through the current level's obstacles and draws all of them
+    // drawObstacles(): loops through the current level's obstacles-array and draws every obstacle in it
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     
     for (let i in currentLevel.obstacles) {
@@ -782,7 +851,7 @@ function drawObstacles() {
 }
 
 function drawTitleScreen() {
-    // drawTitleScreen(): draws the games title screen, including the play button, which starts the game
+    // drawTitleScreen(): draws the games title screen which includes a large, rotatable player, and some credits
     
     // Grey Ball
     ctx.save();
@@ -792,15 +861,16 @@ function drawTitleScreen() {
     ctx.restore();
 
     // Credits
-    ctx.fillStyle = "rgb(110, 110, 110)";
+    ctx.fillStyle = "black";
     ctx.font = "20px Outfit";
     ctx.textAlign = "center";
-    ctx.fillText("This Took Forever", cnv.width/2, cnv.height/6-20);
-    ctx.fillText("Credits to Gavin Diep For The Art", cnv.width/2, cnv.height/6);
+    ctx.fillText("This Took Forever", cnv.width/2, cnv.height/6-45);
+    ctx.fillText("Credits To Gavin Diep For The Art", cnv.width/2, cnv.height/6-22.5);
+    ctx.fillText("Credits To Thygan Buch For The Music", cnv.width/2, cnv.height/6);
 }
 
 function drawCursor() {
-    // drawCursor(): draws a circle at the cursors coordinates
+    // drawCursor(): creates a custom cursor by drawing a circle at the cursors coordinates
     
     // Cursor
     if (mouseX !== undefined && mouseY !== undefined) {
@@ -813,9 +883,9 @@ function drawCursor() {
         const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
 
         if (currentLevel.terrain === "grassy") {
-            ctx.fillStyle = hoveringOverAButton ? "rgb(171, 249, 255)" : "rgb(27, 240, 255)";
+            ctx.fillStyle = hoveringOverAButton ? "rgb(89, 216, 255)" : "rgb(0, 153, 255)";
         } else {
-            ctx.fillStyle = hoveringOverAButton ? "rgb(75, 75, 75)" : "rgb(50, 50, 50)";
+            ctx.fillStyle = hoveringOverAButton ? "rgb(100, 100, 100)" : "rgb(25, 25, 25)";
         }
         
         drawCircle(mouseX, mouseY, 5);
@@ -823,6 +893,9 @@ function drawCursor() {
 }
 
 function drawButtons() {
+    // drawButtons(): draws every button in the `buttons` array.
+    // doesn't need to check for gamestate because the `Button` class does that logic on its own
+    
     for (let i in buttons) {
         const btn = buttons[i];
         btn.draw();
