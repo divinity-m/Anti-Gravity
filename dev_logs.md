@@ -408,8 +408,13 @@ if (!player.enteringPortal) {
 Surprisingly enough, fixing the facing angle also stopped the collision issues caused by entering portals. I'm assuming it's because the portal would pull the player, who's already grounded on a block, further into the block at an unexpected angle—clipping the player just past the maximum distance of which a collision would be detected. This is only a theory so I'm not completely certain on why the bug is fixed. 
 
 ### Things Added:
- - A performance limit.
+ - A performance limit
  - Fixed bugs caused by poor calculations for `player.facingAngle`
 
 <br>
 
+# Day 32 - Friday | At home work #
+I felt like the game was still lacking something important so I decided to add in music. Right now there are only two songs which play based off the current level's terrain. Both songs are made by my friend Thygan Buch.
+
+### Things Added:
+ - Music ♬
