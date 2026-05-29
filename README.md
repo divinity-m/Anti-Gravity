@@ -30,4 +30,8 @@ Gavin Diep made nearly all of the art. I think the only art he didnt make was th
 I didn't play any role in the music besides coding it in. Thygan Buch made all of it.
 
 
+
+
+
+
 Unlike with my CSE project [Crescendo](https://divinity-m.github.io/Crescendo/), no AI was used in the making of this project.
