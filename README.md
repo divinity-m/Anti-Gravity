@@ -18,7 +18,9 @@ ___
 ___
 
 ### What could I have done better?
-Overall, I enjoyed the creation of this project, but there's a lot more I could have done to improve on it. For one, the animations are very lacking, besides the portal and the player rotating, the entire game is incredibly stiff. Animated cloud movements or dirt/rock pixels appearing on the ground when the player moves would have also been a beautiful touch to improve the user experience. \
+Overall, I enjoyed the creation of this project, but there's a lot more I could have done to improve on it. For one, the animations are very lacking, besides the portal and the player rotating, the entire game is incredibly stiff. Animated cloud movements or dirt/rock pixels appearing on the ground when the player moves would have also been a beautiful touch to improve the user experience.
+
+
 I've already covered the hitboxes, but it's just painfully challenging to emphasize just how much difficulty I encountered when figuring out what boolean statements and if-statement chains would get things working properly, and even now, I'm very skepticle of if there are any undiscovered collision-related bugs sneaking through my code. I think my lack of confidence in my collision system stems mostly from how inexperience I am in coding collisions that dont immediately cause a dramatic event (eg. damage, respawn), but rather, force the player away from a specific area.
 
 ___
@@ -28,10 +30,6 @@ Gavin Diep made nearly all of the art. I think the only art he didnt make was th
 
 
 I didn't play any role in the music besides coding it in. Thygan Buch made all of it.
-
-
-
-
 
 
 Unlike with my CSE project [Crescendo](https://divinity-m.github.io/Crescendo/), no AI was used in the making of this project.
