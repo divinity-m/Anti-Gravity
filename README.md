@@ -12,11 +12,11 @@ A 2D platformer. You play as a ball with the unique ability to invert the direct
 - Rotating obstacles doesn't rotate hitboxes, so I can only rotate an obstacle a full 180° to maintain a consistent hitbox, otherwise, the hitboxes would be highly innaccurate.
 
 ### What could I have done better?
-Overall, I enjoyed the creation of this project, but there's a lot more I could have done to improve on it. For one, the animations are very lacking, besides the portal and the player rotating, the entire game is incredibly stiff. Animated cloud movements or dirt/rock pixels appearing on the ground when the player moves would have also been a beautiful touch to improve the user experience.
+Overall, I enjoyed the creation of this project, but there's a lot more I could have done to improve on it. For one, the animations are very lacking, besides the portal and the player rotating, the entire game is incredibly stiff. Animated cloud movements or dirt/rock pixels appearing on the ground when the player moves would have also been a beautiful touch to improve the user experience. \
 I've already covered the hitboxes, but it's just painfully challenging to emphasize just how much difficulty I encountered when figuring out what boolean statements and if-statement chains would get things working properly, and even now, I'm very skepticle of if there are any undiscovered collision-related bugs sneaking through my code. I think my lack of confidence in my collision system stems mostly from how inexperience I am in coding collisions that dont immediately cause a dramatic event (eg. damage, respawn), but rather, force the player away from a specific area.
 
 
 ### Things to note
-Gavin Diep made nearly all of the art. I think the only art he didnt make was the icons for the restart and home button, but those are just google stock images so I didn't make them either. The only art I designed would have been the buttons with text, which was inspired by Gavins original design for the play button. The main role I played when it came to the art was animating the spin of the player and the portal.
-I didn't play any role in the music besides coding it in. Thygan Buch made all of it.
+Gavin Diep made nearly all of the art. I think the only art he didnt make was the icons for the restart and home button, but those are just google stock images so I didn't make them either. The only art I designed would have been the buttons with text, which was inspired by Gavins original design for the play button. The main role I played when it came to the art was animating the spin of the player and the portal. \
+I didn't play any role in the music besides coding it in. Thygan Buch made all of it. \
 Unlike with my CSE project [Crescendo](https://divinity-m.github.io/Crescendo/), no AI was used in the making of this project.
