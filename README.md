@@ -18,4 +18,4 @@ I've already covered the hitboxes, but it's just painfully challenging to emphas
 
 ### Things to note
 Gavin Diep made nearly all of the art. I think the only art he didnt make was the icons for the restart and home button, but those are just google stock images so I didn't make them either. The only art I designed would have been the buttons with text, which was inspired by Gavins original design for the play button. The main role I played when it came to the art was animating the spin of the player and the portal.
-Unlike with my CSE project (Crescendo)[https://divinity-m.github.io/Crescendo/], no AI was used in the making of this project.
+Unlike with my CSE project [Crescendo](https://divinity-m.github.io/Crescendo/), no AI was used in the making of this project.
