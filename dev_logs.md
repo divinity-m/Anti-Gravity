@@ -418,7 +418,7 @@ I felt like the game was still lacking something important so I decided to add i
 I also made an animation which starts when a song begins playing, most of the logic for this is stored in the function, `animateArtistPopUp()`. It slides in & fades in text, the text itself reads the name and artist of the song. A lot of the variables/properties used for the animation is stored in a singular object called `songText`. This text isn't exclusive to a single level and it has many unique properties so I chose not to use the `Text` object for it. The animation itself is inspired mostly by some animation effects in [Canva](https://www.canva.com/).
 
 
-**Later the same day,** I added in two new songs (which are also terrain-based). Since both grassy and rocky levels only have two alternating songs, I didn't want to create any complicated array logic for looping, so I used basic if-statements like:
+**Later the same day,** I added in two new songs (which are also terrain-based). Grassy and rocky levels now each have two alternating songs, becasue of this, I didn't want to create any complicated array logic for looping, so I used basic if-statements:
 ```javascript
 const leftInDesire = document.getElementById("left-in-desire");
 const doneWithPain = document.getElementById("done-with-pain");
@@ -426,7 +426,7 @@ const doneWithPain = document.getElementById("done-with-pain");
 if (lastPlayingAudioEl?.id === "left-in-desire") nextSong = doneWithPain;
 else nextSong = leftInDesire;
 ```
-Although there's far more to it, none of it gets very complicated.
+Although there's far more logic I'm not showing here, none of it gets much more complicated than if-elif-else statements.
 
 ### Things Added:
  - Music ♬
