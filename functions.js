@@ -270,50 +270,92 @@ function respawnPlayer() {
 
 function playMusic() {
     // playMusic(): plays a song based off the current level's terrain
+
+    // ends the function if there hasn't been any user interaction
+    if (!interaction) return;
+
     
-    // waits for user interaction with the page before playing anything
-    if (interaction) {
+    // determine the type of terrain
+    const terrainIsGrassy = currentLvlNum < 6 || currentLvlNum === 9;
+
+    // determine what type of terrain the last song was playing in
+    const grassLevelSongWasPlaying = lastPlayingAudioEl?.id === "a-new-start" || lastPlayingAudioEl?.id === "8-bit-christmas";
+    const caveLevelSongWasPlaying = lastPlayingAudioEl?.id === "left-in-desire" || lastPlayingAudioEl?.id === "done-with-pain";
+
+    // determine if the terrain has changed
+    const terrainChange = (caveLevelSongWasPlaying && terrainIsGrassy) || (grassLevelSongWasPlaying && !terrainIsGrassy);
+
+    // get every audio element
+    const audioElements = Array.from(document.querySelectorAll("audio"));
+
+    // find an element thats not paused
+    const songIsCurrentlyPlaying = audioElements.find((audio) => !audio.paused);
+
+
+    // for there to be a song change, the level terrain must change or every song must be paused
+    if (terrainChange || !songIsCurrentlyPlaying) {
         // get the audio elements
         const aNewStart = document.getElementById("a-new-start");
         const leftInDesire = document.getElementById("left-in-desire");
+        const eightBC = document.getElementById("8-bit-christmas");
+        const doneWithPain = document.getElementById("done-with-pain");
 
-        const grassyTerrain = currentLvlNum < 6 || currentLvlNum === 9;
+        let nextSong;
 
-        // A New Start will play for the grassy levels
-        if (grassyTerrain && aNewStart.paused) {
-            if (!leftInDesire.paused) {
-                leftInDesire.pause();
+        // choose songs based on the terrain of the current level / background level
+        if (terrainIsGrassy) {
+            
+            // choose a random song if the last song was a cave-type song or undefined (page just loaded)
+            if (caveLevelSongWasPlaying || lastPlayingAudioEl === "none") {
+                const rand = Math.random();
+                nextSong = rand > 0.5 ? aNewStart : eightBC;
+            }
 
-                // if the last song just stopped playing, a new song must've started, so play the animation
-                songText.reset();
-                songText.active = true;
-                songText.content = "A New Start - Thygan Buch";
+            // if it is a grass level song, alternate between A New Start and 8 Bit Christmas
+            else if (lastPlayingAudioEl?.id === "a-new-start") nextSong = eightBC;
+            else nextSong = aNewStart;
+        }
+        else {
+
+            // choose a random song if the last song was a grassy-type song or undefined
+            if (grassLevelSongWasPlaying || lastPlayingAudioEl === "none") {
+                const rand = Math.random();
+                nextSong = rand > 0.5 ? leftInDesire : doneWithPain;
             }
             
-            aNewStart.currentTime = 0;
-            aNewStart.volume = 0.25;
-            aNewStart.play();
+            // if it is a cave level song, alternate between Left In Desire and Done With Pain
+            else if (lastPlayingAudioEl?.id === "left-in-desire") nextSong = doneWithPain;
+            else nextSong = leftInDesire;
         }
+        
 
-        // Interstellar will play for the rocky levels
-        if (!grassyTerrain && leftInDesire.paused) {
-            if (!aNewStart.paused) {
-                aNewStart.pause();
-                
-                songText.reset();
-                songText.active = true;
-                songText.content = "Left In Desire - Thygan Buch";
-            }
-            
-            leftInDesire.currentTime = 0;
-            leftInDesire.volume = 0.25;
-            leftInDesire.play();
+        // pause the last song and play the next
+        if (lastPlayingAudioEl !== "none" && !lastPlayingAudioEl.paused) lastPlayingAudioEl.pause();
+        nextSong.currentTime = 0;
+        nextSong.volume = 0.25;
+        nextSong.play();
+        
+
+        // reset the variable for the last song
+        lastPlayingAudioEl = nextSong;
+
+        // play the animation
+        songText.reset();
+        songText.active = true;
+
+        const songContentOptions = {
+            "a-new-start": "A New Start - Thygan Buch",
+            "left-in-desire": "Left In Desire - Thygan Buch",
+            "8-bit-christmas": "8 Bit Chirstmas - Thygan Buch",
+            "done-with-pain": "Done With Pain - Thygan Buch",
         }
+        
+        songText.content = songContentOptions[nextSong.id];
     }
 }
 
 
-// Processes (Seldom) *//
+//* Processes (Seldom) *//
 
 function setUpLevels() {
     // setUpLevels(): creates every single level in the game
@@ -932,7 +974,7 @@ function animateArtistPopUp() {
         // text color depends on the terrain
         const grassyTerrain = currentLvlNum < 6 || currentLvlNum === 9;
         if (grassyTerrain) ctx.fillStyle = `rgba(82, 213, 82, ${songText.alpha})`;
-        else ctx.fillStyle = `rgba(7, 79, 212, ${songText.alpha})`;
+        else ctx.fillStyle = `rgba(255, 255, 255, ${songText.alpha})`;
 
         ctx.textAlign = "left";
         ctx.font = "400 17.5px Outfit";
@@ -946,10 +988,10 @@ function animateArtistPopUp() {
 
         if (songText.fadeIn) {
             // the alpha value increments in proportion to the songText's x coordinate (for that 'fade-in' effect)
-            songText.alpha += (1 - songText.x/100) / 100;
+            songText.alpha += (1 - songText.x/100) / 75;
 
             // once the alpha value reaches a certain point, `fadeIn` becomes false
-            songText.fadeIn = !(songText.alpha >= 1.5);
+            songText.fadeIn = !(songText.alpha >= 2);
             
         } else {
             // rapidly decrease the alpha value if `fadeIn` is false
