@@ -65,6 +65,20 @@ const portal = {
     timeSinceEntered: Date.now(),
 }
 
+const songText = {
+    active: false,
+    x: -100, y: cnv.height - 20,
+    alpha: 0, fadeIn: true,
+    content: "A New Start - Thygan Buch",
+    reset() {
+        this.active = false;
+        this.x = -100;
+        this.y = cnv.height - 20;
+        this.alpha = 0;
+        this.fadeIn = true;
+    }
+}
+
 // classes
 /*
 data types to remember for @param
@@ -443,7 +457,6 @@ function draw() {
     // draw(): the main function which is repeated to call other process and draw functions
     
     now = Date.now();
-    playMusic();
     
     // canvas reset
     ctx.clearRect(0, 0, cnv.width, cnv.height);
@@ -510,6 +523,10 @@ function draw() {
     }
     
     drawButtons();
+    
+    playMusic();
+    animateArtistPopUp();
+    
     drawCursor();
 }
 
