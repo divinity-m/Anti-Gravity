@@ -28,6 +28,8 @@ const cloudColor2 = "rgba(218, 251, 255, 0.8)";
 const rockColor = "rgb(81, 79, 77)";
 const phaseColor = "rgba(81, 79, 77, 0.7)";
 
+let lastPlayingAudioEl = "none";
+
 // objects
 const player = {
     x: cnv.width/5, y: cnv.height - cnv.height/3,
