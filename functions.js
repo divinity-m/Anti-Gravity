@@ -47,7 +47,13 @@ function mouseMoveHandler(e) {
 function clickHandler(e) {
     // clickHandler(): checks if the user clicks any buttons
     
-    interaction = true;
+    if (interaction === false) {
+        // `interaction === false` is not redundant. interaction specifically needs to be `false`... i think
+        
+        interaction = true;
+        songText.reset();
+        songText.active = true;
+    }
 
     for (let i in buttons) {
         let btn = buttons[i];
@@ -275,27 +281,35 @@ function playMusic() {
 
         // A New Start will play for the grassy levels
         if (grassyTerrain && aNewStart.paused) {
-            if (!leftInDesire.paused) leftInDesire.pause();
+            if (!leftInDesire.paused) {
+                leftInDesire.pause();
+
+                // if the last song just stopped playing, a new song must've started, so play the animation
+                songText.reset();
+                songText.active = true;
+                songText.content = "A New Start - Thygan Buch";
+            }
             
             aNewStart.currentTime = 0;
-            aNewStart.volume = 0.2;
+            aNewStart.volume = 0.25;
             aNewStart.play();
         }
 
         // Interstellar will play for the rocky levels
         if (!grassyTerrain && leftInDesire.paused) {
-            if (!aNewStart.paused) aNewStart.pause();
+            if (!aNewStart.paused) {
+                aNewStart.pause();
+                
+                songText.reset();
+                songText.active = true;
+                songText.content = "Left In Desire - Thygan Buch";
+            }
             
             leftInDesire.currentTime = 0;
-            leftInDesire.volume = 0.2;
+            leftInDesire.volume = 0.25;
             leftInDesire.play();
         }
     }
-}
-
-function slideInCreditsAnimation() {
-    // slideInCreditsAnimation(): when a song begins playing, the song name and artist slide in from the bottom left of the screen
-    
 }
 
 
@@ -899,5 +913,51 @@ function drawButtons() {
     for (let i in buttons) {
         const btn = buttons[i];
         btn.draw();
+    }
+}
+
+
+
+function animateArtistPopUp() {
+    // animateArtistPopUp(): when a song begins playing, the song's name and artist slide in from the bottom left of the screen
+    // get all audio elements
+    const audioElements = Array.from(document.querySelectorAll("audio"));
+
+    // get the element thats playing
+    const playingAudio = audioElements.find((audio) => !audio.paused && audio.currentTime > 1);
+
+    // wait until a new song is playing AND the audio element has actually started (.play() is async) before running the animation
+    if (songText.active && playingAudio) {
+
+        // text color depends on the terrain
+        const grassyTerrain = currentLvlNum < 6 || currentLvlNum === 9;
+        if (grassyTerrain) ctx.fillStyle = `rgba(82, 213, 82, ${songText.alpha})`;
+        else ctx.fillStyle = `rgba(7, 79, 212, ${songText.alpha})`;
+
+        ctx.textAlign = "left";
+        ctx.font = "400 17.5px Outfit";
+
+        ctx.fillText("♬ " + songText.content, songText.x, songText.y);
+
+        // it's x coordinate slowly reaches 25 to create the 'slide in' effect
+        if (songText.x < 25) {
+            songText.x += (25 - songText.x) / 15;
+        }
+
+        if (songText.fadeIn) {
+            // the alpha value increments in proportion to the songText's x coordinate (for that 'fade-in' effect)
+            songText.alpha += (1 - songText.x/100) / 100;
+
+            // once the alpha value reaches a certain point, `fadeIn` becomes false
+            songText.fadeIn = !(songText.alpha >= 1.5);
+            
+        } else {
+            // rapidly decrease the alpha value if `fadeIn` is false
+            songText.alpha -= 0.05;
+            songText.alpha = Math.max(songText.alpha, 0); // can't drop below 0
+        }
+        
+        // reset the object
+        if (songText.alpha <= 0) songText.reset();
     }
 }
