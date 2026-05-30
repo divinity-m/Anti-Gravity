@@ -414,9 +414,21 @@ Surprisingly enough, fixing the facing angle also stopped the collision issues c
 <br>
 
 # Day 32 - Friday | At home work #
-I felt like the game was still lacking something important so I decided to add in music. Right now there are only two songs which play based off the current level's terrain. Both songs are made by my friend Thygan Buch. The new function, `playMusic()`, handles most of the logic. \
+I felt like the game was still lacking something important so I decided to add in music. Right now, there are only two songs which play based off the current level's terrain. Both songs are made by my friend Thygan Buch. The new function, `playMusic()`, handles most of the logic. \
 I also made an animation which starts when a song begins playing, most of the logic for this is stored in the function, `animateArtistPopUp()`. It slides in & fades in text which reads the name and artist of the song. A lot of the variables/properties used for the animation is stored in a singular object called `songText`. This text isn't exclusive to a single level and it has many unique properties so I chose not to use the `Text` object for it.
+
+
+**Later the same day,** I added in two new songs (which are also terrain-based). Since both grassy and rocky levels only have two alternating songs, I didn't want to create any complicated array logic for looping, so I used basic if-statements like:
+```javascript
+const leftInDesire = document.getElementById("left-in-desire");
+const doneWithPain = document.getElementById("done-with-pain");
+
+if (lastPlayingAudioEl?.id === "left-in-desire") nextSong = doneWithPain;
+else nextSong = leftInDesire;
+```
+Although there's far more to it, none of it gets very complicated.
 
 ### Things Added:
  - Music ♬
+ - Looping
  - Fade + Slide in animation for music credits
