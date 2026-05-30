@@ -426,7 +426,7 @@ const doneWithPain = document.getElementById("done-with-pain");
 if (lastPlayingAudioEl?.id === "left-in-desire") nextSong = doneWithPain;
 else nextSong = leftInDesire;
 ```
-Although there's far more logic I'm not showing here, none of it gets much more complicated than if-elif-else statements.
+Although there's far more logic I'm not showing here, none of it gets much more complicated than if-elseif-else statements.
 
 ### Things Added:
  - Music ♬
