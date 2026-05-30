@@ -415,6 +415,8 @@ Surprisingly enough, fixing the facing angle also stopped the collision issues c
 
 # Day 32 - Friday | At home work #
 I felt like the game was still lacking something important so I decided to add in music. Right now there are only two songs which play based off the current level's terrain. Both songs are made by my friend Thygan Buch.
+I also made an animation which starts when a song begins playing. It slides in and fades in text which reads the name and artist of the song. Most of the variables used for the animation is stored in a singular object called `songText`. It's not text exclusive to a single level and it has many unique properties so I chose not to use the `Text` object.
 
 ### Things Added:
  - Music ♬
+ - Fade + Slide in animation for music credits
