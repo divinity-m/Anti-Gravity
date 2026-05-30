@@ -415,7 +415,7 @@ Surprisingly enough, fixing the facing angle also stopped the collision issues c
 
 # Day 32 - Friday | At home work #
 I felt like the game was still lacking something important so I decided to add in music. Right now, there are only two songs which play based off the current level's terrain. Both songs are made by my friend Thygan Buch. The new function, `playMusic()`, handles most of the logic. \
-I also made an animation which starts when a song begins playing, most of the logic for this is stored in the function, `animateArtistPopUp()`. It slides in & fades in text which reads the name and artist of the song. A lot of the variables/properties used for the animation is stored in a singular object called `songText`. This text isn't exclusive to a single level and it has many unique properties so I chose not to use the `Text` object for it.
+I also made an animation which starts when a song begins playing, most of the logic for this is stored in the function, `animateArtistPopUp()`. It slides in & fades in text, the text itself reads the name and artist of the song. A lot of the variables/properties used for the animation is stored in a singular object called `songText`. This text isn't exclusive to a single level and it has many unique properties so I chose not to use the `Text` object for it. The animation itself is inspired mostly by some animation effects in [Canva](https://www.canva.com/).
 
 
 **Later the same day,** I added in two new songs (which are also terrain-based). Since both grassy and rocky levels only have two alternating songs, I didn't want to create any complicated array logic for looping, so I used basic if-statements like:
