@@ -804,15 +804,46 @@ function setUpLevels() {
     level9.addText(500, 250, 35, "Thanks for playing!", "center", "fill", 0, grassColor);
 }
 
-function setUpLevelButtons() {
-// setUpLevelButtons(): creates the buttons in the levelSelect menu which teleport you to a specific level
+function setUpButtons() {
+// setUpButtons(): defines every button in the game with the `Button` class then stores them in the `buttons` array
+
+    // Button Class Constructor Parameters
+    // (x, y, w, h, name, content, location, event)
+
+    // Buttons on the title screem
+    const playBtn = new Button(cnv.width/2 - 75, 200, 150, 75, "Play", "Play 60px", "titleScreen", () => { gameState = "levels"; });
+    const levelsBtn = new Button(cnv.width/2 - 75, 285, 70, 35, "Level Select", "Levels 22px", "titleScreen", () => { gameState = "levelSelect"; });
+    const skinsBtn = new Button(cnv.width/2 + 5, 285, 70, 35, "Skin Select", "Skins 22px", "titleScreen", () => { gameState = "skinSelect"; });
+
+
+    // Buttons to exit to the title screen
+    const leaveLevelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Leave Level Select", "Menu 22px", "levelSelect", () => { gameState = "titleScreen"; });
+    const leaveSkinsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Leave Skin Select", "Menu 22px", "skinSelect", () => { gameState = "titleScreen"; });
+
     
+    // In game buttons
+    const homeBtn = new Button(cnv.width-40, 15, 25, 25, "Home", "home-btn img", "levels", () => { gameState = "titleScreen"; });
+    const restartBtn = new Button(cnv.width-80, 15, 25, 25, "Restart", "restart-btn img", "levels", respawnPlayer);
+
+
+    // Buttons for choosing a skin
+    const greyball = document.getElementById("grey-ball");
+    const arrowball = document.getElementById("arrow-ball");
+
+    const greyBallBtn = new Button(cnv.width/2 - 85, 200, 80, 80, "Choose Greyball", "grey-ball img", "skinSelect", () => { player.img = greyball; });
+    const arrowBallBtn = new Button(cnv.width/2 + 5, 200, 80, 80, "Choose Arrowball", "arrow-ball img", "skinSelect", () => { player.img = arrowball; });
+
+
+    // adds every button to the `buttons` array
+    buttons = [playBtn, levelsBtn, skinsBtn, leaveLevelsBtn, leaveSkinsBtn, homeBtn, restartBtn, greyBallBtn, arrowBallBtn];
+
+    
+    // player spawn coordinates for levels 1-9 in order (for the buttons below)
     const defaultSpawns = [
-        // player spawn coordinates for levels 1-9 in order
         [200, 250], [800, 350], [100, 350], [775, 350], [650, 250], [775, 300], [100, 200], [800, 200], [500-17.5/2, 250-17.5/2]
     ];
     
-    // buttons to warp to every level
+    // buttons for warping to every level
     for (let i in allLevels) {
         let levelBtn;
         
@@ -854,7 +885,7 @@ function drawPlayer(x, y, r, rotation) {
 
     if (player.phasing) ctx.globalAlpha = 0.5; // the player becomes transparent when its phasing
     
-    ctx.drawImage(document.getElementById("grey-ball"), -player.r * 1.5, -player.r * 1.5, player.r * 3, player.r * 3);
+    ctx.drawImage(player.img, -player.r * 1.5, -player.r * 1.5, player.r * 3, player.r * 3);
 
     ctx.restore();
 
@@ -876,11 +907,10 @@ function drawPortal() {
     
     ctx.restore();
 
-
-    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
-    
     // Inner Portal
+    const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     ctx.globalAlpha = 1;
+    
     ctx.save();
     ctx.translate(portal.x, portal.y)
     ctx.rotate(portal.rotation);
@@ -899,6 +929,7 @@ function drawPortal() {
 
 function drawObstacles() {
     // drawObstacles(): loops through the current level's obstacles-array and draws every obstacle in it
+
     const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
     
     for (let i in currentLevel.obstacles) {
@@ -909,11 +940,11 @@ function drawObstacles() {
 function drawTitleScreen() {
     // drawTitleScreen(): draws the games title screen which includes a large, rotatable player, and some credits
     
-    // Grey Ball
+    // Player Ball
     ctx.save();
     ctx.translate(cnv.width/2, cnv.height/2);
     ctx.rotate(player.rotation);
-    ctx.drawImage(document.getElementById("grey-ball"), -player.r * 10, -player.r * 10, player.r * 20, player.r * 20);
+    ctx.drawImage(player.img, -player.r * 10, -player.r * 10, player.r * 20, player.r * 20);
     ctx.restore();
 
     // Credits
@@ -959,9 +990,9 @@ function drawButtons() {
 }
 
 
-
 function animateArtistPopUp() {
     // animateArtistPopUp(): when a song begins playing, the song's name and artist slide in from the bottom left of the screen
+
     // get all audio elements
     const audioElements = Array.from(document.querySelectorAll("audio"));
 
