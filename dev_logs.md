@@ -432,3 +432,8 @@ Although there's far more logic I'm not showing here, none of it gets much more 
  - Music ♬
  - Looping
  - Fade + Slide in animation for music credits
+
+
+# Day 35 - Monday | In class work #
+
+### Things Added:
