@@ -37,6 +37,8 @@ const player = {
     r: 17.5, rotation: 0, spinSpeed: Math.PI/16,
     
     speed: 5, facingAngle: 0,
+
+    img: document.getElementById("grey-ball"),
     
     enteringPortal: false,
 
@@ -69,9 +71,13 @@ const portal = {
 
 const songText = {
     active: false,
+
     x: -100, y: cnv.height - 20,
+
     alpha: 0, fadeIn: true,
+
     content: "A New Start - Thygan Buch",
+
     reset() {
         this.active = false;
         this.x = -100;
@@ -180,15 +186,6 @@ class Button {
         this.event();
     }
 }
-
-const playBtn = new Button(cnv.width/2 - 75, 200, 150, 75, "Play", "Play 60px", "titleScreen", () => { gameState = "levels"; });
-const levelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Level Select", "Levels 22px", "titleScreen", () => { gameState = "levelSelect"; });
-const leaveLevelsBtn = new Button(cnv.width/2 - 35, 290, 70, 35, "Leave Level Select", "Menu 22px", "levelSelect", () => { gameState = "titleScreen"; });
-const homeBtn = new Button(cnv.width-40, 15, 25, 25, "Home", "home-btn img", "levels", () => { gameState = "titleScreen"; });
-const restartBtn = new Button(cnv.width-80, 15, 25, 25, "Restart", "restart-btn img", "levels", respawnPlayer);
-
-buttons = [playBtn, levelsBtn, leaveLevelsBtn, homeBtn, restartBtn];
-
 
 class Obstacle {
     // Block: A template class for classes involved in level creation
@@ -444,8 +441,9 @@ class Level {
     }
 }
 
-setUpLevels();
-setUpLevelButtons();
+setUpLevels(); // create every level
+setUpButtons(); // create every button
+
 
 // Inputs //
 document.addEventListener("keydown", keydownHandler);
