@@ -372,7 +372,7 @@ if ((player.y - previousY !== 0 || player.x - previousX !== 0) && !player.enteri
 Then I decided that I needed to completely revamp it. \
 <br>
 
-I chose to look at one of my CS-20 level projects for help because I remembered finding a really good method for finding angles for WASD/Arrow-keys type of movement. I then used it's code as a template to tamper with for Anti-Gravity's movement. Thankfully, this solution worked incredibly well.
+I chose to look at one of my [CS-20 level projects](https://github.com/divinity-m/dodge.io/blob/main/functions.js#L1379) for help (specifically in its `keyboardControls()` function) because I remembered finding a really good method for finding angles for WASD/Arrow-keys type of movement. I then used it's code as a template to tamper with for Anti-Gravity's movement. Thankfully, this solution worked incredibly well.
 ```javascript
 // TEMPLATE CODE
 let [dxKB, dyKB] = [0, 0];
