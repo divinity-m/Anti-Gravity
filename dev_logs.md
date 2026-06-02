@@ -439,4 +439,4 @@ Although there's far more logic I'm not showing here, none of it gets much more 
 Considering that the game is basically complete, I chose to add skins, which dont affect gameplay in any way. I added a new button in the title screen with the name "Skins" which swaps the gamestate to `skinSelect`, redirecting you to a screen where you can choose between two player skins. Just making a new skin took half of my class time, so I only had enough time left to code the menu and buttons for the skins. Tommorrow, I plan to make the player required to unlock the second skin by placing a key in Level 8.
 
 ### Things Added:
- - Player Skins
+ - Player skins & New menu for skins
