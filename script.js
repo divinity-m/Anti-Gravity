@@ -176,9 +176,21 @@ class Button {
 
             // overlay for mouse hovers
             ctx.fillStyle = this.mouseOver ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
-            ctx.strokeStyle = this.mouseOver ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0)";
-            ctx.lineWidth = 4;
             ctx.fillRect(this.x, this.y, this.w, this.h);
+
+            
+            let btnLocked = false;
+            
+            // check if the button is locked by an unobtained key
+            for (let i in keys) {
+                if (!keys[i].obtained && this.name.includes(keys[i].unlock)) btnLocked = true;
+            }
+
+            // if the button is locked, the stroked rectangle border should be dark
+            const dimBorder = btnLocked ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.5)";
+                
+            ctx.strokeStyle = this.mouseOver ? dimBorder : "rgba(255, 255, 255, 0)";
+            ctx.lineWidth = 4;
             ctx.strokeRect(this.x, this.y, this.w, this.h);
 
             
@@ -187,9 +199,12 @@ class Button {
                 const key = keys[i];
                 if (!key.obtained && this.name.includes(key.unlock)) {
                     ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-                    ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
-                    ctx.fillRect(this.x, this.y, this.w, this.h);
-                    ctx.strokeRect(this.x, this.y, this.w, this.h);
+                    ctx.fillRect(this.x, this.y, this.w, this.h); // dim's the player skin
+                    
+                    ctx.drawImage(document.getElementById(key.img), this.x+this.w/2 - 30, this.y+this.h/2 - 15, 60, 30);
+
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                    ctx.fillRect(this.x, this.y, this.w, this.h); // dim's the key
                 }
             }
         }
@@ -205,25 +220,30 @@ class Key {
     * @param {number} w - The key's width
     * @param {number} h - The key's height
     * @param {string} img - The key's image src
-    * @param {number} level - The level number in which the key is located
+    * @param {string|number} location - Where specifically the key is found; if it's in a level, just use the level number
     * @param {string} unlock - What the key gives the player 
+    * @param {boolean} clickToPickUp - If the key must be clicked or collided with to obtain
     */
-    constructor(x, y, w, h, img, level, unlock) {
+    constructor(x, y, w, h, img, location, unlock, clickToObtain = false) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.img = img;
-        this.level = level;
+        this.location = location;
         this.unlock = unlock;
+        this.clickToObtain = clickToObtain;
         this.obtained = false;
     }
 
     obtain() {
         // Key.obtain(): creates the collisions for the key and gives the player the key if they fulfill those collisions
 
-        // only proceed with the logic if the level is right
-        if (currentLvlNum === this.level) {
+        const correctLocation = gameState === this.location || (currentLvlNum === this.location && gameState === "levels");
+        
+        // use collision logic if the key isn't clickable
+        if (correctLocation && !this.clickToObtain) {
+            
             // the distance to the center of the player from the center of the key will be used to create a hitbox
             const keyDx = player.x - (this.x + this.w/2);
             const keyDy = player.y - (this.y + this.h/2);
@@ -234,19 +254,22 @@ class Key {
     
             // obtain the key if there's a collision and it hasn't already been obtained
             if (obtainKey && !this.obtained) this.obtained = true;
-
-
-            // // a visual of the key's hitbox
-            // ctx.strokeStyle = "rgba(125, 125, 125, 0.75)";
-            // drawCircle(this.x+this.w/2, this.y+this.h/2, this.w/2, 1);
         }
+
+        // if (correctLocation) {
+        //     // a visual of the key's hitbox
+        //     ctx.strokeStyle = "rgba(125, 125, 125, 0.75)";
+        //     drawCircle(this.x+this.w/2, this.y+this.h/2, this.w/2, 1);
+        // }
     }
 
     draw() {
         // Key.draw(): uses the keys `img` and `level` properties to draw it 
 
         // the key must not be obtained for it to be drawn
-        if (currentLvlNum === this.level && !this.obtained) {
+        const correctLocation = gameState === this.location || (currentLvlNum === this.location && gameState === "levels");
+        
+        if (correctLocation && !this.obtained) {
             ctx.drawImage(document.getElementById(this.img), this.x, this.y, this.w, this.h);
         }
     }
@@ -565,7 +588,6 @@ function draw() {
         drawPortal();
         drawPlayer();
         drawObstacles();
-        drawKeys();
     }
     
     // bottom bar
@@ -591,6 +613,7 @@ function draw() {
     }
     
     drawButtons();
+    drawKeys();
     
     playMusic();
     animateArtistPopUp();
