@@ -40,7 +40,7 @@ const player = {
     
     speed: 5, facingAngle: 0,
 
-    img: document.getElementById("grey-ball"), keys: [],
+    img: document.getElementById("grey-ball"),
     
     enteringPortal: false,
 
@@ -125,7 +125,7 @@ class Button {
         this.content = content;
         this.location = location;
         this.event = event;
-        this.mouseOver = false; // A boolean which checks various conditions to determine if the mouse is hovering over the button
+        this.mouseOver = false; // A boolean which determines if the mouse is hovering over the button
     }
 
     draw() {
@@ -180,6 +180,18 @@ class Button {
             ctx.lineWidth = 4;
             ctx.fillRect(this.x, this.y, this.w, this.h);
             ctx.strokeRect(this.x, this.y, this.w, this.h);
+
+            
+            // dim cover for locked player skins
+            for (let i in keys) {
+                const key = keys[i];
+                if (!key.obtained && this.name.includes(key.unlock)) {
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+                    ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                    ctx.strokeRect(this.x, this.y, this.w, this.h);
+                }
+            }
         }
     }
 }
@@ -209,22 +221,32 @@ class Key {
 
     obtain() {
         // Key.obtain(): creates the collisions for the key and gives the player the key if they fulfill those collisions
-        
-        const obtainKey = (
-            player.x > this.x && player.x < this.x + this.w &&
-            player.y > this.y && player.y < this.y + this.h
-        )
-        
-        if (obtainKey && !this.obtained) {
-            this.obtained = true;
-            player.keys.push(this);
+
+        // only proceed with the logic if the level is right
+        if (currentLvlNum === this.level) {
+            // the distance to the center of the player from the center of the key will be used to create a hitbox
+            const keyDx = player.x - (this.x + this.w/2);
+            const keyDy = player.y - (this.y + this.h/2);
+            const keyDist = Math.hypot(keyDx, keyDy);
+    
+            // a collision happens when the distance between the player & the key becomes shorter than the key's width + the player's radius
+            const obtainKey = keyDist < this.w/2 + player.r;
+    
+            // obtain the key if there's a collision and it hasn't already been obtained
+            if (obtainKey && !this.obtained) this.obtained = true;
+
+
+            // // a visual of the key's hitbox
+            // ctx.strokeStyle = "rgba(125, 125, 125, 0.75)";
+            // drawCircle(this.x+this.w/2, this.y+this.h/2, this.w/2, 1);
         }
     }
 
     draw() {
         // Key.draw(): uses the keys `img` and `level` properties to draw it 
 
-        if (currentLvlNum === this.level) {
+        // the key must not be obtained for it to be drawn
+        if (currentLvlNum === this.level && !this.obtained) {
             ctx.drawImage(document.getElementById(this.img), this.x, this.y, this.w, this.h);
         }
     }
@@ -375,18 +397,18 @@ class Spike extends Obstacle {
         }
 
         ctx.fill();
-
-        // spike hitbox visualization
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 0.5;
-        if (this.variant.toLowerCase().includes("normal")) {
-            // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/2, this.size*0.35, this.size);
-        }
-        if (this.variant.toLowerCase().includes("wide")) {
-            // ctx.strokeRect(-this.size/2 + this.size*0.325, -this.size/4, this.size*0.35, this.size/2);
-        }
-        
         ctx.restore();
+
+        
+        // // spike hitbox visual
+        // ctx.strokeStyle = "red";
+        // ctx.lineWidth = 0.5;
+        // if (this.variant.toLowerCase().includes("normal")) {
+        //     ctx.strokeRect(this.x + this.size*0.325, this.y, this.size*0.35, this.size);
+        // }
+        // if (this.variant.toLowerCase().includes("wide")) {
+        //     ctx.strokeRect(this.x + this.size*0.325, this.y + this.size/4, this.size*0.35, this.size/2);
+        // }
     }
 
     checkCollisions() {
@@ -543,6 +565,7 @@ function draw() {
         drawPortal();
         drawPlayer();
         drawObstacles();
+        drawKeys();
     }
     
     // bottom bar
@@ -568,7 +591,6 @@ function draw() {
     }
     
     drawButtons();
-    drawKeys();
     
     playMusic();
     animateArtistPopUp();
