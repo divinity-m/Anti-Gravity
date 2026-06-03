@@ -840,23 +840,37 @@ function setUpButtons() {
     const restartBtn = new Button(cnv.width-80, 15, 25, 25, "Restart", "restart-btn img", "levels", respawnPlayer);
 
 
-    // Buttons for choosing a skin
-    const greyball = document.getElementById("grey-ball");
-    const arrowball = document.getElementById("arrow-ball");
+    // Image elements for each skin
+    const greyBall = document.getElementById("grey-ball");
+    const arrowBall = document.getElementById("arrow-ball");
+    const nexusBall = document.getElementById("nexus-ball");
 
-    const greyBallBtn = new Button(cnv.width/2 - 85, 200, 80, 80, "Choose Greyball", "grey-ball img", "skinSelect", () => { player.img = greyball; });
-    const arrowBallBtn = new Button(cnv.width/2 + 5, 200, 80, 80, "Choose Arrowball", "arrow-ball img", "skinSelect", () => {
+    // Buttons for choosing a skin
+    const greyBallBtn = new Button(cnv.width/2 - 130, 200, 80, 80, "Choose Greyball", "grey-ball img", "skinSelect", () => { player.img = greyBall; });
+    const arrowBallBtn = new Button(cnv.width/2 - 40, 200, 80, 80, "Choose Arrowball", "arrow-ball img", "skinSelect", () => {
 
         // define the grey key
         const greyKey = keys.find((key) => key.unlock === "Arrowball");
 
         // change the player's image to the arrowball if the grey key has been obtained
-        if (greyKey.obtained) player.img = arrowball;
+        if (greyKey.obtained) player.img = arrowBall;
+    });
+    const nexusBallBtn = new Button(cnv.width/2 + 50, 200, 80, 80, "Choose Nexusball", "nexus-ball img", "skinSelect", () => {
+
+        // define the grey key
+        const greyKey = keys.find((key) => key.unlock === "Nexusball");
+
+        // change the player's image to the arrowball if the grey key has been obtained
+        if (greyKey.obtained) player.img = nexusBall;
     });
 
-
     // adds every button to the `buttons` array
-    buttons = [playBtn, levelsBtn, skinsBtn, leaveLevelsBtn, leaveSkinsBtn, homeBtn, restartBtn, greyBallBtn, arrowBallBtn];
+    buttons = [
+        playBtn, levelsBtn, skinsBtn,
+        leaveLevelsBtn, leaveSkinsBtn,
+        homeBtn, restartBtn,
+        greyBallBtn, arrowBallBtn, nexusBallBtn
+    ];
 
     
     // player spawn coordinates for levels 1-9 in order (for the buttons below)
@@ -996,18 +1010,34 @@ function drawCursor() {
     
     // Cursor
     if (mouseX !== undefined && mouseY !== undefined) {
-        hoveringOverAButton = false;
+        // check if the mouse is hovering over a button or a clickable key
+        hovering = false;
         for (let i in buttons) {
-            if (buttons[i].mouseOver) hoveringOverAButton = true;
+            if (buttons[i].mouseOver) hovering = true;
+        }
+        for (let i in keys) {
+            const key = keys[i];
+            if (key.clickToObtain && gameState === key.location) {
+                // get the distance from the mouse to the key's center
+                const keyDx = mouseX - (key.x + key.w/2);
+                const keyDy = mouseY - (key.y + key.h/2);
+                const keyDist = Math.hypot(keyDx, keyDy);
+        
+                // check if the distance is smaller than the key's radius
+                const obtainKey = keyDist < key.w/2;
+        
+                // if the distance is small enough and the key is unclaimed, set `hovering` to true
+                if (obtainKey && !key.obtained) hovering = true;
+            }
         }
         
         
         const currentLevel = allLevels.find((level) => level.number === currentLvlNum);
 
         if (currentLevel.terrain === "grassy") {
-            ctx.fillStyle = hoveringOverAButton ? "rgb(89, 216, 255)" : "rgb(0, 153, 255)";
+            ctx.fillStyle = hovering ? "rgb(89, 216, 255)" : "rgb(0, 153, 255)";
         } else {
-            ctx.fillStyle = hoveringOverAButton ? "rgb(100, 100, 100)" : "rgb(25, 25, 25)";
+            ctx.fillStyle = hovering ? "rgb(100, 100, 100)" : "rgb(25, 25, 25)";
         }
         
         drawCircle(mouseX, mouseY, 5);
