@@ -1,7 +1,7 @@
 /// SCRIPT.JS ANTI GRAVITY ///
 
 // Canvas Setup //
-const cnv = document.getElementById("game-canvas");
+const cnv = document.getElementById("game");
 const ctx = cnv.getContext("2d");
 let gameState = "titleScreen";
 let interaction = false;
@@ -19,6 +19,8 @@ let [gravity, dGravity] = [0, 0.75];
 let [fallingDirection, isMidAir, onObstacle] = ["down", false, false];
 
 let [allLevels, currentLvlNum] = [[], 0];
+
+let keys = [];
 
 const dirtColor = "rgb(143, 89, 43)";
 const grassColor = "rgb(42, 191, 42)";
@@ -38,7 +40,7 @@ const player = {
     
     speed: 5, facingAngle: 0,
 
-    img: document.getElementById("grey-ball"),
+    img: document.getElementById("grey-ball"), keys: [],
     
     enteringPortal: false,
 
@@ -180,10 +182,51 @@ class Button {
             ctx.strokeRect(this.x, this.y, this.w, this.h);
         }
     }
+}
 
-    effect() {
-        // Button.draw(): Imposes the effect the button has when it's clicked
-        this.event();
+class Key {
+    // Key: A collectible item used to unlock player skins
+
+    /**
+    * @param {number} x - The key's x coordinate
+    * @param {number} y - The key's y coordinate
+    * @param {number} w - The key's width
+    * @param {number} h - The key's height
+    * @param {string} img - The key's image src
+    * @param {number} level - The level number in which the key is located
+    * @param {string} unlock - What the key gives the player 
+    */
+    constructor(x, y, w, h, img, level, unlock) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.img = img;
+        this.level = level;
+        this.unlock = unlock;
+        this.obtained = false;
+    }
+
+    obtain() {
+        // Key.obtain(): creates the collisions for the key and gives the player the key if they fulfill those collisions
+        
+        const obtainKey = (
+            player.x > this.x && player.x < this.x + this.w &&
+            player.y > this.y && player.y < this.y + this.h
+        )
+        
+        if (obtainKey && !this.obtained) {
+            this.obtained = true;
+            player.keys.push(this);
+        }
+    }
+
+    draw() {
+        // Key.draw(): uses the keys `img` and `level` properties to draw it 
+
+        if (currentLvlNum === this.level) {
+            ctx.drawImage(document.getElementById(this.img), this.x, this.y, this.w, this.h);
+        }
     }
 }
 
@@ -441,8 +484,10 @@ class Level {
     }
 }
 
-setUpLevels(); // create every level
-setUpButtons(); // create every button
+// define every level, button, and key manually
+setUpLevels();
+setUpButtons();
+setUpKeys();
 
 
 // Inputs //
@@ -523,6 +568,7 @@ function draw() {
     }
     
     drawButtons();
+    drawKeys();
     
     playMusic();
     animateArtistPopUp();
