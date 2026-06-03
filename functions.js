@@ -57,7 +57,7 @@ function clickHandler(e) {
 
     for (let i in buttons) {
         let btn = buttons[i];
-        if (btn.mouseOver) btn.effect();
+        if (btn.mouseOver) btn.event();
     }
 }
 
@@ -67,16 +67,16 @@ function clickHandler(e) {
 function playerMovement() {
     // playerMovement(): checks if certain buttons are pressed to move the player
     
-    const isLevels = gameState === "levels";
-    player.spinSpeed = isLevels ? Math.PI/16 : Math.PI/128;
+    const canMove = gameState === "levels" && !player.enteringPortal;
+    player.spinSpeed = gameState === "levels" ? Math.PI/16 : Math.PI/128;
     
     if (aPressed) {
-        if (isLevels && !player.enteringPortal) player.x -= player.speed;
+        if (canMove) player.x -= player.speed;
 
         player.rotation -= player.spinSpeed;
     }
     if (dPressed) {
-        if (!player.enteringPortal) player.x += player.speed;
+        if (canMove) player.x += player.speed;
         
         player.rotation += player.spinSpeed;
     }
@@ -858,6 +858,16 @@ function setUpButtons() {
     }
 }
 
+function setUpKeys() {
+    // setUpKeys(): defines every key object in the game
+
+    // Key Class Constructor Parameters
+    // x, y, w, h, img, level, unlock
+    const greyKey = new Key(200, 200, 40, 20, "grey-key", 8, "arrow-skin");
+
+    keys = [greyKey];
+}
+
 //* Draw Functions *//
 
 function drawCircle(x, y, r, lw = 0) {
@@ -989,7 +999,6 @@ function drawButtons() {
     }
 }
 
-
 function animateArtistPopUp() {
     // animateArtistPopUp(): when a song begins playing, the song's name and artist slide in from the bottom left of the screen
 
@@ -1032,5 +1041,11 @@ function animateArtistPopUp() {
         
         // reset the object
         if (songText.alpha <= 0) songText.reset();
+    }
+}
+
+function drawKeys() {
+    for (let i in keys) {
+        keys[i].draw();
     }
 }
