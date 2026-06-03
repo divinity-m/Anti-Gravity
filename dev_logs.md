@@ -447,7 +447,7 @@ I found a nice pixelated golden key image on google and gavin helped me design a
 <br>
 
 ### At Home Work
-The obtainment logic for picking up keys in levels was still incomeplete and the grey key on level 8 wasn't positioned properly so I had to finish that up. I also made the logic for picking up keys in the menu via clicking them.
+The obtainment logic for picking up keys in levels was still incomeplete and the grey key on level 8 wasn't positioned properly so I had to finish that up. I also made the logic for picking up keys in the menu via clicking them. Using this logic I placed a gold key somewhere hidden in the menu.
 
 ### Things Added:
  - Keys for unlocking player skins
