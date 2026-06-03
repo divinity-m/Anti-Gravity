@@ -56,8 +56,7 @@ function clickHandler(e) {
     }
 
     for (let i in buttons) {
-        let btn = buttons[i];
-        if (btn.mouseOver) btn.event();
+        if (buttons[i].mouseOver) buttons[i].event();
     }
 }
 
@@ -831,7 +830,14 @@ function setUpButtons() {
     const arrowball = document.getElementById("arrow-ball");
 
     const greyBallBtn = new Button(cnv.width/2 - 85, 200, 80, 80, "Choose Greyball", "grey-ball img", "skinSelect", () => { player.img = greyball; });
-    const arrowBallBtn = new Button(cnv.width/2 + 5, 200, 80, 80, "Choose Arrowball", "arrow-ball img", "skinSelect", () => { player.img = arrowball; });
+    const arrowBallBtn = new Button(cnv.width/2 + 5, 200, 80, 80, "Choose Arrowball", "arrow-ball img", "skinSelect", () => {
+
+        // define the grey key
+        const greyKey = keys.find((key) => key.unlock === "Arrowball");
+
+        // change the player's image to the arrowball if the grey key has been obtained
+        if (greyKey.obtained) player.img = arrowball;
+    });
 
 
     // adds every button to the `buttons` array
@@ -846,10 +852,13 @@ function setUpButtons() {
     // buttons for warping to every level
     for (let i in allLevels) {
         let levelBtn;
+
+        // level buttons use warpToLevel() to relocate between levels and determine spawnpoints
         
         if (i < 5) { // top row | first 5 levels
             levelBtn = new Button(cnv.width/2-15 - (2-i)*40, 200, 30, 30, "Select Level 1", `${Number(i)+1} 20px`, "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
         }
+            
         else {  // bottom row | final 4 levels
             levelBtn = new Button(cnv.width/2+7.5 - (7-i)*40, 245, 30, 30, "Select Level 1", `${Number(i)+1} 20px`, "levelSelect", warpToLevel.bind(this, Number(i)+1, defaultSpawns[i]));
         }
@@ -863,7 +872,7 @@ function setUpKeys() {
 
     // Key Class Constructor Parameters
     // x, y, w, h, img, level, unlock
-    const greyKey = new Key(200, 200, 40, 20, "grey-key", 8, "arrow-skin");
+    const greyKey = new Key(128, 235, 40, 20, "grey-key", 8, "Arrowball");
 
     keys = [greyKey];
 }
@@ -994,8 +1003,7 @@ function drawButtons() {
     // doesn't need to check for gamestate because the `Button` class does that logic on its own
     
     for (let i in buttons) {
-        const btn = buttons[i];
-        btn.draw();
+        buttons[i].draw();
     }
 }
 
@@ -1045,7 +1053,10 @@ function animateArtistPopUp() {
 }
 
 function drawKeys() {
+    // drawKeys(): checks for every keys collisions and draws them
+    
     for (let i in keys) {
+        keys[i].obtain();
         keys[i].draw();
     }
 }
