@@ -58,6 +58,21 @@ function clickHandler(e) {
     for (let i in buttons) {
         if (buttons[i].mouseOver) buttons[i].event();
     }
+    for (let i in keys) {
+        const key = keys[i];
+        if (key.clickToObtain && gameState === key.location) {
+            // get the distance from the mouse to the key's center
+            const keyDx = mouseX - (key.x + key.w/2);
+            const keyDy = mouseY - (key.y + key.h/2);
+            const keyDist = Math.hypot(keyDx, keyDy);
+    
+            // check if the distance is smaller than the key's radius
+            const obtainKey = keyDist < key.w/2;
+    
+            // if the distance is small enough and the key is unclaimed, obtain it
+            if (obtainKey && !key.obtained) key.obtained = true;
+        }
+    }
 }
 
 
@@ -873,8 +888,9 @@ function setUpKeys() {
     // Key Class Constructor Parameters
     // x, y, w, h, img, level, unlock
     const greyKey = new Key(128, 235, 40, 20, "grey-key", 8, "Arrowball");
+    const goldKey = new Key(5, 5, 18, 9, "gold-key", "levelSelect", "Nexusball", true);
 
-    keys = [greyKey];
+    keys = [greyKey, goldKey];
 }
 
 //* Draw Functions *//
