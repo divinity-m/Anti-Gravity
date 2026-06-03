@@ -440,3 +440,14 @@ Considering that the game is basically complete, I chose to add skins, which don
 
 ### Things Added:
  - Player skins & New menu for skins
+
+
+# Day 36 - Tuesday | In class work & At home work #
+I found a nice pixelated golden key image on google and gavin helped me design a grey version of it. To draw the key and apply it's collisions, I originally wanted to just make it an object with a few methods, but since I wanted to add another skin in the future, I chose to make a `Key` class instead so I would have the option of making more keys. This `Key` class is very similar to my obstacle classes because it has a function for collisions and drawing, but I chose to make it separate from them because I do want to add keys outside of levels. I plan to make such keys clickable to be obtained. Most of the the logic for the grey key is already set up, I've made `setUpKeys()` function to define every key, along with a `drawKeys()` function to check for key collisions and draw them.
+<br>
+
+### At Home Work
+The obtainment logic for picking up keys in levels was still incomeplete and the grey key on level 8 wasn't positioned properly so I had to finish that up. I also made the logic for picking up keys in the menu via clicking them.
+
+### Things Added:
+ - Keys in levels which unlock player skins
