@@ -101,6 +101,12 @@ function mouseMoveHandler(e) {
 
 <img src="./Images/skyBackdrop.svg" alt="Grey Ball" width="200" height="200">
 
+<p float="left">
+    <img src="./Images/grassBar.png" alt="Geen Portal" width="200" height="200">
+    <img src="./Images/grassBarBlades.png" alt="Geen Portal" width="200" height="200">
+    <img src="./Images/purpPortal.png" alt="Blue Portal" width="200" height="200">
+</p>
+
 <img src="./Images/playBtn.svg" alt="Grey Ball" width="200" height="200">
 
 ### Things Added:
