@@ -23,7 +23,7 @@ The movement has also been added, the "A", "D" and left/right arrow-keys can be 
 Gavin Diep helped me create a nice design for the player, it's inspired mostly by Geometry Dash's design for the default ball skin. \
 I refined some aspects of the game, such acceleration due to gravity and making the player spin when it moves left and right. 
 
-![Grey Ball](./Images/greyBall.svg)
+<img src="./Images/greyBall.svg" alt="Grey Ball" width="200" height="200">
 
 ### Things Added:
  - Player movement refinement
