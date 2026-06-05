@@ -99,19 +99,19 @@ function mouseMoveHandler(e) {
 }
 ```
 
-<img src="./Images/skyBackdrop.svg" alt="Grey Ball" width="200" height="200">
+<img src="./Images/skyBackdrop.svg" alt="Sky Backdrop" width="200" height="200">
 
 <p float="left">
-    <img src="./Images/grassBar.svg" alt="Geen Portal" width="200" height="200">
-    <img src="./Images/grassBarBlades.svg" alt="Geen Portal" width="200" height="200">
+    <img src="./Images/grassBar.svg" alt="Grass Bar" width="200" height="200">
+    <img src="./Images/grassBarBlades.svg" alt="Grass Bar Blades" width="200" height="200">
 </p>
 
 <p float="left">
-    <img src="./Images/cloudBar.svg" alt="Geen Portal" width="200" height="200">
-    <img src="./Images/cloudBarFluff.svg" alt="Geen Portal" width="200" height="200">
+    <img src="./Images/cloudBar.svg" alt="Cloud Bar" width="200" height="200">
+    <img src="./Images/cloudBarFluff.svg" alt="Cloud Bar Fluff" width="200" height="200">
 </p>
 
-<img src="./Images/playBtn.svg" alt="Grey Ball" width="200" height="200">
+<img src="./Images/playBtn.svg" alt="Play Button" width="200" height="200">
 
 ### Things Added:
  - Custom Background & Floor/Roof Design
@@ -221,9 +221,9 @@ I started working on the players second ability. By pressing `S` or the down arr
 # Day 22 - Tuesday | In class work #
 I was hoping to finish all of level 6 today, but I got sidetracked by the idea of "phaseable spikes". These type of spikes weren't necessarily challenging to code, but thinking of unique ways to use them took up a lot of my time, so I didn't complete all of level 6, but about 90% of it is done. Gavin also worked on a cave-like design for the blocks in cave levels and I did a lot of recoloring of other parts of the level to make everything look good.
 
-<img src="./Images/caveBackdrop.svg" alt="Geen Portal" width="200" height="200">
-<img src="./Images/horizontalChocolateBar.svg" alt="Geen Portal" width="200" height="200">
-<img src="./Images/verticleChocolateBar.svg" alt="Geen Portal" width="200" height="200">
+<img src="./Images/caveBackdrop.svg" alt="Cave Backdrop" width="200" height="200">
+<img src="./Images/horizontalChocolateBar.svg" alt="Horiz Chocolate Bar" width="200" height="200">
+<img src="./Images/verticleChocolateBar.svg" alt="Vert Chocolate Bar" width="200" height="200">
 
 ### Things Added:
  - Most of level 6 and phase-variant spikes
@@ -473,6 +473,10 @@ I found a nice pixelated golden key image on google and gavin helped me design a
 
 ### At Home Work
 The obtainment logic for picking up keys in levels was still incomeplete and the grey key on level 8 wasn't positioned properly so I had to finish that up. I also made the logic for picking up keys in the menu via clicking them. Using this logic I placed a gold key somewhere hidden in the menu, it doens't unlock anything right now.
+
+
+<img src="./Images/greyKey.svg" alt="Grey Key" width="200" height="200">
+<img src="./Images/goldKey.svg" alt="Gold Key" width="200" height="200">
 
 ### Things Added:
  - Keys for unlocking player skins
