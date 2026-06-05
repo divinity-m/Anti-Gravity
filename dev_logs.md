@@ -38,6 +38,7 @@ I started working on the mechanics for the portal, which marks the checkpoint fo
     <img src="./Images/purpPortal.png" alt="Blue Portal" width="200" height="200">
     <img src="./Images/blackPortal.png" alt="Black Portal" width="200" height="200">
 </p>
+
 ### Things Added:
  - Portal Design
 
@@ -97,6 +98,10 @@ function mouseMoveHandler(e) {
     mouseY = (e.clientY - rect.top) * scaleX * 1.05; // notice this bug here? it took me a week to find out about it.
 }
 ```
+
+<img src="./Images/skyBackdrop.svg" alt="Grey Ball" width="200" height="200">
+
+<img src="./Images/playBtn.svg" alt="Grey Ball" width="200" height="200">
 
 ### Things Added:
  - Custom Background & Floor/Roof Design
