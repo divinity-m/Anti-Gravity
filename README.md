@@ -1,8 +1,9 @@
 # ANTI GRAVITY - CSE Project
 A 2D platformer. You play as a ball with the unique ability to invert the direction of gravity. Using this skill, you can parkour through 8 levels with grassy and underground themes designed by my artistic best bud. This project was made with HTML, CSS, and Javascript and the overall concept takes a lot of inspiration from Geometry Dash, while the art used Kirby, and Mario as a canvas. My goal with Anti Gravity was to extract the ball gamemode from geometry dash and transform it into a separate platformer game using only my existing programming knowledge.
 
-<img src="./Images/Screenshot 2026-06-05 100843.png" alt="Level 8" width="600" height="600">
-
+<p align="center">
+    <img src="./Images/Screenshot 2026-06-05 100843.png" alt="Level 8" width="600" height="600">
+</p>
 ___
 
 ### Targets Landed:
