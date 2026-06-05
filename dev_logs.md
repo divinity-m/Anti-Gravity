@@ -477,6 +477,8 @@ The obtainment logic for picking up keys in levels was still incomeplete and the
 
 <img src="./Images/greyKey.svg" alt="Grey Key" width="200" height="200">
 <img src="./Images/goldKey.svg" alt="Gold Key" width="200" height="200">
+<img src="./Images/image_2026-06-05_100523930.png" alt="Gold Key" width="600" height="600">
+
 
 ### Things Added:
  - Keys for unlocking player skins
