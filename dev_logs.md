@@ -221,11 +221,9 @@ I started working on the players second ability. By pressing `S` or the down arr
 # Day 22 - Tuesday | In class work #
 I was hoping to finish all of level 6 today, but I got sidetracked by the idea of "phaseable spikes". These type of spikes weren't necessarily challenging to code, but thinking of unique ways to use them took up a lot of my time, so I didn't complete all of level 6, but about 90% of it is done. Gavin also worked on a cave-like design for the blocks in cave levels and I did a lot of recoloring of other parts of the level to make everything look good.
 
-<p float="left">
-    <img src="./Images/caveBackdrop.svg" alt="Geen Portal" width="200" height="200">
-    <img src="./Images/horizontalChocolateBar.svg" alt="Geen Portal" width="200" height="200">">
-    <img src="./Images/verticleChocolateBar.svg" alt="Geen Portal" width="200" height="200">
-</p>
+<img src="./Images/caveBackdrop.svg" alt="Geen Portal" width="200" height="200">
+<img src="./Images/horizontalChocolateBar.svg" alt="Geen Portal" width="200" height="200">
+<img src="./Images/verticleChocolateBar.svg" alt="Geen Portal" width="200" height="200">
 
 ### Things Added:
  - Most of level 6 and phase-variant spikes
