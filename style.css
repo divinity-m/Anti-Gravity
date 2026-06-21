@@ -4,6 +4,7 @@ html, body {
   touch-action: none; /* disable gestures like pinch or pan */
   overscroll-behavior: none; /* prevent edge bounce */
   height: 100%;
+  cursor: none;
 }
 
 #game-canvas {
